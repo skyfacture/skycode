@@ -1,0 +1,645 @@
+﻿{
+    "generatedAt":  "2026-06-27T18:16:04+10:00",
+    "source":  "swcomposerapi.chm",
+    "topicCount":  36,
+    "topics":  [
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/2DOutputFormatValues.htm",
+                       "title":  "Image Output Format Values",
+                       "topTerms":  [
+                                        "Output",
+                                        "Values",
+                                        "The",
+                                        "Image",
+                                        "Format",
+                                        "batch",
+                                        "png",
+                                        "ImageOutputFormat",
+                                        "Reference",
+                                        "jpeg",
+                                        "eps",
+                                        "set"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/3DOutputFormatValue.htm",
+                       "title":  "3D Output Format Values",
+                       "topTerms":  [
+                                        "Output",
+                                        "The",
+                                        "Values",
+                                        "Format",
+                                        "batch",
+                                        "Composer",
+                                        "pdf",
+                                        "STEP",
+                                        "VDA",
+                                        "ACIS",
+                                        "u3d",
+                                        "smg"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/3DVIAConverterErrorCodes.htm",
+                       "title":  "Converter Return Codes",
+                       "topTerms":  [
+                                        "Yes",
+                                        "File",
+                                        "The",
+                                        "not",
+                                        "Log",
+                                        "found",
+                                        "Converter",
+                                        "application",
+                                        "Return",
+                                        "IOErrorLevel",
+                                        "page",
+                                        "Settings"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API.htm",
+                       "title":  "APIs",
+                       "topTerms":  [
+                                        "Composer",
+                                        "you",
+                                        "APIs",
+                                        "specify",
+                                        "documents",
+                                        "with",
+                                        "RenderMode",
+                                        "values",
+                                        "and",
+                                        "For",
+                                        "integer",
+                                        "Microsoft"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_active_x_properties.htm",
+                       "title":  "Composer Players API - Players Plug-in Properties",
+                       "topTerms":  [
+                                        "The",
+                                        "Boolean",
+                                        "False",
+                                        "True",
+                                        "quot",
+                                        "Displays",
+                                        "name",
+                                        "toolbar",
+                                        "mode",
+                                        "Composer",
+                                        "Properties",
+                                        "CLitSelection"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_event.htm",
+                       "title":  "Composer Player ActiveX API - Events",
+                       "topTerms":  [
+                                        "quot",
+                                        "name",
+                                        "selection",
+                                        "the",
+                                        "String",
+                                        "void",
+                                        "CLitSelection",
+                                        "when",
+                                        "Sent",
+                                        "specifies",
+                                        "Parameters",
+                                        "CLitModifiable"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_methods.htm",
+                       "title":  "Composer Player ActiveX API - Methods",
+                       "topTerms":  [
+                                        "quot",
+                                        "The",
+                                        "String",
+                                        "name",
+                                        "selection",
+                                        "Returns",
+                                        "CLitSelection",
+                                        "specifies",
+                                        "Boolean",
+                                        "Single",
+                                        "Value",
+                                        "For"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_objects.htm",
+                       "title":  "Composer Player ActiveX API - Objects",
+                       "topTerms":  [
+                                        "Name",
+                                        "CLitSelection",
+                                        "CLitModifiable",
+                                        "the",
+                                        "Actor",
+                                        "Selection",
+                                        "properties",
+                                        "Modifiable",
+                                        "Objects",
+                                        "Value",
+                                        "set",
+                                        "UseGUID"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_properties.htm",
+                       "title":  "Composer Player ActiveX API - Object Properties",
+                       "topTerms":  [
+                                        "the",
+                                        "Value",
+                                        "Sets",
+                                        "Actor",
+                                        "int",
+                                        "Viewport",
+                                        "Text",
+                                        "Digger",
+                                        "CuttingPlane",
+                                        "Texture",
+                                        "Boolean",
+                                        "Color"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_application_event.htm",
+                       "title":  "Composer API - Application Events",
+                       "topTerms":  [
+                                        "the",
+                                        "sender",
+                                        "IApplication",
+                                        "specifies",
+                                        "String",
+                                        "document",
+                                        "Application",
+                                        "menuLabel",
+                                        "Boolean",
+                                        "void",
+                                        "IDocument",
+                                        "userData"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_application_method.htm",
+                       "title":  "Composer API - Application Methods",
+                       "topTerms":  [
+                                        "the",
+                                        "quot",
+                                        "String",
+                                        "Returns",
+                                        "workshop",
+                                        "specifies",
+                                        "Boolean",
+                                        "Parameters",
+                                        "See",
+                                        "also",
+                                        "tab",
+                                        "Long"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_application_prop.htm",
+                       "title":  "Composer API - Application Properties",
+                       "topTerms":  [
+                                        "The",
+                                        "Composer",
+                                        "Application",
+                                        "Turns",
+                                        "Boolean",
+                                        "True",
+                                        "off",
+                                        "False",
+                                        "Version",
+                                        "visibility",
+                                        "Properties",
+                                        "API"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_event.htm",
+                       "title":  "Composer API - Document Events",
+                       "topTerms":  [
+                                        "quot",
+                                        "The",
+                                        "name",
+                                        "selection",
+                                        "String",
+                                        "void",
+                                        "CLitSelection",
+                                        "when",
+                                        "sent",
+                                        "specifies",
+                                        "Parameters",
+                                        "Motion"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_method.htm",
+                       "title":  "Composer API - Document Methods",
+                       "topTerms":  [
+                                        "quot",
+                                        "the",
+                                        "String",
+                                        "name",
+                                        "selection",
+                                        "Returns",
+                                        "Boolean",
+                                        "specifies",
+                                        "CLitSelection",
+                                        "Single",
+                                        "Value",
+                                        "Parameters"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_object.htm",
+                       "title":  "Composer API - Objects",
+                       "topTerms":  [
+                                        "Name",
+                                        "CLitSelection",
+                                        "CLitModifiable",
+                                        "Actor",
+                                        "the",
+                                        "Selection",
+                                        "Objects",
+                                        "properties",
+                                        "set",
+                                        "Modifiables",
+                                        "Alpha",
+                                        "UseGUID"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_object_prop.htm",
+                       "title":  "Composer API - Object Properties",
+                       "topTerms":  [
+                                        "the",
+                                        "Value",
+                                        "Sets",
+                                        "Actor",
+                                        "int",
+                                        "Viewport",
+                                        "Text",
+                                        "Digger",
+                                        "CuttingPlane",
+                                        "Boolean",
+                                        "Texture",
+                                        "Color"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_prop.htm",
+                       "title":  "Composer API - Document Properties",
+                       "topTerms":  [
+                                        "the",
+                                        "quot",
+                                        "name",
+                                        "True",
+                                        "CLitSelection",
+                                        "False",
+                                        "Boolean",
+                                        "mode",
+                                        "for",
+                                        "selection",
+                                        "view",
+                                        "and"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API-3DVIAComposer.htm",
+                       "title":  "Composer API",
+                       "topTerms":  [
+                                        "API",
+                                        "Composer",
+                                        "you",
+                                        "The",
+                                        "required",
+                                        "registry",
+                                        "settings",
+                                        "least",
+                                        "once",
+                                        "initialize",
+                                        "categories",
+                                        "Application"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API-3DVIAComposer-Application.htm",
+                       "title":  "Composer API - Application",
+                       "topTerms":  [
+                                        "Composer",
+                                        "Application",
+                                        "API",
+                                        "The",
+                                        "Events",
+                                        "Methods",
+                                        "Properties",
+                                        "following",
+                                        "components",
+                                        "manage"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API-3DVIAComposer-Document.htm",
+                       "title":  "Composer API - Document",
+                       "topTerms":  [
+                                        "Composer",
+                                        "Document",
+                                        "API",
+                                        "Properties",
+                                        "Objects",
+                                        "Methods",
+                                        "manage",
+                                        "Object",
+                                        "Events",
+                                        "components",
+                                        "following",
+                                        "documents"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/API-3DVIAPlayer.htm",
+                       "title":  "Composer Player ActiveX API",
+                       "topTerms":  [
+                                        "Composer",
+                                        "Players",
+                                        "The",
+                                        "API",
+                                        "Microsoft",
+                                        "documents",
+                                        "and",
+                                        "Properties",
+                                        "ActiveX",
+                                        "topics",
+                                        "following",
+                                        "see"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/CommandLineParameters.htm",
+                       "title":  "Command Line Interface",
+                       "topTerms":  [
+                                        "the",
+                                        "Batch",
+                                        "file",
+                                        "value",
+                                        "Composer",
+                                        "xml",
+                                        "Specifies",
+                                        "exe",
+                                        "fileSettings",
+                                        "fileInput",
+                                        "Parameters",
+                                        "Sync"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/ControllingU3DModelsWithAcrobatJavaScript.htm",
+                       "title":  "Controlling U3D Models with Acrobat JavaScript",
+                       "topTerms":  [
+                                        "the",
+                                        "JavaScript",
+                                        "Acrobat",
+                                        "you",
+                                        "layer",
+                                        "U3D",
+                                        "control",
+                                        "scene",
+                                        "c3D",
+                                        "layerManager",
+                                        "use",
+                                        "Hides"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/Copyrights.htm",
+                       "title":  "Legal Notices",
+                       "topTerms":  [
+                                        "the",
+                                        "and",
+                                        "You",
+                                        "License",
+                                        "This",
+                                        "that",
+                                        "work",
+                                        "any",
+                                        "Library",
+                                        "for",
+                                        "code",
+                                        "not"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/FilterOperators.htm",
+                       "title":  "Filter Operators",
+                       "topTerms":  [
+                                        "types",
+                                        "all",
+                                        "for",
+                                        "PropertyFound",
+                                        "Operators",
+                                        "Type",
+                                        "Property",
+                                        "Colors",
+                                        "Long",
+                                        "Fonts",
+                                        "LogFont",
+                                        "Color"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/HTMLInformationTemplateExample.htm",
+                       "title":  "Example: Using the Information HTML Template",
+                       "topTerms":  [
+                                        "quot",
+                                        "div",
+                                        "class",
+                                        "the",
+                                        "property",
+                                        "meta",
+                                        "Name",
+                                        "meta_container",
+                                        "meta_value",
+                                        "meta_name",
+                                        "Template",
+                                        "display"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/HTMLProfiles.htm",
+                       "title":  "HTML Profiles",
+                       "topTerms":  [
+                                        "the",
+                                        "Value",
+                                        "Localization",
+                                        "Meta",
+                                        "HTML",
+                                        "Label",
+                                        "Lang",
+                                        "profile",
+                                        "Full",
+                                        "Boolean",
+                                        "hides",
+                                        "pane"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/Introduction.htm",
+                       "title":  "Introduction",
+                       "topTerms":  [
+                                        "Programming",
+                                        "Guide",
+                                        "Composer",
+                                        "Introduction",
+                                        "SOLIDWORKS"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/LogFileValues.htm",
+                       "title":  "Log File Overwrite Values",
+                       "topTerms":  [
+                                        "Overwrite",
+                                        "The",
+                                        "Log",
+                                        "File",
+                                        "Values",
+                                        "behavior",
+                                        "batch",
+                                        "Always",
+                                        "Value",
+                                        "OverwriteChoice",
+                                        "user",
+                                        "Ask"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/RegisteringActiveX.htm",
+                       "title":  "Registering the Composer Player ActiveX Control",
+                       "topTerms":  [
+                                        "the",
+                                        "Composer",
+                                        "Player",
+                                        "ActiveX",
+                                        "Control",
+                                        "bit",
+                                        "register",
+                                        "you",
+                                        "bin",
+                                        "install_dir",
+                                        "bat",
+                                        "version"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/RightManagerValues.htm",
+                       "title":  "Right Manager Values",
+                       "topTerms":  [
+                                        "Values",
+                                        "The",
+                                        "Right",
+                                        "Manager",
+                                        "batch",
+                                        "annotations",
+                                        "enable",
+                                        "OptionPro",
+                                        "Reference",
+                                        "unused",
+                                        "trees",
+                                        "BOM"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/Samples.htm",
+                       "title":  "Composer API Samples",
+                       "topTerms":  [
+                                        "Samples",
+                                        "API",
+                                        "Composer",
+                                        "the",
+                                        "following",
+                                        "folder",
+                                        "install_dir",
+                                        "available",
+                                        "using",
+                                        "Code",
+                                        "are"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/Web.htm",
+                       "title":  "Composer Player ActiveX Examples",
+                       "topTerms":  [
+                                        "Composer",
+                                        "you",
+                                        "HTML",
+                                        "Player",
+                                        "example",
+                                        "can",
+                                        "applications",
+                                        "insert",
+                                        "The",
+                                        "and",
+                                        "use",
+                                        "with"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/WebPPT.htm",
+                       "title":  "Composer in PowerPoint",
+                       "topTerms":  [
+                                        "the",
+                                        "Composer",
+                                        "PowerPoint",
+                                        "file",
+                                        "click",
+                                        "Player",
+                                        "and",
+                                        "Control",
+                                        "ActiveX",
+                                        "tab",
+                                        "select",
+                                        "document"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/WebProgrammingCaseStudy.htm",
+                       "title":  "Example: Using Composer Player in HTML",
+                       "topTerms":  [
+                                        "the",
+                                        "name",
+                                        "value",
+                                        "function",
+                                        "myObject",
+                                        "param",
+                                        "Composer",
+                                        "JavaScript",
+                                        "HTML",
+                                        "create",
+                                        "text",
+                                        "form"
+                                    ]
+                   },
+                   {
+                       "file":  "docs/swcomposerapi_html/APIFiles/WhatsNew.htm",
+                       "title":  "What\u0026#39;s New",
+                       "topTerms":  [
+                                        "The",
+                                        "columns",
+                                        "document",
+                                        "This",
+                                        "New",
+                                        "What",
+                                        "file",
+                                        "method",
+                                        "configure",
+                                        "input",
+                                        "config",
+                                        "load"
+                                    ]
+                   }
+               ]
+}

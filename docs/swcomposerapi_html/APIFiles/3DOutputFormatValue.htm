@@ -1,0 +1,214 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+
+
+  <title>3D Output Format Values</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link href="3dviacomposer.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h1>3D Output Format Values</h1>
+
+  <p><span class="commande">The following table lists the 3D output-format values to use with the batch command</span> <span style="font-family: monospace;">Batch.3DOutputFormat.</span>To output multiple formats, add the values. For example, to output <span style="font-family: monospace;">.smg</span>, <span style="font-family: monospace;">.u3d</span>, and <span style="font-family: monospace;">.pdf</span>, set <span style="font-family: monospace;">Batch.3DOutputFormat</span> to 147457:</p>
+
+  <p style="margin-left: 40px;">1 + 16384 + 131072 = 147457</p>
+
+  <table style="width: 568px; height: 462px;" border="1" cellpadding="1" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="kbd">3D Format<br></td>
+
+        <td class="kbd">Extension<br></td>
+
+        <td><span class="kbd">Reference</span><br></td>
+
+        <td class="kbd">Value (2^Reference)<br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Composer</span><br></td>
+
+        <td>.smg</td>
+
+        <td><span class="commande">0</span><br></td>
+
+        <td>1</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Composer</span></td>
+
+        <td>.smgXml + .smgGeom<br></td>
+
+        <td><span class="commande">1</span><br></td>
+
+        <td>2</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">VRML 2.0</span></td>
+
+        <td>.wrl</td>
+
+        <td><span class="commande">2</span><br></td>
+
+        <td>4</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Stereolithography</span></td>
+
+        <td><span class="commande">.stl</span><br></td>
+
+        <td><span class="commande">3</span><br></td>
+
+        <td><span class="commande">8</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Alias Wavefront</span></td>
+
+        <td>.obj<br></td>
+
+        <td><span class="commande">4</span><br></td>
+
+        <td>16</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">3D Studio Mesh</span></td>
+
+        <td>.3ds<br></td>
+
+        <td><span class="commande">5</span><br></td>
+
+        <td>32</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">IGES</span></td>
+
+        <td>.ige, .iges<br></td>
+
+        <td><span class="commande">7</span><br></td>
+
+        <td>128</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">STEP</span></td>
+
+        <td>.stp, .step<br></td>
+
+        <td><span class="commande">8</span><br></td>
+
+        <td>256</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">ACIS text</span></td>
+
+        <td><span class="commande">.sat</span><br></td>
+
+        <td><span class="commande">9</span><br></td>
+
+        <td><span class="commande">512</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">ACIS binary</span></td>
+
+        <td><span class="commande">.sab</span><br></td>
+
+        <td><span class="commande">10</span><br></td>
+
+        <td><span class="commande">1024</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Parasolid<sup>*</sup></span></td>
+
+        <td>.x_t<sup>*</sup><br></td>
+
+        <td><span class="commande">11</span><br></td>
+
+        <td>2048</td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">VDA</span></td>
+
+        <td>.<span class="commande">vda</span><br></td>
+
+        <td><span class="commande">12</span><br></td>
+
+        <td><span class="commande">4096</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span style="font-style: italic;">&lt;unused&gt;</span></td>
+
+        <td><span style="font-style: italic;">&lt;unused&gt;</span><br></td>
+
+        <td><span class="commande">13</span><br></td>
+
+        <td><span class="commande">8192</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Universal 3D</span></td>
+
+        <td>.u3d<br></td>
+
+        <td><span class="commande">14</span><br></td>
+
+        <td><span class="commande">16384</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">XAML</span></td>
+
+        <td><span class="commande">.xaml</span><br></td>
+
+        <td><span class="commande">15</span><br></td>
+
+        <td><span class="commande">32768</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">Composer</span></td>
+
+        <td><span class="commande">.exe</span><br></td>
+
+        <td><span class="commande">16</span><br></td>
+
+        <td><span class="commande">65536</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">PDF</span></td>
+
+        <td><span class="commande">.pdf</span><br></td>
+
+        <td><span class="commande">17</span><br></td>
+
+        <td><span class="commande">131072</span><br></td>
+      </tr>
+
+      <tr>
+        <td><span class="commande">3DXML</span></td>
+
+        <td><span class="commande">.3dxml</span><br></td>
+
+        <td><span class="commande">18</span><br></td>
+
+        <td><span class="commande">262144</span><br></td>
+      </tr>
+    </tbody>
+  </table><br>
+  <span class="commande"><sup>*</sup>Requires special DLL.</span><br>
+  </body>
+</html>

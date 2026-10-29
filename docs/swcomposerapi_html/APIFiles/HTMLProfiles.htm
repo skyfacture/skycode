@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>HTML Profiles</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="3dviacomposer.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <h1>HTML Profiles<br>
+    </h1>
+    <p>HTML profiles determine <span style="font-family: monospace;"><span
+          style="font-family: Verdana,Arial,Helvetica,sans-serif;">the
+          features included in HTML output </span></span>when you
+      publish to HTML from Composer (<span class="kbd">File
+        &gt; Publish &gt; HTML</span>)<span style="font-family:
+        monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;">. Composer
+          provides several predefined profiles in </span></span><span
+        style="font-family: monospace;">&lt;</span><span
+        style="font-style: italic; font-family: monospace;">install_dir</span><span
+        style="font-family: monospace;">&gt;\Profiles</span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;">. </span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;">Each profile has two
+          files:<br>
+        </span></span></p>
+    <ul>
+      <li><span style="font-family: monospace;">*.smgPublishHtmlSet</span>
+        is an XML file that defines the HTML features. <br>
+      </li>
+      <li><span style="font-family: monospace;">*.jpg</span> is the
+        preview image that is displayed in the Save As dialog box when a
+        user publishes to HTML.<br>
+      </li>
+    </ul>
+    <p><span style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"> </span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;">You can customize your
+          HTML output by </span></span><span style="font-family:
+        monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;">creating your own
+          profiles and putting them</span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"> in an <span class="kbd">HTML
+
+            Publish</span> data-path folder (see <span class="kbd">Application
+
+            Preferences - Data Paths</span> in Composer Help). </span></span><span style="font-family: monospace;"><span
+          style="font-family: Verdana,Arial,Helvetica,sans-serif;">Unlike
+          workshop profiles, Composer does not provide a
+          graphical interface for creating HTML profiles.</span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"> Use a text editor.</span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"></span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"></span></span></p>
+    <p><span style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;">To create a </span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"></span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"><span style="font-family:
+            monospace;">.smgPublishHtmlSet</span></span></span><span
+        style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"> file, start with a
+          predefined profile and then change the following tags as
+          needed:</span></span></p>
+    <p><span style="font-family: monospace;"><span style="font-family:
+          Verdana,Arial,Helvetica,sans-serif;"></span></span></p>
+    <table style="text-align: left;" cellpadding="3" cellspacing="0"
+      border="1">
+      <tbody>
+        <tr>
+          <td class="kbd">Tag<br>
+          </td>
+          <td class="kbd">Type<br>
+          </td>
+          <td class="kbd">Description<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">TopBar<br>
+          </td>
+          <td style="vertical-align: top;">Boolean<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Not implemented. Always set to 0.</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">BottomBar<br>
+          </td>
+          <td style="vertical-align: top;">Boolean<br>
+          </td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            bottom bar, which is where the following feature panes are
+            displayed: BOM, Meta, PMI, View. Only hide the bottom bar
+            when all these features are disabled (such as the Simple
+            profile).<br>
+            <br>
+            <span class="note">Note:</span> The bottom bar can display
+            at most 3 panes.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">TopNavigationBar<br>
+          </td>
+          <td style="vertical-align: top;">Boolean<br>
+          </td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            navigation toolbar at the top of the HTML page. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">Meta.Name<br>
+          </td>
+          <td style="vertical-align: top;">String<br>
+          </td>
+          <td style="vertical-align: top;">Specifies the profile name as
+            it appears to users in the Save As dialog box.<br>
+            <br>
+            <span class="note">Note:</span> <span style="font-family:
+              monospace;">Meta.Name</span> and <span
+              style="font-family: monospace;">Meta.Description</span>
+            support localized strings.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">Meta.Description<br>
+          </td>
+          <td style="vertical-align: top;">String<br>
+          </td>
+          <td style="vertical-align: top;">Specifies the detailed
+            description of the profile.<br>
+            <br>
+            <span class="note">Note:</span> The description is not
+            currently displayed to users in Composer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">PreviewImage<br>
+          </td>
+          <td style="vertical-align: top;">String<br>
+          </td>
+          <td style="vertical-align: top;">Specifies the image (<span
+              style="font-family: monospace;"><span style="font-family:
+                Verdana,Arial,Helvetica,sans-serif;"><span
+                  style="font-family: monospace;">.jpg</span></span></span>)
+            file containing the profile thumbnail image.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">BOM<br>
+          </td>
+          <td style="vertical-align: top;">Boolean</td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            BOM Table pane.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">Meta<br>
+          </td>
+          <td style="vertical-align: top;">Boolean</td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            Meta-properties pane. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">PMI<br>
+          </td>
+          <td style="vertical-align: top;">Boolean</td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            PMI (product manufacturing information) pane.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">DetailView<br>
+          </td>
+          <td style="vertical-align: top;">Boolean</td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            Detail View pane.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">View<br>
+          </td>
+          <td style="vertical-align: top;">Boolean</td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            Views pane.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">Tree<br>
+          </td>
+          <td style="vertical-align: top;">Boolean</td>
+          <td style="vertical-align: top;">Displays (1) or hides (0) the
+            Assembly pane.<br>
+            <br>
+            <span class="note">Note:</span> The Assembly pane can take a
+            long time to load for models with large numbers of nodes in
+            the assembly tree. Consider hiding the HTML Assembly pane
+            and use the Composer Player Assembly tree
+            instead.<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <span class="note">Note:</span><br>
+    <ul>
+      <li>The bottom bar can display at most three of the following
+        features at the same time: BOM, Meta, PMI, and View.<br>
+      </li>
+      <li>Most features require Composer Player Pro. When a
+        published HTML file is opened without a Player Pro license, the
+        <span class="kbd">Simple</span> profile is always used.</li>
+    </ul>
+    For example, the following is the <span class="kbd">Full</span> (<span
+      style="font-family: monospace;">Full.smgPublishHtmlSet</span>)
+    profile definition:<br>
+    <pre>&lt;CLitPublishHtmlProperties&gt;<br>&nbsp; &lt;Profile.Modifiable Value="1"/&gt;<br>&nbsp; &lt;Profile.AssociatedFile Value=""/&gt;<br>&nbsp; &lt;TopBar Value="0"/&gt;<br>&nbsp; &lt;BottomBar Value="1"/&gt;<br>&nbsp; &lt;TopNavigationBar Value="1"/&gt;<br>&nbsp; &lt;Server Type="PropertyDefinitions"&gt;<br>&nbsp;&nbsp;&nbsp; &lt;MetaProperties&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Meta Name="Meta.Name" Type="String" DefaultLabel="Full"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localizations&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="FRA"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value="Full"/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="DEU"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value="Full"/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="JPN"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value="Full"/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="CHS"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value="Full"/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="KOR"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value="Full"/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localizations&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Meta&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Meta Name="Meta.Description" Type="String" DefaultLabel=""&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localizations&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="FRA"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value=""/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="DEU"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value=""/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="JPN"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value=""/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="CHS"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value=""/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Localization Lang="KOR"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Label Value=""/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localization&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Localizations&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Meta&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/MetaProperties&gt;<br>&nbsp; &lt;/Server&gt;<br>&nbsp; &lt;Meta.Name Value=""/&gt;<br>&nbsp; &lt;Meta.Description Value=""/&gt;<br>&nbsp; &lt;PreviewImage Value="Full.smgPublishHtmlSet.jpg"/&gt;<br>&nbsp; &lt;BOM Value="1"/&gt;<br>&nbsp; &lt;Meta Value="1"/&gt;<br>&nbsp; &lt;PMI Value="0"/&gt;<br>&nbsp; &lt;DetailView Value="1"/&gt;<br>&nbsp; &lt;View Value="1"/&gt;<br>&nbsp; &lt;Tree Value="1"/&gt;<br>&lt;/CLitPublishHtmlProperties&gt;<br></pre>
+  </body>
+</html>

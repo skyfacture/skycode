@@ -1,0 +1,20 @@
+2026-10-08 14:00:06: -- Analysis Started by On Schedule Min=0 Hour=14 , Under Runner
+2026-10-08 14:00:06: L: Reading State File C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-08 14:00:07: R: Reading State File //SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-08 14:00:08: Changes: 3, Conflicts: 0, CopyTime: 0, FixState: 0, Errors: 0, All: 147
+2026-10-08 14:00:08: Left to Right: Copy File: 3 
+2026-10-08 14:00:08: == Sync Started by On Schedule Min=0 Hour=14 , Under Runner
+2026-10-08 14:00:08: ConnectCloned connected to file:///C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-08 14:00:08: ConnectCloned connected to file:///C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-08 14:00:08: ConnectCloned connected to file:///C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-08 14:00:08: ConnectCloned connected to smb://SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-08 14:00:08: ConnectCloned connected to smb://SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-08 14:00:08: ConnectCloned connected to smb://SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-08 14:00:08: > Copy Over 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/SkycodeHost SW v2025.accdb' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/SkycodeHost SW v2025.accdb' (1,601,536)
+2026-10-08 14:00:09: < Copy Over 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/SkycodeHost SW v2025.accdb' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/SkycodeHost SW v2025.accdb' (1,601,536)
+2026-10-08 14:00:09: Copy Over 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/logs/meta descriptions.txt' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/logs/meta descriptions.txt' (187,337)
+2026-10-08 14:00:09: Copy Over 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/logs/meta partnos.txt' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/logs/meta partnos.txt' (217,385)
+2026-10-08 14:00:09: Close Modified Folder (mod-time, acl): /logs
+2026-10-08 14:00:09: Save State File C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-08 14:00:09: Save State File //SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-08 14:00:09: == Sync Complete. Time: 00:00:01, Speed: 0.00/s, OK: 3, Errors: 0

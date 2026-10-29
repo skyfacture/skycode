@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Converter Return Codes</title>
+
+  
+
+  
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  
+  <link href="3dviacomposer.css" rel="stylesheet" type="text/css"></head><body>
+<h1>Converter Return Codes<br>
+</h1>
+
+<p><span class="commande">The following table lists the return values for Converter.</span></p>
+
+<table border="1" cellpadding="1" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td class="kbd">Return Code<br>
+      </td>
+      <td class="kbd">Description<br>
+      </td>
+      <td class="kbd">Writes Message to Log File<br>
+      </td>
+      <td class="kbd">Creates Output File:<br>
+IOErrorLevel Disabled<br>
+      </td>
+      <td class="kbd">Creates Output File:<br>
+IOErrorLevel Enabled<br>
+      </td>
+    </tr>
+    <tr>
+      <td>0<br>
+      </td>
+      <td>Success<br>
+      </td>
+      <td style="vertical-align: top;">Yes ("OK" message)<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+    </tr>
+    <tr>
+      <td>1<br>
+      </td>
+      <td>Multiple errors<br>
+      </td>
+      <td style="vertical-align: top;">Yes (Details of multiple errors in log)<br>
+      </td>
+      <td style="vertical-align: top;">Error-dependent<br>
+      </td>
+      <td style="vertical-align: top;">No<br>
+      </td>
+    </tr>
+    <tr>
+      <td>2<br>
+      </td>
+      <td>License issue (license not found or invalid)<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">3<br>
+      </td>
+      <td style="vertical-align: top;">Input file not found<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">4<br>
+      </td>
+      <td style="vertical-align: top;">Settings file not found<br>
+      </td>
+      <td style="vertical-align: top;">No log file generated<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">5<br>
+      </td>
+      <td style="vertical-align: top;">Referenced <span style="font-family: monospace;">.smgGeom</span> or <span style="font-family: monospace;">.smgXml</span> file not found (unresolved link in fully-shattered structure) <br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">6<br>
+      </td>
+      <td style="vertical-align: top;">Resource not found (unresolved path to a Composer texture file, linked document, etc.)<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">7<br>
+      </td>
+      <td style="vertical-align: top;">Composer file locked by another application<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">Top-level assembly: No<br>
+Otherwise: Yes<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">8<br>
+      </td>
+      <td style="vertical-align: top;">SMG file not generated for unknown reason<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No<br>
+      </td>
+      <td style="vertical-align: top;">No</td>
+    </tr><tr>
+      <td style="vertical-align: top;">9<br>
+      </td>
+      <td style="vertical-align: top;">Incompatible hardware settings (for example, running in 8-bit color mode)<br>
+      </td>
+      <td style="vertical-align: top;">Yes<br>
+      </td>
+      <td style="vertical-align: top;">No<br>
+      </td>
+      <td style="vertical-align: top;">No<br>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<br>
+
+<span class="note">Note:</span> <br>
+
+<ul>
+
+  <li>Set <span class="kbd">IOErrorLevel</span> from the Application Preferences - Advanced Settings page.</li>
+  <li>The Converter log file, <span style="font-family: monospace;">ComposerConverterLog.xml</span>, is located in the <span class="kbd">User</span> folder as specified on the Application Preferences - Application Paths page. This log files contains conversion details. Conversion summaries also appear in the user log file as specified on the Logging page of Sync.<br>
+  </li>
+</ul>
+
+<br>
+
+<br>
+</body></html>

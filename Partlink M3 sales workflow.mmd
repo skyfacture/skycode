@@ -1,0 +1,55 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#111111',
+    'primaryBorderColor': '#333333',
+    'lineColor': '#333333',
+    'secondaryColor': '#ffffff',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'clusterBkg': '#ffffff',
+    'clusterBorder': '#333333',
+    'nodeBorder': '#333333',
+    'textColor': '#111111',
+    'fontFamily': 'Arial',
+    'fontSize': '14px',
+    'tertiaryTextColor': '#111111'
+  },
+  'flowchart': { 'curve': 'basis' }
+}}%%
+flowchart LR
+    subgraph sales [Sales Preparation]
+        direction TB
+        A(["Partlink<br/>Sales exec browses kits, BOM, exploded views"])
+        B(["Prepare for M3<br/>Skyfacture trigger"])
+        A --> B
+    end
+
+    subgraph skyfacture [Skyfacture Governance]
+        direction TB
+        C{"Skyfacture<br/>Governance checks<br/>- Completeness<br/>- Sales/Pricing/Supply flags<br/>- Lifecycle"}
+        D(["Skyfacture<br/>Generate M3 Item Packet<br/>JSON/XML for ItemMaster, Facility, Warehouse"])
+        C --> D
+    end
+
+    subgraph m3 [M3 Operations]
+        direction TB
+        E[("M3 Sandbox/Production<br/>SKU Created<br/>ItemMaster + Warehouse + Facility + Pricing")]
+        F(["Sales Order OIS100<br/>Sales exec quotes/orders SKU"])
+        E --> F
+    end
+
+    subgraph fulfillment [On-Demand Fulfillment]
+        direction TB
+        G(["JIT Remanufacture<br/>Proreman builds kit/assembly on demand"])
+        H(["Shipment<br/>To warehouse or direct to customer"])
+        I(["Customer Receives Product<br/>Documentation via Partlink"])
+        G --> H
+        H --> I
+    end
+
+    B --> C
+    D --> E
+    F --> G

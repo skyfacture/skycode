@@ -1,0 +1,1321 @@
+﻿{
+    "generatedAt":  "2026-06-27T17:56:49+10:00",
+    "fileCount":  31,
+    "language":  "VBA",
+    "entries":  [
+                    {
+                        "file":  "archive/Assy Selection Auto Views.bas",
+                        "lineCount":  233,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "cleanPartNo",
+                                               "partNo",
+                                               "topLevelID",
+                                               "swDoc",
+                                               "CLitSelection",
+                                               "assembly",
+                                               "processedPartNos",
+                                               "Name",
+                                               "initialViewName",
+                                               "Err",
+                                               "cleanActorID",
+                                               "startPos",
+                                               "Meta"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto View Creation.bas",
+                        "lineCount":  142,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateViewsForActors",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "Debug",
+                                               "Print",
+                                               "PartNo",
+                                               "actors",
+                                               "swDoc",
+                                               "Actor",
+                                               "initialViewName",
+                                               "Meta",
+                                               "View",
+                                               "CLitSelection",
+                                               "value",
+                                               "actorCount",
+                                               "startPos",
+                                               "newViewName",
+                                               "Failed"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto View Creation_Assy \u0026 Tree Order 1.bas",
+                        "lineCount":  208,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateViewsForActors",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripNodeType",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+                                             {
+                                                 "Name":  "LIMIT_TO_15",
+                                                 "Kind":  "Const",
+                                                 "Scope":  "Default"
+                                             }
+                                         ],
+                        "topIdentifiers":  [
+                                               "Print",
+                                               "Debug",
+                                               "PartNo",
+                                               "actors",
+                                               "orderedActors",
+                                               "swDoc",
+                                               "startPos",
+                                               "Actor",
+                                               "NodeType",
+                                               "actorCount",
+                                               "Meta",
+                                               "initialViewName",
+                                               "CLitSelection",
+                                               "strippedValue",
+                                               "View"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto View Creation_Assy \u0026 Tree Order.bas",
+                        "lineCount":  208,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateViewsForActors",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripNodeType",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+                                             {
+                                                 "Name":  "LIMIT_TO_15",
+                                                 "Kind":  "Const",
+                                                 "Scope":  "Default"
+                                             }
+                                         ],
+                        "topIdentifiers":  [
+                                               "Print",
+                                               "Debug",
+                                               "PartNo",
+                                               "orderedActors",
+                                               "actors",
+                                               "startPos",
+                                               "swDoc",
+                                               "NodeType",
+                                               "Actor",
+                                               "actorCount",
+                                               "initialViewName",
+                                               "Meta",
+                                               "CLitSelection",
+                                               "strippedValue",
+                                               "endPos"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto Views - Root Subs and Parts.bas",
+                        "lineCount":  193,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "swDoc",
+                                               "CLitSelection",
+                                               "logFile",
+                                               "actorPath",
+                                               "LogPrint",
+                                               "Now",
+                                               "rootID",
+                                               "PartNo",
+                                               "assemblyID",
+                                               "Name",
+                                               "segments",
+                                               "the",
+                                               "startPos",
+                                               "Temp",
+                                               "actors"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto Views - Root Subs and Parts_rev 1.bas",
+                        "lineCount":  208,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "swDoc",
+                                               "CLitSelection",
+                                               "logFile",
+                                               "PartNo",
+                                               "actorPath",
+                                               "LogPrint",
+                                               "Now",
+                                               "rootID",
+                                               "Meta",
+                                               "assemblyID",
+                                               "the",
+                                               "Name",
+                                               "Len",
+                                               "startPos",
+                                               "Temp"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto Views - Root Subs and Parts_rev 2 - Copy.bas",
+                        "lineCount":  160,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Private"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Private"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "Now",
+                                               "LogPrint",
+                                               "swDoc",
+                                               "root",
+                                               "PartNo",
+                                               "rootID",
+                                               "Len",
+                                               "actor",
+                                               "rootPartNo",
+                                               "StripMetaPartNo",
+                                               "selectionString",
+                                               "Meta",
+                                               "rootViewName",
+                                               "parentSelection"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Auto Views - Root Subs and Parts_rev 2 testing.bas",
+                        "lineCount":  160,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Private"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Private"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "Now",
+                                               "LogPrint",
+                                               "swDoc",
+                                               "root",
+                                               "PartNo",
+                                               "rootID",
+                                               "Len",
+                                               "actor",
+                                               "rootPartNo",
+                                               "StripMetaPartNo",
+                                               "selectionString",
+                                               "Meta",
+                                               "rootViewName",
+                                               "parentSelection"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Skycode - subassemblies only.bas",
+                        "lineCount":  209,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateSubAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "Temp",
+                                               "Replace",
+                                               "logFile",
+                                               "result",
+                                               "LogPrint",
+                                               "Now",
+                                               "swDoc",
+                                               "Remove",
+                                               "rootID",
+                                               "CLitSelection",
+                                               "actors",
+                                               "assemblyID",
+                                               "PartNo",
+                                               "assembly",
+                                               "startPos"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Skycode_config parts renamed and create new view.bas",
+                        "lineCount":  218,
+                        "procedures":  [
+                                           {
+                                               "Name":  "TestPartPropertyFix",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "Now",
+                                               "actorPath",
+                                               "Meta",
+                                               "PartNo",
+                                               "actors",
+                                               "part",
+                                               "swDoc",
+                                               "cleanPartPartNo",
+                                               "partViewName",
+                                               "startPos",
+                                               "Temp",
+                                               "Len",
+                                               "Actor"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Skyfacture -- CreateViews 1_Root Assembly.bas",
+                        "lineCount":  160,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Private"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Private"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "Now",
+                                               "LogPrint",
+                                               "swDoc",
+                                               "root",
+                                               "PartNo",
+                                               "rootID",
+                                               "Len",
+                                               "actor",
+                                               "rootPartNo",
+                                               "StripMetaPartNo",
+                                               "selectionString",
+                                               "Meta",
+                                               "rootViewName",
+                                               "parentSelection"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Skyfacture -- CreateViews 1_Root Assembly_testing.bas",
+                        "lineCount":  169,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Private"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Private"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "Now",
+                                               "swDoc",
+                                               "root",
+                                               "PartNo",
+                                               "rootPartNo",
+                                               "Meta",
+                                               "rootID",
+                                               "Len",
+                                               "actor",
+                                               "StripMetaPartNo",
+                                               "selectionString",
+                                               "parentSelection",
+                                               "fuck"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Skyfacture -- CreateViews 2_Sub Assemblies and Parts.bas",
+                        "lineCount":  210,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "swDoc",
+                                               "logFile",
+                                               "CLitSelection",
+                                               "PartNo",
+                                               "LogPrint",
+                                               "Now",
+                                               "actorPath",
+                                               "Meta",
+                                               "rootID",
+                                               "assemblyID",
+                                               "Name",
+                                               "Step",
+                                               "startPos",
+                                               "Temp",
+                                               "the"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 1 - Subs - success with three subs.bas",
+                        "lineCount":  243,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "cleanPartNo",
+                                               "partNo",
+                                               "assembly",
+                                               "swDoc",
+                                               "topLevelID",
+                                               "CLitSelection",
+                                               "initialViewName",
+                                               "Err",
+                                               "cleanActorID",
+                                               "Name",
+                                               "processedCount",
+                                               "processedPartNos",
+                                               "rawActors"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 1 - Subs.bas",
+                        "lineCount":  57,
+                        "procedures":  [
+                                           {
+                                               "Name":  "QueryManuallySelectedObject",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "Print",
+                                               "Debug",
+                                               "the",
+                                               "selectedActors",
+                                               "swDoc",
+                                               "Step",
+                                               "selected",
+                                               "Document",
+                                               "actorArray",
+                                               "Composer",
+                                               "swApp",
+                                               "selection",
+                                               "active",
+                                               "IDs",
+                                               "DSComposer"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 2 - Accessing All Nested Subs recursively - success.bas",
+                        "lineCount":  295,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "ProcessAssembly",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "GetImmediateSubAssemblies",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "GetPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "swDoc",
+                                               "partNo",
+                                               "assembly",
+                                               "CLitSelection",
+                                               "parentID",
+                                               "Name",
+                                               "cleanPartNo",
+                                               "topLevelID",
+                                               "segments",
+                                               "actors",
+                                               "allActorIDs",
+                                               "actor",
+                                               "cleanActorID"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 2 - Accessing All Nested Subs recursively.bas",
+                        "lineCount":  1,
+                        "procedures":  [
+
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "Nested",
+                                               "All",
+                                               "recursively",
+                                               "Subs",
+                                               "VB_Name",
+                                               "Attribute",
+                                               "Accessing",
+                                               "Test"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 3 - Accessing the Root Assy only.bas",
+                        "lineCount":  233,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "cleanPartNo",
+                                               "partNo",
+                                               "topLevelID",
+                                               "swDoc",
+                                               "CLitSelection",
+                                               "assembly",
+                                               "processedPartNos",
+                                               "Name",
+                                               "initialViewName",
+                                               "Err",
+                                               "cleanActorID",
+                                               "startPos",
+                                               "Meta"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 4 - Accessing All Parts.bas",
+                        "lineCount":  142,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateViewsForActors",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "Debug",
+                                               "Print",
+                                               "PartNo",
+                                               "actors",
+                                               "swDoc",
+                                               "Actor",
+                                               "initialViewName",
+                                               "Meta",
+                                               "View",
+                                               "CLitSelection",
+                                               "value",
+                                               "actorCount",
+                                               "startPos",
+                                               "newViewName",
+                                               "Failed"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 5 - Accessing Root and All Nested Subs recursively - success.bas",
+                        "lineCount":  334,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "ProcessAssembly",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "GetImmediateSubAssemblies",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "GetPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "swDoc",
+                                               "PartNo",
+                                               "CLitSelection",
+                                               "assembly",
+                                               "Name",
+                                               "parentID",
+                                               "cleanPartNo",
+                                               "view",
+                                               "topLevelID",
+                                               "actors",
+                                               "Root",
+                                               "Meta",
+                                               "segments"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/Test 6 - Accessing Root, Nested Subs and Parts recursively - success.bas",
+                        "lineCount":  193,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "swDoc",
+                                               "CLitSelection",
+                                               "logFile",
+                                               "actorPath",
+                                               "LogPrint",
+                                               "Now",
+                                               "rootID",
+                                               "PartNo",
+                                               "assemblyID",
+                                               "Name",
+                                               "segments",
+                                               "the",
+                                               "startPos",
+                                               "Temp",
+                                               "actors"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/test.bas",
+                        "lineCount":  12,
+                        "procedures":  [
+                                           {
+                                               "Name":  "TestComposer",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "swDoc",
+                                               "MsgBox",
+                                               "swApp",
+                                               "document",
+                                               "Active",
+                                               "views",
+                                               "ViewCount",
+                                               "has",
+                                               "GetActiveDocument",
+                                               "CreateObject",
+                                               "TestComposer",
+                                               "DSComposer",
+                                               "Composer",
+                                               "Connected"
+                                           ]
+                    },
+                    {
+                        "file":  "archive/test.vba",
+                        "lineCount":  12,
+                        "procedures":  [
+                                           {
+                                               "Name":  "TestComposer",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "swDoc",
+                                               "MsgBox",
+                                               "swApp",
+                                               "document",
+                                               "Active",
+                                               "views",
+                                               "ViewCount",
+                                               "has",
+                                               "GetActiveDocument",
+                                               "CreateObject",
+                                               "TestComposer",
+                                               "DSComposer",
+                                               "Composer",
+                                               "Connected"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - align pivot to actor location frame.bas",
+                        "lineCount":  393,
+                        "procedures":  [
+                                           {
+                                               "Name":  "AlignPivotToFrame",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "CleanActorPath",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "ExtractTagContent",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "ExtractFirstTag",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "GetAttrValue",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "FormatCoord",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogMsg",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+                                             {
+                                                 "Name":  "TOLERANCE",
+                                                 "Kind":  "Const",
+                                                 "Scope":  "Default"
+                                             }
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogMsg",
+                                               "GetAttrValue",
+                                               "FormatCoord",
+                                               "Origin",
+                                               "errorCount",
+                                               "allCount",
+                                               "XML",
+                                               "Pivot",
+                                               "actors",
+                                               "Frame",
+                                               "pos",
+                                               "tagName",
+                                               "Len",
+                                               "actorPath"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - parts and nonnumeric partnumbers.bas",
+                        "lineCount":  248,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "Temp",
+                                               "Now",
+                                               "Replace",
+                                               "result",
+                                               "Meta",
+                                               "actorPath",
+                                               "part",
+                                               "PartNo",
+                                               "Remove",
+                                               "swDoc",
+                                               "actors",
+                                               "cleanPartPartNo",
+                                               "PARTNO_cfg"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - rename views starting from View 60.bas",
+                        "lineCount":  120,
+                        "procedures":  [
+                                           {
+                                               "Name":  "RenameViewsSequentially",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "Now",
+                                               "viewSelection",
+                                               "viewNames",
+                                               "views",
+                                               "view",
+                                               "Document",
+                                               "Err",
+                                               "viewCount",
+                                               "newViewName",
+                                               "startPos",
+                                               "Cleanup",
+                                               "swDoc",
+                                               "Description"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - selection only_subassemblies parts and nonnumeric partnumbers.bas",
+                        "lineCount":  408,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "IsChildPartOfSubAssembly",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "CollectionContains",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "Now",
+                                               "Replace",
+                                               "Temp",
+                                               "actors",
+                                               "swDoc",
+                                               "Meta",
+                                               "actorPath",
+                                               "result",
+                                               "PartNo",
+                                               "part",
+                                               "CLitSelection",
+                                               "rootID",
+                                               "segments"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - Set Each Pivot Actor Local Coord System.bas",
+                        "lineCount":  398,
+                        "procedures":  [
+                                           {
+                                               "Name":  "SetPivotsLocalCoordSystem",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "CleanActorPath",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "ExtractTagContent",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "ExtractFirstTag",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "GetAttrValue",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "FormatCoord",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogMsg",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+                                             {
+                                                 "Name":  "TOLERANCE",
+                                                 "Kind":  "Const",
+                                                 "Scope":  "Default"
+                                             }
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogMsg",
+                                               "GetAttrValue",
+                                               "FormatCoord",
+                                               "Origin",
+                                               "allCount",
+                                               "errorCount",
+                                               "actors",
+                                               "Frame",
+                                               "Pivot",
+                                               "XML",
+                                               "pos",
+                                               "tagName",
+                                               "Actor",
+                                               "actorPath"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - set meta description with Meta Description_cfg.bas",
+                        "lineCount":  339,
+                        "procedures":  [
+                                           {
+                                               "Name":  "SetMetaDescriptionfromDescription_cfg",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "IsValidDescription",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaProperty",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "SanitizeMetaDescription",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "Meta",
+                                               "description",
+                                               "LogPrint",
+                                               "Now",
+                                               "Method",
+                                               "value",
+                                               "Len",
+                                               "cleanDescriptionCfg",
+                                               "actorPath",
+                                               "Description_cfg",
+                                               "cleanPartDescription",
+                                               "swDoc",
+                                               "Temp",
+                                               "char"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - set meta partno with meta partno_cfg.bas",
+                        "lineCount":  288,
+                        "procedures":  [
+                                           {
+                                               "Name":  "setMetaPartNoFromPartno_cfg",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "SanitizeMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "Meta",
+                                               "LogPrint",
+                                               "Now",
+                                               "PartNo",
+                                               "Method",
+                                               "actorPath",
+                                               "cleaned",
+                                               "Len",
+                                               "cleanPartNoCfg",
+                                               "value",
+                                               "swDoc",
+                                               "SetPropertyMap",
+                                               "cleanPartPartNo",
+                                               "Temp"
+                                           ]
+                    },
+                    {
+                        "file":  "Skycode - subassemblies parts and nonnumeric partnumbers.bas",
+                        "lineCount":  361,
+                        "procedures":  [
+                                           {
+                                               "Name":  "CreateAssemblyViews",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "StripMetaPartNo",
+                                               "Kind":  "Function",
+                                               "Scope":  "Default"
+                                           },
+                                           {
+                                               "Name":  "LogPrint",
+                                               "Kind":  "Sub",
+                                               "Scope":  "Default"
+                                           }
+                                       ],
+                        "declarations":  [
+
+                                         ],
+                        "topIdentifiers":  [
+                                               "logFile",
+                                               "LogPrint",
+                                               "Now",
+                                               "Replace",
+                                               "Temp",
+                                               "actors",
+                                               "swDoc",
+                                               "Meta",
+                                               "result",
+                                               "actorPath",
+                                               "PartNo",
+                                               "CLitSelection",
+                                               "part",
+                                               "Remove",
+                                               "Len"
+                                           ]
+                    }
+                ]
+}

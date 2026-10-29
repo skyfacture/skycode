@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <title>Example: Using the Information HTML Template</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="3dviacomposer.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+.style1 {
+				color: #FF0000;
+				font-family: "Courier New", Courier, monospace;
+}
+.style2 {
+				color: #FF0000;
+}
+.style3 {
+				font-family: "Courier New", Courier, monospace;
+}
+</style>
+  </head>
+  <body>
+    <h1>Example: Using the Information HTML Template<br>
+    </h1>
+    <p>The Composer API and Composer Player ActiveX API let you control the 
+	display of meta-properties using a dedicated HTML template. </p>
+	<p><span class="kbd"></span>Code fragments are in <span
+        style="color: red; font-family: monospace;">red</span>.</p>
+	<h2>HTML Code of the Template</h2>
+	<pre id="line64"><span title="Start tag seen without seeing a doctype first. Expected “&lt;!DOCTYPE html&gt;”." class="style1">&lt;</span><span title="Start tag seen without seeing a doctype first. Expected “&lt;!DOCTYPE html&gt;”." class="style2"><span class="style3">html</span></span><span title="Start tag seen without seeing a doctype first. Expected “&lt;!DOCTYPE html&gt;”." class="style1">&gt;</span><span>
+<span class="style1">&lt;head&gt;</span>
+<span class="style3"><span id="line66"></span></span></span><span class="style2"><span class="style3">    &lt;meta</span> <span class="style3">http-equiv=&quot;</span><a class="style3">content-type</a><span class="style3">&quot; content=&quot;</span><a class="style3">text/html; charset=utf-8</a><span class="style3">&quot; /&gt;</span></span>
+<span class="style3"><span id="line67"></span><span class="style2">    &lt;</span></span><span class="style2"><span class="style3">title&gt;&lt;/title&gt;</span></span>
+<span class="style3"><span id="line68"></span><span class="style2">    &lt;</span></span><span class="style2"><span class="style3">style&gt;</span></span>
+<span id="line69"></span><span class="style1">        body</span>
+<span id="line70"></span><span class="style1">        {</span>
+<span id="line71"></span><span class="style1">            background-color: #F3F3F3;</span>
+<span id="line72"></span><span class="style1">        }</span>
+<span id="line73"></span><span class="style1">        .meta_container</span>
+<span id="line74"></span><span class="style1">        {</span>
+<span id="line75"></span><span class="style1">            display: block;</span>
+<span id="line76"></span><span class="style1">            position: relative;</span>
+<span id="line77"></span><span class="style1">            overflow: hidden;</span>
+<span id="line78"></span><span class="style1">            width: 100%;</span>
+<span id="line79"></span><span class="style1">            padding: 3px;</span>
+<span id="line80"></span><span class="style1">            border-bottom: 1px solid #DADADA;</span>
+<span id="line81"></span><span class="style1">            font-family: Verdana, Geneva, Tahoma, sans-serif;</span>
+<span id="line82"></span><span class="style1">            font-size: 11px;</span>
+<span id="line83"></span><span class="style1">        }</span>
+<span id="line84"></span><span class="style1">        .meta_name</span>
+<span id="line85"></span><span class="style1">        {</span>
+<span id="line86"></span><span class="style1">            font-weight: bold;</span>
+<span id="line87"></span><span class="style1">            width: 40%;</span>
+<span id="line88"></span><span class="style1">            max-width: 200px;</span>
+<span id="line89"></span><span class="style1">            height: auto;</span>
+<span id="line90"></span><span class="style1">            float: left;</span>
+<span id="line91"></span><span class="style1">            display: inline-block;</span>
+<span id="line92"></span><span class="style1">            word-wrap: break-word;</span>
+<span id="line93"></span><span class="style1">        }</span>
+<span id="line94"></span><span class="style1">        .meta_value</span>
+<span id="line95"></span><span class="style1">        {</span>
+<span id="line96"></span><span class="style1">            width: 60%;</span>
+<span id="line97"></span><span class="style1">            min-height: 15px;</span>
+<span id="line98"></span><span class="style1">            height: auto;</span>
+<span id="line99"></span><span class="style1">            float: left;</span>
+<span id="line100"></span><span class="style1">            display: inline-block;</span>
+<span id="line101"></span><span class="style1">            word-wrap: break-word;</span>
+<span id="line102"></span><span class="style1">        }</span>
+<span class="style3"><span id="line103"></span><span class="style2">    &lt;/</span></span><span class="style2"><span class="style3">style&gt;</span></span>
+<span class="style3"><span id="line104"></span><span class="style2">&lt;/</span></span><span class="style2"><span class="style3">head&gt;</span></span>
+<span class="style1">&lt;body&gt;</span>
+<span class="style3"><span id="line106"></span><span class="style2">    &lt;</span></span><span class="style2"><span class="style3">div</span> <span class="style3">id=&quot;</span><a class="style3">ALL_METAS_TEMPLATE</a><span class="style3">&quot; class=&quot;</span><a class="style3">meta_container</a><span class="style3">&quot;&gt;</span></span>
+<span class="style3"><span id="line107"></span><span class="style2">        &lt;</span></span><span class="style2"><span class="style3">div&gt;</span></span>
+<span class="style3"><span id="line108"></span><span class="style2">            &lt;</span></span><span class="style2"><span class="style3">div</span> <span class="style3">class=&quot;</span><a class="style3">meta_name</a><span class="style3">&quot;&gt;</span></span>
+<span class="style3"><span id="line109"></span><span class="style2">                $(ALL_METAS).Name&lt;/</span></span><span class="style2"><span class="style3">div&gt;</span></span>
+<span class="style3"><span id="line110"></span><span class="style2">            &lt;</span></span><span class="style2"><span class="style3">div</span> <span class="style3">class=&quot;</span><a class="style3">meta_value</a><span class="style3">&quot;&gt;</span></span>
+<span class="style3"><span id="line111"></span><span class="style2">                $(ALL_METAS)&lt;/</span></span><span class="style2"><span class="style3">div&gt;</span></span>
+<span class="style3"><span id="line112"></span><span class="style2">        &lt;/</span></span><span class="style2"><span class="style3">div&gt;</span></span>
+<span class="style3"><span id="line113"></span><span class="style2">    &lt;/</span></span><span class="style2"><span class="style3">div&gt;</span></span>
+<span class="style3"><span id="line114"></span><span class="style2">&lt;/</span></span><span class="style2"><span class="style3">body&gt;</span></span>
+<span id="line115"></span><span class="comment"><span class="style1">&lt;!--</span>
+<span class="style1">&lt;div attr=&quot;META_COLOR_TEMPLATE&quot;&gt;</span>
+<span id="line117"></span><span class="style1">  &lt;div style=&quot;background-color:META_COLOR_VALUE;height:15px;width:15px;border-radius:8px;&quot;&gt;&lt;/div&gt;</span>
+<span id="line118"></span><span class="style1">  META_COLOR_VALUE</span>
+<span id="line119"></span><span class="style1">&lt;/div&gt;   </span>
+<span id="line120"></span><span class="style1">--&gt;</span></span><span>
+<span id="line121"></span></span><span class="comment"><span class="style1">&lt;!--</span>
+<span class="style1">&lt;div attr=&quot;META_BOOL_TEMPLATE&quot;&gt;</span>
+<span id="line123"></span><span class="style1">  &lt;input type=&quot;checkbox&quot; disabled META_BOOL_VALUE&gt;  </span>
+<span id="line124"></span><span class="style1">&lt;/div&gt;</span>
+<span id="line125"></span><span class="style1">--&gt;</span></span><span>
+<span class="style3"><span id="line126"></span></span></span><span class="style2"><span class="style3">&lt;/html&gt;</span></span></pre>
+	<h2>Use Cases</h2>
+    <ol>
+      <li>To display a meta-property:<br>
+        <br>
+        <span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style2">&nbsp;&nbsp;&nbsp; &lt;</span><span class="style1">div class=&quot;meta_name&quot;&gt;$(Meta_Property_Name).Name&lt;/div&gt;</span><br class="style1">
+		<span class="style2">&nbsp;&nbsp;&nbsp; &lt;</span><span class="style1">div class=&quot;meta_value 
+		“&gt;$( Meta_Property_Name)&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;</span><br>
+        <br>
+		Example, with C_modified being a meta-property:<br>
+		<br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_name&quot;&gt;$(C_modified).Name&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_value&quot;&gt;$(C_modified)&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;</span><br>
+		<br>
+		</li>
+      <li>To display the selected actor&#39;s parent&#39;s meta-property, with ParentLevel being a digit 
+		(1= actor&#39;s parent, 2=actor&#39;s grand-parent, and so on):<br>
+        <br>
+		<span class="style1">Property Name: $(ParentLevel#Meta_Property_Name).Name<br>
+		Property Value: $(ParentLevel#Meta_Property_Name)</span><br>        <br>
+		Example, with C_modified being a meta-property:<br>
+		<br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=meta_name&gt;$(1#C_modified).Name&lt;/div&gt;
+		</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=meta_value&gt;$(1#C_modified)&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;<br>
+		</span><br>
+      </li>
+		<li>To display meta-properties using the NetGUID of the actor:<br>
+		<br>
+		<span class="style1">Property Name: $(NetGUID#Meta_Property_Name).Name</span><br class="style1">
+		<span class="style1">Property Value: $( NetGUID#Meta_Property_Name)</span><br>
+		<br>
+		Example, with C_modified being a meta-property displayed by its netGUID:<br>
+		<br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=meta_name&gt;$(a7ebc89bd236726b.a0488ba792ea999e.ARotor 
+		#C_modified).Name&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=meta_value&gt;$(a7ebc89bd236726b.a0488ba792ea999e.ARotor 
+		#C_modified)&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;<br>
+		</span><br>
+		</li>
+		<li>To display all meta-properties of the actor: <br>
+		<span class="style1"><br>
+		&lt;div id = &quot;ALL_METAS_TEMPLATE&quot; class=&quot;meta_container&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;div&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_name&quot;&gt;$(ALL_METAS).Name&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_value&quot;&gt;$(ALL_METAS)&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
+		&lt;/div&gt;<br>
+		</span>
+		</li>
+		<li>To graphically display colors and their values:<br>
+		<span class="comment"><span class="style1"><br>
+		&lt;div attr=&quot;META_COLOR_TEMPLATE&quot;&gt;</span><br>
+		<span id="line127"></span><span class="style1">&nbsp; &lt;div style=&quot;background-color:META_COLOR_VALUE;height:15px;width:15px;border-radius:8px;&quot;&gt;&lt;/div&gt;</span><br>
+		<span id="line128"></span><span class="style1">&nbsp;  META_COLOR_VALUE</span><br>
+		<span id="line129"></span><span class="style1">&lt;/div&gt;&nbsp;&nbsp;
+		<br>
+		</span><br>
+		<span id="line130">Note: if used, this sub-template will be automatically 
+		appended to the tags containing meta-properties of the color type in the 
+		HTML template. <br>
+		For example, if there is a meta-property call Part_Color 
+		with its value as red color, and if you add the color meta-property as 
+		follows:</span></span><br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_name&quot;&gt;$(Part_Color).Name&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_value&quot;&gt;$(Part_Color)&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;<br></span><span id="line134">
+		<span class="comment">In this case, the sub-template for color will be 
+		appended with the above tag, with the replaced property name and color 
+		value, as follows: <br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_name&quot;&gt;Part_Color&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_value&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div attr=&quot;&quot;META_COLOR_TEMPLATE&quot;&gt;<br>
+		<span id="line135"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div style=&quot;background-color:#FF0000;height:15px;width:15px;border-radius:8px;&quot;&gt;&lt;/div&gt;<br>
+		<span id="line136"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		#FF0000<br>
+		<span id="line137">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+		&lt;/div&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;<br>
+		</span></span><br>
+		</li>
+		<li>To display a boolean value (yes/no check box):<br>
+		<br>
+		<span class="comment"><span class="style1">&lt;div attr=&quot;META_BOOL_TEMPLATE&quot;&gt;</span><br>
+<span id="line131"></span><span class="style1">  &nbsp; &lt;input type=&quot;checkbox&quot; disabled META_BOOL_VALUE&gt;&nbsp;  </span>
+		<br>
+<span id="line132"></span><span class="style1">&lt;/div&gt;</span><br>
+<span id="line133"><br>
+		<span id="line138">Note: if used, this sub-template will be automatically 
+		appended to the tags containing meta-properties of the boolean type in the 
+		HTML template. <br>
+				For example, if you add the boolean meta-property tag as follows:</span></span></span><br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_name&quot;&gt;$(Part_Availibility).Name&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_value&quot;&gt;$(Part_Availibility)&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;<br></span></span>
+		<span id="line139"><span class="comment">In this case, the sub-template 
+		for boolean will be appended with the above tag, with the replaced 
+		property name and boolean value, as follows: <span id="line140">
+		<br>
+		<span class="style1">&lt;div class=&quot;meta_container&quot;&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_name&quot;&gt;Part_Availibility&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&nbsp;&nbsp;&nbsp; &lt;div class=&quot;meta_value&quot;&gt;&lt;input 
+		type=&quot;checkbox&quot; disabled checked&gt;&lt;/div&gt;</span><br class="style1">
+		<span class="style1">&lt;/div&gt;</span></span></span><br>
+		<br class="style1">
+		</li>
+    </ol>
+  </body>
+</html>

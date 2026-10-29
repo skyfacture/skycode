@@ -1,0 +1,92 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>Example: Using Composer Player in HTML</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <link href="3dviacomposer.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>Example: Using Composer Player in HTML</h1>
+    <p>
+        You can embed the Composer Players Plug-in in HTML pages to create interactive Web content. You can publish to HTML from Composer (<span class="kbd">File &gt; Publish &gt; HTML)</span>, which uses the default template in <span style="font-family: monospace;">&lt;</span><span style="font-style: italic; font-family: monospace;">install_dir</span><span style="font-family: monospace;">&gt;\Html</span>, or you can create your own templates. You can also use HTML profiles to configure the HTML output.<br>
+    </p>
+    <p>
+        The following programming example shows how to display highlighted actor names, change actor materials, and create links from an HTML document using JavaScript.<br>
+    </p>
+    <p><span class="kbd"></span>Code fragments are in <span style="color: red; font-family: monospace;">red</span>.</p>
+    <ol>
+        <li>Prerequisite setting functions needed to support Internet explorer and Firefox.
+      <pre style="color: red;"><br>&lt;script type="text/javascript"&gt;<br>  function isIE() {<br>    return (false || !!document.documentMode);<br>  }<br><br>  function getObject() {<br>    if (isIE())<br>      myObject = document.getElementById('_ComposerPlayerActiveX');<br>    else<br>      myObject = document.getElementById('_ComposerPlayerPlugin');<br><br>    return myObject;<br>  }<br><br>  function addEvent(obj, name, func) {<br>    if (obj.attachEvent)<br>      obj.attachEvent(name, func);<br>    else<br>      obj.addEventListener(name, func, false);<br>  }<br><br>  function ComposerWebPlayerLoaded() {<br>    registerEvents();<br>    myObject.FileName = "[FileName]";<br>  }<br>&lt;/script&gt;</pre>
+            <p>where: </p>
+            <ul>
+                <li><span style="font-weight: bold; font-family: monospace;">isIE()</span> function is used to find whether the browser is Internet Explorer or not.<br></li>
+                <li><span style="font-weight: bold; font-family: monospace;">getObject()</span> function gives us the PlugIn object based on the browser. For Internet Explorer we get plugin object as Composer Player ActiveX control and for Firefox we get object of Composer Player Plugin.</li>
+                <li><span style="font-weight: bold; font-family: monospace;">addEvent(...)</span> function registers events for Composer PlugIn. It handles event registration for both Internet Explorer and Firefox.</li>
+				<li><span style="font-weight: bold; font-family: monospace;">ComposerWebPlayerLoaded()</span> function is specific to Firefox plugin, it is triggered by the onload event of the plugin. In this, registerEvents() function is used for registering different events (like GetHighlight, ChangeSelection etc.) by calling the addEvent(...) while myObject.Filename is used to specify the file to open.</li>
+            </ul>
+        </li>
+        <br>
+        <li>Embed Composer Player in an HTML page by inserting the following code between the <span style="font-family: Courier New,Courier,monospace;">&lt;body&gt;</span> and <span style="font-family: Courier New,Courier,monospace;">&lt;/body&gt;</span> tags:
+            <pre style="color: red;">&lt;!--[if IE]&gt;<br>  &lt;object id="_ComposerPlayerActiveX" height="100%" width="100%" classid="CLSID:410B702D-FCFC-46B7-A954-E876C84AE4C0" codebase="ComposerPlayerActiveX.cab#version=7,1,0,2762"&gt;<br>  &lt;param name="FileName" value="example.smg"/&gt;<br>!--&lt;![endif]--&gt;<br>&lt;![if !IE]&gt;<br>  &lt;object id="_ComposerPlayerPlugin" type="application/x-composerplayerwebplugin" width="100%" height="100%"&gt;<br>  &lt;param name="onload" value="ComposerWebPlayerLoaded" /&gt;<br>![endif]&gt;<br><br>  &lt;param name="_Version" value="262163"/&gt;<br>  &lt;param name="RenderGroundShadow" value="0"/&gt;<br>  &lt;param name="RenderMode" value="0"/&gt;<br>  &lt;param name="CameraPlayMode" value="1"/&gt;<br>  &lt;param name="AntiAliasingOnIdle" value="1"/&gt;<br>  &lt;param name="GroundGrid" value="1"/&gt;<br>  &lt;param name="AutoPlay" value="0"/&gt;<br>  &lt;param name="ShowViewBar" value="0"/&gt;<br>  &lt;param name="ShowDiapoBar" value="0"/&gt;<br>  &lt;param name="ShowMarkerBar" value="0"/&gt;<br>  &lt;param name="ShowStandardToolBar" value="0"/&gt;<br>  &lt;param name="ShowTimeLineBar" value="0"/&gt;<br>  &lt;param name="ShowMain3DToolBar" value="0"/&gt;<br>  &lt;param name="ShowCollabToolBar" value="0"/&gt;<br>  &lt;param name="ShowStatusBar" value="0"/&gt;<br>  &lt;param name="UseGUID" value="1"/&gt;<br>&lt;/object&gt;<br></pre>
+            <p>where: </p>
+            <ul>
+                <li><span style="font-weight: bold; font-family: monospace;">id</span> is the name that identifies, the Composer Player ActiveX control for Internet Explorer and Composer Player Plugin for Firefox in the HTML file. The underscore (_) is used because <span style="font-family: monospace;">id</span> cannot start with a number.<br>
+                </li>
+                <li><span style="font-weight: bold; font-family: monospace;">classid</span> is a unique identifier used by Windows to identify the Composer ActiveX control. This identifier typically does not change.</li>
+                <li><span style="font-weight: bold; font-family: monospace;">codebase</span> is the path to the <span style="font-family: monospace;">ComposerPlayerActiveX.cab</span> file, which contains the Composer Player ActiveX (<span style="font-family: monospace;">.ocx</span>) file. The <span style="font-family: monospace;">.cab</span> file is necessary to publish your code one the Web. The version number is listed as <span class="kbd">FileVersion</span> in the <span style="font-family: monospace;">ComposerPlayerActiveX.inf</span> file, which is in the <span style="font-family: monospace;">.cab</span> file. The <span style="font-family: monospace;">.cab</span> file is located in: <span style="font-family: monospace;"><span style="font-style: italic;">&lt;Composer_install_dir&gt;</span>\bin</span></li>
+                    <li><span style="font-family: monospace; font-weight: bold;">param</span> tags define properties such as the play mode, the render mode, and what toolbars to display. For details, see <a href="API_AutoGenerate/group__group_active_x_a_p_i_active_x_properties.htm">ActiveX Properties</a>.<span style="font-family: monospace;">                        
+            </ul>
+        </li>
+        <li>
+            <p>Display the highlighted actor name in an HTML form:</p>
+            <ol style="list-style-type: lower-alpha;">
+                <li>
+                    <p>Create the form in which to write the text:</p>
+                    <pre style="color: red;">&lt;form action="" method="post" enctype="text/plain" name="highlight_form"&gt;<br>  &lt;input type="text" name="highlight_text" value="none"&gt;<br>&lt;/form&gt;<br></pre>
+                    <p>The important parts of this code are the form name (<span style="font-family: monospace;">highlight_form</span>) and the text name (<span style="font-family: monospace;">highlight_text</span>).</p>
+                </li>
+                <li>
+                    <p>
+                        Create two JavaScript functions that write the highlighted actor name to the form. The first function calls the myObject's (value assigned to myObject depends on the browser whether Internet Explorer or Firefox) <span style="font-family: monospace;">HighlightedObject</span> property and writes the actor name it returns in the form. The second function displays "none" if no actor is highlighted.<br>
+                    </p>
+                    <pre style="color: red;">&lt;script type="text/javascript"&gt;<br>  function update_highlight_text() {<br>    var highlightstr;<br>    highlightstr=myObject.HighlightedObject;<br>    document.highlight_form.highlight_text.value=highlightstr;<br>  }</pre>
+                    <pre style="color: red;">  function reset_highlight_text() {<br>    document.highlight_form.highlight_text.value="none";<br>  }<br>&lt;/script&gt;<br></pre>
+                </li>
+                <li>Call these two functions when <span style="font-family: monospace;">GetHighlight</span> and <span style="font-family: monospace;">LooseHighlight</span> events are notified:
+                    <pre style="color: red;">&lt;script type="text/javascript"&gt;<br>  function addGetHighlight() {<br>    addEvent(myObject, 'GetHighlight', function () {<br>      update_highlight_text();<br>    });<br>  }<br><br>  function addLooseHighlight() {<br>    addEvent(myObject, 'LooseHighlight', function ()<br>      reset_highlight_text();<br>    });<br>  }<br>&lt;/script&gt;</pre>
+                </li>
+                <li>Register these events in the <span style="font-family: monospace;">onload</span> of <span style="font-family: Courier New,Courier,monospace;">&lt;body&gt;</span> tag.
+                    <pre style="color: red;">&lt;body onload=&quot;addGetHighlight(); addLooseHighlight()&quot;&gt;</pre>
+                </li>
+            </ol>
+        </li>
+        <li>Create two JavaScript functions that change the materials of the selected actors:
+            <br>
+            <ol style="list-style-type: lower-alpha;">
+                <li>Create two hypertext links that call the JavaScript functions:
+                    <pre style="color: red;">&lt;br&gt;<br>&lt;A href="javascript:change_color_Glass()"&gt;Glass&lt;/A&gt;<br>&lt;br&gt;<br>&lt;A href="javascript:change_color_RedMetal()"&gt;Red Metal&lt;/A&gt; <br></pre>
+                </li>
+                <li>Create the JavaScript functions.
+                    <pre style="color: red;">&lt;script type="text/javascript"&gt; <br>function change_color_Glass()<br>{<br>  var selectionstr;<br>  selectionstr=myObject.Selection;<br>  myObject.SetPropertySet(selectionstr,'&lt;CLitPropertySet&gt;&lt;Actor.Env.Effect Value="5"/&gt;&lt;/CLitPropertySet&gt;');<br>  myObject.RefreshScene(1);<br>}<br><br>function change_color_RedMetal()<br>{<br>  var selectionstr;<br>  selectionstr=myObject.Selection;<br>  myObject.SetPropertySet(selectionstr,'&lt;CLitPropertySet&gt;&lt;Actor.Env.Effect Value="2"/&gt;&lt;/CLitPropertySet&gt;');<br>  myObject.SetPropertySet(selectionstr,'&lt;CLitPropertySet&gt;&lt;Actor.Color R="255" G="0" B="0"/&gt;&lt;/CLitPropertySet&gt;');<br>  myObject.RefreshScene(1);<br>} <br>&lt;/script&gt;<br></pre>
+                    <p>These functions use the <span style="font-family: monospace;">SetPropertySet()</span> method, which is an Advanced function requiring a Composer Player Pro license.&nbsp;</p>
+                </li>
+            </ol>
+        </li>
+        <li>Create links on selected actors:
+    <ol style="list-style-type: lower-alpha;">
+        <li>Create an HTML form in which the user specifies the link destination:
+            <pre style="color: red;">&lt;form action="javascript:add_link();" method="post" enctype="text/plain" name="link_form"&gt;<br>  &lt;i&gt;Enter a destination web address in the following text box.&lt;/i&gt;<br>  &lt;input type="text" name="link_text" value="Enter a URL"&gt;<br>  &lt;br&gt;<br>  &lt;input type="submit" name="link_ok" value="Create the Link" &gt;<br>&lt;/form&gt; <br></pre>
+        </li>
+        <li>Create the JavaScript function that adds the link:
+            <pre style="color: red;">&lt;script type="text/javascript"&gt; <br>function add_link()<br>{<br>  var selectionstr;<br>  var linkstr;<br>  selectionstr=myObject.Selection;<br>  linkstr=document.link_form.link_text.value;<br>  myObject.AddLink(selectionstr,linkstr,1);<br>  myObject.RefreshScene(1);<br>} <br>&lt;/script&gt;<br></pre>
+            <p>The <span style="font-family: monospace;">AddLink()</span> method is an Advanced function requiring a Composer Player Pro license.</p>
+        </li>
+    </ol>
+        </li>
+    </ol>
+
+</body>
+</html>

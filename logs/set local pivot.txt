@@ -1,0 +1,458 @@
+2/09/2026 5:25:13 PM - AlignPivotToFrame starting...
+Connected to document.
+Mesh actors found: 144
+Assembly actors found: 0
+Total actors to process: 144
+  UPDATE: ABG 006 721 65.ABG 006 781 10.PBG 006 781 10-1
+    Frame  Origin: 0., 0., 0.
+    Pivot  Origin: 0., 1.498524, -29.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 0.]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.ABG 006 669 36.ABG 004 613 04.PBG 004 613 04-1
+  UPDATE: ABG 006 721 65.ABG 006 669 36.ABG 004 613 04.PBG 004 613 04-2
+    Frame  Origin: 0., 0., -0.2
+    Pivot  Origin: 0., 0., -10.5375
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -0.2]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.ABG 006 669 36.ABG 007 375 00.PBG 007 375 00-1
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PBG 004 874 17
+    Frame  Origin: 0., 0., 0.
+    Pivot  Origin: 0., 0., 11.5
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 0.]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PBG 004 613 50
+    Frame  Origin: 0., 0., -118.129
+    Pivot  Origin: 0., 0., -140.704
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -118.129]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PVORING0002
+    Frame  Origin: 0., 0., -108.475
+    Pivot  Origin: 0.004542, -0.043871, -108.475
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -108.475]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PBG 006 567 49
+    Frame  Origin: 0., 0., 41.125
+    Pivot  Origin: 0., 0., -96.375
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 41.125]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PBG 004 613 51
+    Frame  Origin: 0., 0., -192.775
+    Pivot  Origin: 0., 0., -168.525
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -192.775]
+  SKIP (already aligned) [0., 0., -173.875]: ABG 006 721 65.ABG 006 669 36.PVORING000
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PVORING0001
+    Frame  Origin: 0., 0., -93.975
+    Pivot  Origin: 0.017809, -0.040352, -93.975
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -93.975]
+  SKIP (already aligned) [0., 0., -83.675]: ABG 006 721 65.ABG 006 669 36.PVORING0003
+  SKIP (already aligned) [0., 0., -148.875]: ABG 006 721 65.ABG 006 669 36.PVORING0004
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PVORING0006
+    Frame  Origin: 0., 0., -76.09406
+    Pivot  Origin: 0.009525, -0.043065, -76.09406
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -76.09406]
+  SKIP (already aligned) [0., 0., 7.7]: ABG 006 721 65.ABG 006 669 36.PVORING0007
+  SKIP (already aligned) [0., 0., -14.775]: ABG 006 721 65.ABG 006 669 36.PVORING0008
+  SKIP (already aligned) [0., 0., -188.075]: ABG 006 721 65.ABG 006 669 36.PVORING0005
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PVORING0009
+    Frame  Origin: 0., 0., -148.925
+    Pivot  Origin: -0.028112, -0.032879, -148.925
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -148.925]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PBG 004 613 48-1
+  SKIP (already aligned) [12.21035, -28.76578, -4.]: ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PVGSC00002
+  SKIP (already aligned) [18.80672, -24.95736, -4.]: ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PVGSC00003
+  SKIP (already aligned) [-31.01707, -3.808417, -4.]: ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PVGSC00004
+  SKIP (already aligned) [18.80672, 24.95736, -4.]: ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PVGSC0000
+  SKIP (already aligned) [12.21035, 28.76578, -4.]: ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PVGSC00001
+  SKIP (already aligned) [-31.01707, 3.808417, -4.]: ABG 006 721 65.ABG 006 669 36.ABG 004 613 48.PVGSC00005
+  UPDATE: ABG 006 721 65.ABG 006 669 36.ABG 007 375 00.PBG 007 375 00-2
+    Frame  Origin: 0., 0., -162.95
+    Pivot  Origin: 0., 0., -152.975
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -162.95]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PVORING00010
+    Frame  Origin: 0., 0., -168.475
+    Pivot  Origin: -0.035831, -0.024219, -168.475
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -168.475]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.P551 785 12
+    Frame  Origin: 0., 0., 7.6
+    Pivot  Origin: 0., 0., 5.6
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 7.6]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.P550 141 13
+    Frame  Origin: 0., 0., -184.575
+    Pivot  Origin: 0., 0., -186.075
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -184.575]
+  UPDATE: ABG 006 721 65.ABG 006 018 31.PBG 006 018 31-1
+    Frame  Origin: 0., 0., 0.
+    Pivot  Origin: 0., -26.4, 178.8149
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 0.]
+  UPDATE: ABG 006 721 65.ABG 006 018 31.PBG 005 333 77
+    Frame  Origin: 0., 0., 273.15
+    Pivot  Origin: 0., 0., 257.6
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 273.15]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.A152 377 08.A7372 1003 01.P3115 0262 00-1
+  UPDATE: ABG 006 721 65.ABG 006 669 36.P551 785 13
+    Frame  Origin: 0., 0., 14.625
+    Pivot  Origin: 0., 0., 17.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 14.625]
+  UPDATE: ABG 006 721 65.ABG 006 669 36.P550 141 131
+    Frame  Origin: 0., 0., -179.575
+    Pivot  Origin: 0., 0., -178.075
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -179.575]
+  UPDATE: ABG 006 721 65.ABG 006 018 31.A550 257 94.P550 121 65
+    Frame  Origin: 0., 0., -23.
+    Pivot  Origin: 0., 0., -15.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -23.]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.A152 377 08.A152 254 88.P152 254 88-1
+  UPDATE: ABG 006 721 65.ABG 006 669 36.PVORING00011
+    Frame  Origin: 0., 0., -167.925
+    Pivot  Origin: -0.019072, -0.03883, -167.925
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -167.925]
+  SKIP (already aligned) [10.11, 0., 0.]: ABG 006 721 65.A152 377 08.A7372 1003 01.PVORING000
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.ABG 006 018 31.A550 257 94.P550 257 94-1
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.A152 377 08.A152 254 88.P152 254 88-2
+  UPDATE: ABG 006 721 65.A152 377 08.P152 376 88-2
+    Frame  Origin: 0., -22., 0.
+    Pivot  Origin: 0., -8.01, 0.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., -22., 0.]
+  UPDATE: ABG 006 721 65.A152 377 08.A7372 1003 01.P3310 4076 00
+    Frame  Origin: 46.5, 0., 0.
+    Pivot  Origin: 40.2, 0., 0.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [46.5, 0., 0.]
+  UPDATE: ABG 006 721 65.A152 377 08.P152 377 08-1
+    Frame  Origin: 0., 0., 0.
+    Pivot  Origin: 11.25, -29.25, 0.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 0.]
+  UPDATE: ABG 006 721 65.A152 377 08.P085 370 18
+    Frame  Origin: 29.5, -45., -51.0955
+    Pivot  Origin: 37.5, -45., -64.9519
+    -> SUCCESS: Actor.Location written, Pivot aligned to [29.5, -45., -51.0955]
+  SKIP (already aligned) [10.11, 0., 0.]: ABG 006 721 65.A152 376 88.A7372 1003 01.PVORING000
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.A152 376 88.A7372 1003 01.P3115 0262 00-1
+  UPDATE: ABG 006 721 65.A152 376 88.A7372 1003 01.P3310 4076 00
+    Frame  Origin: 46.5, 0., 0.
+    Pivot  Origin: 40.2, 0., 0.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [46.5, 0., 0.]
+  UPDATE: ABG 006 721 65.P550 263 32
+    Frame  Origin: 0., -78.05, 321.45
+    Pivot  Origin: 0., -78.05, 285.2
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., -78.05, 321.45]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVWSHLOCK
+    Frame  Origin: -46.925, -51.925, 28.2
+    Pivot  Origin: -46.83839, -51.90454, 28.2
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-46.925, -51.925, 28.2]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.A152 376 88.A152 254 88.P152 254 88-2
+  UPDATE: ABG 006 721 65.PBG 006 188 50
+    Frame  Origin: 0., 0., 320.9
+    Pivot  Origin: 0., 0., 110.9
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 320.9]
+  UPDATE: ABG 006 721 65.A152 376 88.P152 376 88-1
+    Frame  Origin: 0., 0., 0.
+    Pivot  Origin: 11.25, -29.25, 0.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 0.]
+  UPDATE: ABG 006 721 65.A152 376 88.P085 370 18
+    Frame  Origin: 29.5, -45., -51.0955
+    Pivot  Origin: 37.5, -45., -64.9519
+    -> SUCCESS: Actor.Location written, Pivot aligned to [29.5, -45., -51.0955]
+  SKIP (no Frame in Actor.Location): ABG 006 721 65.A152 376 88.A152 254 88.P152 254 88-1
+  UPDATE: ABG 006 721 65.P550 121 64
+    Frame  Origin: 0., -78.05, 269.95
+    Pivot  Origin: 0., -78.05, 259.95
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., -78.05, 269.95]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 2905 01 RD106 FH SEAL KIT (AF).PBG 006 019 67
+    Frame  Origin: 0., 0., 46.7
+    Pivot  Origin: 0., 0., 52.7385
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 46.7]
+  UPDATE: ABG 006 721 65.A152 376 88.P152 376 88-2
+    Frame  Origin: 0., -22., 0.
+    Pivot  Origin: 0., -8.01, 0.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., -22., 0.]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 2905 01 RD106 FH SEAL KIT (AF).P550 214 54
+    Frame  Origin: 0., 0., 1.
+    Pivot  Origin: 0., -2.984779, 0.5
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 1.]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVWSHLOCK1
+    Frame  Origin: -54.9, 38.425, 28.2
+    Pivot  Origin: -54.81339, 38.44546, 28.2
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-54.9, 38.425, 28.2]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK
+    Frame  Origin: -109.5, 7.763229, 150.0712
+    Pivot  Origin: -109.5, 7.783687, 150.1578
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-109.5, 7.763229, 150.0712]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK1
+    Frame  Origin: -109.5, 7.763229, 35.42875
+    Pivot  Origin: -109.5, 7.78039, 35.34143
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-109.5, 7.763229, 35.42875]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK2
+    Frame  Origin: 109.5, 21.88816, 142.7683
+    Pivot  Origin: 109.5, 21.8677, 142.8549
+    -> SUCCESS: Actor.Location written, Pivot aligned to [109.5, 21.88816, 142.7683]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVHEX00002
+    Frame  Origin: -54.9, 38.425, 40.22
+    Pivot  Origin: -54.9, 38.425, 10.06
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-54.9, 38.425, 40.22]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVWSHLOCK2
+    Frame  Origin: 54.9, 38.425, 28.2
+    Pivot  Origin: 54.98661, 38.44546, 28.2
+    -> SUCCESS: Actor.Location written, Pivot aligned to [54.9, 38.425, 28.2]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVHEX0000
+    Frame  Origin: 54.9, 38.425, 40.22
+    Pivot  Origin: 54.9, 38.425, 10.06
+    -> SUCCESS: Actor.Location written, Pivot aligned to [54.9, 38.425, 40.22]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVHEX00001
+    Frame  Origin: -46.925, -51.925, 40.22
+    Pivot  Origin: -46.925, -51.925, 10.06
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-46.925, -51.925, 40.22]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVHEX00003
+    Frame  Origin: 46.925, -51.925, 40.22
+    Pivot  Origin: 46.925, -51.925, 10.06
+    -> SUCCESS: Actor.Location written, Pivot aligned to [46.925, -51.925, 40.22]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 3011 02 RD106 FH FASTENER KIT (AF).PVWSHLOCK3
+    Frame  Origin: 46.925, -51.925, 28.2
+    Pivot  Origin: 47.0116, -51.90454, 28.2
+    -> SUCCESS: Actor.Location written, Pivot aligned to [46.925, -51.925, 28.2]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK6
+    Frame  Origin: -109.5, -74.10001, 92.75
+    Pivot  Origin: -109.5, -74.01216, 92.76416
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-109.5, -74.10001, 92.75]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK3
+    Frame  Origin: 109.5, -72.02148, 77.01204
+    Pivot  Origin: 109.5, -72.04193, 77.09865
+    -> SUCCESS: Actor.Location written, Pivot aligned to [109.5, -72.02148, 77.01204]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK4
+    Frame  Origin: 109.5, 21.88816, 42.83173
+    Pivot  Origin: 109.5, 21.8677, 42.91833
+    -> SUCCESS: Actor.Location written, Pivot aligned to [109.5, 21.88816, 42.83173]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK5
+    Frame  Origin: -41., 35., -26.7
+    Pivot  Origin: -41.08661, 35.02046, -26.7
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-41., 35., -26.7]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00002
+    Frame  Origin: -121.52, 7.763229, 35.42875
+    Pivot  Origin: -93.86, 7.763229, 35.42875
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-121.52, 7.763229, 35.42875]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00003
+    Frame  Origin: 37., -42., -38.72
+    Pivot  Origin: 37., -42., -8.560001
+    -> SUCCESS: Actor.Location written, Pivot aligned to [37., -42., -38.72]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00006
+    Frame  Origin: -121.52, 7.763229, 150.0712
+    Pivot  Origin: -93.86, 7.763228, 150.0712
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-121.52, 7.763229, 150.0712]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX0000
+    Frame  Origin: 121.52, -72.02148, 77.01204
+    Pivot  Origin: 93.86, -72.02148, 77.01204
+    -> SUCCESS: Actor.Location written, Pivot aligned to [121.52, -72.02148, 77.01204]
+  SKIP (already aligned) [-62.225, -67.10001, 294.75]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVGSC00001
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00001
+    Frame  Origin: 121.52, 21.88816, 142.7683
+    Pivot  Origin: 93.86, 21.88816, 142.7683
+    -> SUCCESS: Actor.Location written, Pivot aligned to [121.52, 21.88816, 142.7683]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK7
+    Frame  Origin: 37., -42., -26.7
+    Pivot  Origin: 36.91339, -41.97954, -26.7
+    -> SUCCESS: Actor.Location written, Pivot aligned to [37., -42., -26.7]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK8
+    Frame  Origin: -37., -42., -26.7
+    Pivot  Origin: -37.08661, -41.97954, -26.7
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-37., -42., -26.7]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00007
+    Frame  Origin: 121.52, 21.88816, 42.83173
+    Pivot  Origin: 93.86, 21.88816, 42.83173
+    -> SUCCESS: Actor.Location written, Pivot aligned to [121.52, 21.88816, 42.83173]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00005
+    Frame  Origin: -41., 35., -38.72
+    Pivot  Origin: -41., 35., -8.560001
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-41., 35., -38.72]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVWSHLOCK9
+    Frame  Origin: 41., 35., -26.7
+    Pivot  Origin: 40.91339, 35.02046, -26.7
+    -> SUCCESS: Actor.Location written, Pivot aligned to [41., 35., -26.7]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00004
+    Frame  Origin: -121.52, -74.10001, 92.75
+    Pivot  Origin: -93.86, -74.10001, 92.75
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-121.52, -74.10001, 92.75]
+  SKIP (already aligned) [-62.1, 4.9, 186.7]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVGSC0000
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVFASSPIN
+    Frame  Origin: -33., 0., 239.5522
+    Pivot  Origin: -33., -0.017483, 239.5522
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-33., 0., 239.5522]
+  SKIP (already aligned) [62.1, 4.8, 186.75]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVGSC00002
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00008
+    Frame  Origin: -37., -42., -38.72
+    Pivot  Origin: -37., -42., -8.560001
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-37., -42., -38.72]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVFASSPIN1
+    Frame  Origin: 33., 0., 239.5522
+    Pivot  Origin: 33., -0.017483, 239.5522
+    -> SUCCESS: Actor.Location written, Pivot aligned to [33., 0., 239.5522]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0004
+    Frame  Origin: -75.35, -13.1, 92.75
+    Pivot  Origin: -75.35, -13.11943, 92.71142
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-75.35, -13.1, 92.75]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0005
+    Frame  Origin: -52., -13., -0.9
+    Pivot  Origin: -52.04205, -12.99366, -0.9
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-52., -13., -0.9]
+  SKIP (already aligned) [-37., -42., -0.9]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0003
+  SKIP (already aligned) [41., 35., -0.9]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0002
+  SKIP (already aligned) [37., -42., -0.9]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0009
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0006
+    Frame  Origin: 75.3, -13.1, 92.8
+    Pivot  Origin: 75.3, -13.06084, 92.78178
+    -> SUCCESS: Actor.Location written, Pivot aligned to [75.3, -13.1, 92.8]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVHEX00009
+    Frame  Origin: 41., 35., -38.72
+    Pivot  Origin: 41., 35., -8.560001
+    -> SUCCESS: Actor.Location written, Pivot aligned to [41., 35., -38.72]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING000
+    Frame  Origin: 52., -13., -0.9
+    Pivot  Origin: 51.97169, -13.03173, -0.9
+    -> SUCCESS: Actor.Location written, Pivot aligned to [52., -13., -0.9]
+  SKIP (already aligned) [62.225, -67.05, 294.8]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB FASTENER KIT.PVGSC00003
+  SKIP (already aligned) [-41., 35., -0.9]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0001
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.P152 539 88
+    Frame  Origin: 76., -13.1, 92.8
+    Pivot  Origin: 76.25, -18.04781, 83.54147
+    -> SUCCESS: Actor.Location written, Pivot aligned to [76., -13.1, 92.8]
+  SKIP (already aligned) [0., 51.5, -0.5]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0007
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.P152 539 881
+    Frame  Origin: -76., -13.1, 92.75
+    Pivot  Origin: -76.25, -17.8462, 83.38651
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-76., -13.1, 92.75]
+  SKIP (already aligned) [0., 0., 4.9]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.PVORING0008
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR HYDR KIT.P817 991 29
+    Frame  Origin: -14.98, 4.87, -144.5364
+    Pivot  Origin: -14.98, 4.869999, -126.0364
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-14.98, 4.87, -144.5364]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR HYDR KIT.P857 302 19
+    Frame  Origin: -14.98, 4.87, -172.0178
+    Pivot  Origin: -14.98, 4.87, -163.5178
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-14.98, 4.87, -172.0178]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR HYDR KIT.P817 991 291
+    Frame  Origin: 14.98, 4.87, -144.5364
+    Pivot  Origin: 14.98, 4.869999, -126.0364
+    -> SUCCESS: Actor.Location written, Pivot aligned to [14.98, 4.87, -144.5364]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR HYDR KIT.P3176 6501 00
+    Frame  Origin: 14.98, 4.87, -153.1623
+    Pivot  Origin: 14.98, 4.869999, -148.2073
+    -> SUCCESS: Actor.Location written, Pivot aligned to [14.98, 4.87, -153.1623]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR HYDR KIT.P857 302 191
+    Frame  Origin: 14.98, 4.87, -172.0178
+    Pivot  Origin: 14.98, 4.87, -163.5178
+    -> SUCCESS: Actor.Location written, Pivot aligned to [14.98, 4.87, -172.0178]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR HYDR KIT.P3176 6501 001
+    Frame  Origin: -14.98, 4.87, -153.1623
+    Pivot  Origin: -14.98, 4.87, -148.2073
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-14.98, 4.87, -153.1623]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 IB SEAL KIT.P551 537 71
+    Frame  Origin: 0., 0., -0.5
+    Pivot  Origin: 0., 2.583218, -0.501708
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -0.5]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVSCS00001
+    Frame  Origin: 0., 22.5, -16.5
+    Pivot  Origin: 0., 22.5, -3.999997
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 22.5, -16.5]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVWSHLOCK4
+    Frame  Origin: 42.2, 0., -15.25
+    Pivot  Origin: 42.26718, 0.011568, -15.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [42.2, 0., -15.25]
+  SKIP (already aligned) [-42.2, 0., -3.5]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR SEAL KIT.PVORING000
+  SKIP (already aligned) [0., 0., -10.15]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR SEAL KIT.PVORING0002
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVSCS0000
+    Frame  Origin: -15.9099, -15.9099, -16.5
+    Pivot  Origin: -15.9099, -15.9099, -3.999997
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-15.9099, -15.9099, -16.5]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVWSHLOCK
+    Frame  Origin: -42.2, 0., -15.25
+    Pivot  Origin: -42.13282, 0.011568, -15.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-42.2, 0., -15.25]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVWSHLOCK2
+    Frame  Origin: -15.9099, -15.9099, 2.25
+    Pivot  Origin: -15.86387, -15.90069, 2.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-15.9099, -15.9099, 2.25]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVWSHLOCK1
+    Frame  Origin: 15.9099, -15.9099, 2.25
+    Pivot  Origin: 15.89685, -15.86481, 2.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [15.9099, -15.9099, 2.25]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVWSHLOCK3
+    Frame  Origin: 0., 22.5, 2.25
+    Pivot  Origin: 0.046031, 22.50921, 2.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 22.5, 2.25]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVSCS00002
+    Frame  Origin: 15.9099, -15.9099, -16.5
+    Pivot  Origin: 15.9099, -15.9099, -4.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [15.9099, -15.9099, -16.5]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVSCS00003
+    Frame  Origin: -42.2, 0., 13.5
+    Pivot  Origin: -42.2, 0., -7.500006
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-42.2, 0., 13.5]
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR FASTENER KIT.PVSCS00004
+    Frame  Origin: 42.2, 0., 13.5
+    Pivot  Origin: 42.2, 0., -7.500006
+    -> SUCCESS: Actor.Location written, Pivot aligned to [42.2, 0., 13.5]
+  SKIP (already aligned) [0., 0., 2.15]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR SEAL KIT.PVORING0001
+  UPDATE: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR SEAL KIT.P810 617 79
+    Frame  Origin: 0., 0., -3.25
+    Pivot  Origin: 0.005112, 0., -3.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -3.25]
+  UPDATE: ABG 006 019 62.ABG 006 019 60.P804 318 29
+    Frame  Origin: -64.15, 0., -43.35
+    Pivot  Origin: -62.75, 0., -43.35
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-64.15, 0., -43.35]
+  UPDATE: ABG 006 019 62.ABG 006 664 24.PBG 006 419 09
+    Frame  Origin: 0., 0., 139.1
+    Pivot  Origin: 0., 0., 94.05
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 139.1]
+  SKIP (already aligned) [42.2, 0., -3.5]: A7372 XXXX XX RD106 DRIFTER KIT.A7372 XXXX XX RD106 MTR SEAL KIT.PVORING0003
+  UPDATE: ABG 006 019 62.ABG 006 019 60.PBG 005 510 01
+    Frame  Origin: 0., 0., -40.
+    Pivot  Origin: 0., 0., -12.5
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -40.]
+  UPDATE: ABG 006 016 50.A550 214 20.P550 228 74-7
+    Frame  Origin: 0., 0., -118.1
+    Pivot  Origin: 0., 0., -107.3
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -118.1]
+  SKIP (no Frame in Actor.Location): ABG 006 019 62.ABG 006 664 24.PBG 005 511 14
+  SKIP (no Frame in Actor.Location): ABG 006 019 62.ABG 006 019 60.PBG 006 019 60-1
+  UPDATE: ABG 006 016 50.A550 214 20.P550 228 74-3
+    Frame  Origin: 0., 0., -78.
+    Pivot  Origin: 0., 0., -75.5
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -78.]
+  UPDATE: ABG 006 016 50.A550 214 20.P550 214 20-2
+    Frame  Origin: 0., 0., -78.
+    Pivot  Origin: 0.087931, 0., -84.75
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -78.]
+  UPDATE: ABG 006 016 50.A550 214 20.P550 228 74-8
+    Frame  Origin: 0., 0., -86.1
+    Pivot  Origin: 0., 0., -54.1
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -86.1]
+  UPDATE: ABG 006 016 50.A550 214 20.P689X10051
+    Frame  Origin: -5.75, 2., -98.88
+    Pivot  Origin: -5.752428, 2.016047, -98.88
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-5.75, 2., -98.88]
+  UPDATE: ABG 006 016 50.A550 214 20.P689X1005
+    Frame  Origin: 5.75, 2., -98.88
+    Pivot  Origin: 5.747572, 2.016047, -98.88
+    -> SUCCESS: Actor.Location written, Pivot aligned to [5.75, 2., -98.88]
+  SKIP (already aligned) [0., 0., -13.5]: ABG 006 016 50.A550 214 20.P7372 2903 06
+  SKIP (no Frame in Actor.Location): ABG 006 016 50.A550 214 20.P550 228 74-1
+  UPDATE: ABG 006 016 50.A550 214 20.P550 214 20-3
+    Frame  Origin: -2.230399, 3.24629, -91.5
+    Pivot  Origin: -2.230398, 3.24629, -84.75
+    -> SUCCESS: Actor.Location written, Pivot aligned to [-2.230399, 3.24629, -91.5]
+  UPDATE: ABG 006 016 50.A550 214 20.P550 228 74-2
+    Frame  Origin: 0., 0., 30.
+    Pivot  Origin: 0., 0., -21.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., 30.]
+  SKIP (already aligned) [0., 0., -16.25]: ABG 006 016 50.A550 214 20.P7372 2903 05
+  UPDATE: ABG 006 016 50.A550 214 20.P550 228 74-6
+    Frame  Origin: 0., 0., -96.5
+    Pivot  Origin: 0., 0., -94.
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -96.5]
+  UPDATE: ABG 006 016 50.A550 214 20.PVPLGBSPP
+    Frame  Origin: 0., -10.5, -122.5
+    Pivot  Origin: 0., -10.5, -116.25
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., -10.5, -122.5]
+  UPDATE: ABG 006 016 50.PBG 004 711 69
+    Frame  Origin: 0., 0., -14.
+    Pivot  Origin: 0., 0., -2.5
+    -> SUCCESS: Actor.Location written, Pivot aligned to [0., 0., -14.]
+
+=== DONE ===
+  Updated                  : 101
+  Skipped (already aligned): 30
+  Errors                   : 13
+  Total   : 144

@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="Window Styles" value="0x800025">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="APIFiles/Introduction.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="What's New">
+		<param name="Local" value="APIFiles/WhatsNew.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Application Programming Interfaces">
+		<param name="Local" value="APIFiles/API.htm">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Composer API">
+			<param name="Local" value="APIFiles/API-3DVIAComposer.htm">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Application">
+				<param name="Local" value="APIFiles/API-3DVIAComposer-Application.htm">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Events">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_application_event.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Methods">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_application_method.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Properties">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_application_prop.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Example: Using the Information HTML Template">
+					<param name="Local" value="APIFiles/HTMLInformationTemplateExample.htm">
+					</OBJECT>
+			</UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Document">
+				<param name="Local" value="APIFiles/API-3DVIAComposer-Document.htm">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Events">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_event.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Methods">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_method.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Objects">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_object.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Object Properties">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_object_prop.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Document Properties">
+					<param name="Local" value="APIFiles/API_AutoGenerate/group__group_composer_a_p_i_document_prop.htm">
+					</OBJECT>
+			</UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Samples">
+				<param name="Local" value="APIFiles/Samples.htm">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Composer Players API">
+			<param name="Local" value="APIFiles/API-3DVIAPlayer.htm">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Registering the ActiveX Control">
+				<param name="Local" value="APIFiles/RegisteringActiveX.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Players Plug-in Properties">
+				<param name="Local" value="APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_active_x_properties.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Events">
+				<param name="Local" value="APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_event.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Methods">
+				<param name="Local" value="APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_methods.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Objects">
+				<param name="Local" value="APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_objects.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Properties">
+				<param name="Local" value="APIFiles/API_AutoGenerate/group__group_active_x_a_p_i_properties.htm">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Examples">
+				<param name="Local" value="APIFiles/Web.htm">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Example: Using Composer Player in PowerPoint">
+					<param name="Local" value="APIFiles/WebPPT.htm">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Example: Using Composer Player in HTML">
+					<param name="Local" value="APIFiles/WebProgrammingCaseStudy.htm">
+					</OBJECT>
+			</UL>
+		</UL>
+		
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Command Line Interface">
+		<param name="Local" value="APIFiles/CommandLineParameters.htm">
+		<param name="URL" value="APIFiles\Command line parameters.htm">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Converter Return Codes">
+			<param name="Local" value="APIFiles/3DVIAConverterErrorCodes.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="3D Output Format Values">
+			<param name="Local" value="APIFiles/3DOutputFormatValue.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Image Output Format Values">
+			<param name="Local" value="APIFiles/2DOutputFormatValues.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Right Manager Values">
+			<param name="Local" value="APIFiles/RightManagerValues.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Log File Overwrite Values">
+			<param name="Local" value="APIFiles/LogFileValues.htm">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="HTML Profiles">
+		<param name="Local" value="APIFiles/HTMLProfiles.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Controlling U3D Models with Acrobat JavaScript">
+		<param name="Local" value="APIFiles/ControllingU3DModelsWithAcrobatJavaScript.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Legal Notices">
+		<param name="Local" value="APIFiles/Copyrights.htm">
+		</OBJECT>
+</UL>
+</BODY></HTML>

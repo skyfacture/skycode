@@ -1,0 +1,24 @@
+2026-10-21 14:00:07: -- Analysis Started by On Schedule Min=0 Hour=14 
+2026-10-21 14:00:07: L: Reading State File C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-21 14:00:08: R: Reading State File //SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-21 14:00:09: Changes: 8, Conflicts: 0, CopyTime: 0, FixState: 0, Errors: 0, All: 155
+2026-10-21 14:00:09: Left to Right: Copy File: 8 
+2026-10-21 14:00:09: == Sync Started by On Schedule Min=0 Hour=14 
+2026-10-21 14:00:09: ConnectCloned connected to file:///C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-21 14:00:09: ConnectCloned connected to file:///C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-21 14:00:09: ConnectCloned connected to file:///C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-21 14:00:09: ConnectCloned connected to smb://SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-21 14:00:09: ConnectCloned connected to smb://SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-21 14:00:09: ConnectCloned connected to smb://SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode
+2026-10-21 14:00:09: Create Folder //SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/export-regions.jsx' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/export-regions.jsx' (16,263)
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/export-regions.idjs' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/export-regions.idjs' (14,578)
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/export-regions.mjs' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/export-regions.mjs' (12,614)
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/toc_parent_ranges.jsx' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/toc_parent_ranges.jsx' (1,798)
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/swatch-map.mjs' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/swatch-map.mjs' (6,679)
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/toc_parent_ranges_merged.js' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/toc_parent_ranges_merged.js' (6,512)
+2026-10-21 14:00:09: Copy New 'C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/toc_parent_ranges_merged_GHIB in one.js' -> '//SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/Indesign and Designcraft Scripts/toc_parent_ranges_merged_GHIB in one.js' (6,812)
+2026-10-21 14:00:09: Close Modified Folder (mod-time, acl): /Indesign and Designcraft Scripts
+2026-10-21 14:00:09: Save State File C:/OneDrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-21 14:00:09: Save State File //SkyfactureNAS/Onedrive - Skyfacture Pty Ltd/Skyfacture/3 - Economics/skycode/_gsdata_/_file_state_v4._gs
+2026-10-21 14:00:10: == Sync Complete. Time: 00:00:01, Speed: 0.00/s, OK: 8, Errors: 0

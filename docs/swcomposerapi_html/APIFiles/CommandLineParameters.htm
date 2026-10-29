@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Command Line Interface</title>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  
+  <link href="3dviacomposer.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.style1 {
+				font-family: monospace;
+}
+.style2 {
+				font-family: monospace;
+				font-style: normal;
+				font-weight: normal;
+				color: #000000;
+				font-size: 8pt;
+				margin-top: 5pt;
+				margin-bottom: 0pt;
+}
+</style>
+</head><body class="commande">
+<h1>Command Line Interface</h1>
+
+<span class="commande"><br>
+You can access Composer and Composer Sync features from the command line.</span>
+<p><span class="kbd">Important:</span> </p>
+<ul>
+				<li>
+				<p>A Composer Enterprise Sync or Configuration with Integration license is required to run command line APIs.</p>
+
+<span class="commande">Executables are located in</span>: <span style="font-family: monospace;">&lt;<span style="font-style: italic;">install_dir</span>&gt;\&lt;<span style="font-style: italic;">version</span>&gt;\bin</span></li>
+				<li>
+
+<span class="commande">Executables</span><span style="font-family: monospace;"><span class="commande"> 
+		cannot handle multi-process. Therefore, you cannot launch two identical 
+		processes at the same time. For example, you cannot launch two 
+				ComposerConverter.exe processes simultaneously.</span></span></li>
+</ul>
+<span style="font-family: monospace;"><br>
+</span>
+<ul>
+
+  <li><a href="CommandLineParameters.htm#ComposerParams">Composer Parameters</a></li>
+	<li><a href="CommandLineParameters.htm#SyncParams">Sync Parameters</a></li>
+	<li><a href="CommandLineParameters.htm#ConverterParams">Converter Parameters</a></li>
+
+</ul>
+
+<br>
+
+<span class="introduction"><a name="ComposerParams" id="ComposerParams"></a>Composer Parameters<br>
+<br>
+</span>
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑updatex</b></td>
+      <td> Updates a Composer file from a new source file. <br>
+      <br>
+      <span class="kbd"></span>Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the Composer file (<span style="font-family: monospace;">.smg </span>or <span style="font-family: monospace;">.smgXml</span>) to update.</li>
+        <li><span style="font-family: monospace;">&lt;fileAssociate&gt;</span>: Specifies the file containing up-to-date geometry. To use the same CAD file used to generate the Composer file, specify an empty parameter "" (two double quotes). The path to the original file is stored in the Composer file.<br>
+        </li>
+        <li><span style="font-family: monospace;">&lt;fileSettings.xml&gt;</span>: Uses these settings if specified, otherwise uses default settings. See an <a href="CommandLineParameters.htm#fileSettingsExample">example</a>.</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -updatex &lt;fileInput&gt; &lt;fileAssociate&gt; [&lt;fileSettings.xml&gt;]</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑</b><b>update</b></td>
+      <td> Updates a Composer file from a new source file. <br>
+      <br>
+      <span class="kbd">Important:</span> The <span style="font-family: monospace;">-update</span> switch implements the older geometry-based update behavior. Use the <span style="font-family: monospace;">-updatex</span> switch for the newer structure-based update behavior.<br>
+      <br>
+Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the Composer file (<span style="font-family: monospace;"></span><span style="font-family: monospace;">.smg</span> or <span style="font-family: monospace;">.xmlGeom</span><span style="font-family: monospace;"></span>) to update.</li>
+        <li><span style="font-family: monospace;">&lt;fileAssociate&gt;</span>: Specifies the file containing up-to-date geometry.</li>
+        <li><span style="font-family: monospace;">&lt;fileSettings.xml&gt;</span>: Uses these settings if specified, otherwise uses default settings. See an <a href="CommandLineParameters.htm#fileSettingsExample">example</a>.</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -update &lt;fileInput&gt; &lt;fileAssociate&gt; [&lt;fileSettings.xml&gt;]</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑</b><b>generateImage</b></td>
+      <td> Creates vector or raster images, or both, from a Composer file.<br>
+      <br>
+Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the <span style="font-family: monospace;">.smg</span>, <span style="font-family: monospace;">.</span><span style="font-family: monospace;">smgXml</span>, or <span style="font-family: monospace;">.smgProj</span> file for which images are generated.<br>
+        </li>
+        <li><span style="font-family: monospace;">&lt;fileSettings.xml&gt;</span>: Specifies settings for image generation. For unspecified settings, defaults are used. See an <a href="CommandLineParameters.htm#fileSettingsExample">example</a> settings file. <br>
+        </li>
+        <ul>
+          <li>To specify the output formats, set <span style="font-family: monospace;">Batch.ImageOutputFormat</span> (see the <a href="2DOutputFormatValues.htm">list</a> of formats). If not specified, no images are generated.<br>
+          </li>
+          <li>To specify a Composer view file (<span style="font-family: monospace;">.smgView</span>) containing the views for which images are generated, set <span style="font-family: monospace;">Batch.IOUseSmgView</span> and <span style="font-family: monospace;">Batch.IOSmgViewFile</span>. If <span style="font-family: monospace;"></span>not specified, an image is generated for each view contained in (for <span style="font-family: monospace;">.smg</span>) or referenced by (for <span style="font-family: monospace;">.smgXml</span> or <span style="font-family: monospace;">.xmgProj</span>) the input file.</li>
+          <li>To specify High Resolution Image (<span style="font-family: monospace;">.smgHighResSet</span>) or Technical Illustration (<span style="font-family: monospace;">.smgVectoSet</span>) workshop profiles, set <span style="font-family: monospace;">Batch.IOProfileHighRes</span> or <span style="font-family: monospace;">Batch.IOProfileVecto</span>.</li>
+        </ul>
+      </ul>
+      <span style="font-family: monospace;"> </span><span class="note">Note:</span> Specify files with absolute paths. <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1"><span style="font-family: monospace;">Composer.exe –generateImage &lt;fileInput&gt; &lt;fileSettings.xml&gt;</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span class="kbd">Example:</span><br>
+      <span style="font-family: monospace;">Composer.exe –generateImage "C:\Models\model1.smg" "C:\fileSettings.xml" <br>
+      </span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑</b><b>merge</b></td>
+      <td> Places all objects in the specified files into a new output file.<br>
+      <br>
+Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;listFilesToMerge.xml&gt;</span>: Lists all files to merge. See an <a href="#listfilesToMergeExample">example</a>.<br>
+        </li>
+        <li><span style="font-family: monospace;">&lt;fileOutput&gt;</span>: Specifies the output file (<span style="font-family: monospace;">.smg</span> or <span style="font-family: monospace;">.xmlGeom</span>).</li>
+        <li><span style="font-family: monospace;">&lt;fileSettings.xml&gt;</span>: Uses these settings if specified, otherwise uses default settings. See an <a href="CommandLineParameters.htm#fileSettingsExample">example</a>.</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -merge &lt;listFilesToMerge.xml&gt; &lt;fileOutput&gt; [&lt;fileSettings.xml&gt;]</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑</b><b>getIssuedFrom</b></td>
+      <td> Generates a list of CAD files from which a Composer file is built.<br>
+      <br>
+Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the Composer file (<span style="font-family: monospace;">.smg</span> or <span style="font-family: monospace;">.xmlGeom</span>).</li>
+        <li><span style="font-family: monospace;">&lt;fileOutput&gt;:</span> Specifies the output file (XML format) to which the CAD references files are listed.<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -getIssuedFrom &lt;fileInput&gt; &lt;fileOutput&gt;</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>-removeIssuedFrom</b></td>
+      <td> Removes from a Composer file the objects from a CAD source file.<br>
+      <br>
+Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the Composer file (<span style="font-family: monospace;">.smg</span> or <span style="font-family: monospace;">.xmlGeom</span>).</li>
+        <li><span style="font-family: monospace;">&lt;fileIssuedFrom&gt;</span>: Specifies the CAD file whose objects are removed.<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -removeIssuedFrom &lt;fileInput&gt; &lt;fileIssuedFrom&gt;</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑</b><b>rightManager</b></td>
+      <td> Modifies Right Manager features. For example, you can add or remove the ability to use cutting planes, to add annotations and measurements, or to save a file.<br>
+      <span style="font-family: monospace;"><br>
+      </span> Parameters:<br>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the Composer file (<span style="font-family: monospace;">.smg</span> or <span style="font-family: monospace;">.xmlGeom</span>) to which Right Manager features are assigned.</li>
+        <li><span style="font-family: monospace;">&lt;fileSettings.xml&gt;</span>: Specifies the Right Manager features using the <span style="font-family: monospace;">&lt;Batch.OptionPro&gt;</span> setting. See an <a href="CommandLineParameters.htm#fileSettingsExample">example</a>. See the list of Right Manager <a href="RightManagerValues.htm">features</a>.</li>
+        <li><span style="font-family: monospace;">&lt;fileOutput&gt;</span>: Specifies the resulting Composer file with the modified features. If not specified, the input file is overwritten.<br>
+        </li>
+      </ul>
+      <span class="note">Note:</span> The <span style="font-family: monospace;">OptionsPro</span> registry key sets the default <span style="font-family: monospace;">&lt;batch.OptionPro&gt;</span> value:
+      <p style="font-family: monospace; margin-left: 40px;">HKEY_CURRENT_USER\Software\Dassault Systemes\Composer\Preferences\OptionsPro</p>
+      <p>The default value after installation is 0, meaning no features are enabled.</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -rightManager &lt;fileInput&gt; &lt;fileSettings.xml&gt; [&lt;fileOutput&gt;]</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td><b>‑</b><b>clearanceChecking</b></td>
+      <td> Runs clearance checking on a selection using a specified profile.<br>
+      <p>Parameters:<br>
+      </p>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileInput&gt;</span>: Specifies the Composer file (<span style="font-family: monospace;">.smg</span>, .<span style="font-family: monospace;">smgXml</span>, or <span style="font-family: monospace;">.smgProj</span>).</li>
+        <li><span style="font-family: monospace;">&lt;fileProfile&gt;</span>: Specifies the clearance checking profile.<br>
+        </li>
+        <li><span style="font-family: monospace;">&lt;mode&gt;</span>: <span class="commande">Specifies which actors participate in the test:</span><br>
+        </li>
+        <li style="list-style-type: none; list-style-image: none; list-style-position: outside;">
+          <ul>
+            <li><span style="font-family: monospace;">CheckSel</span>: Checks only actors in <span style="font-family: monospace;">&lt;selection1&gt;</span>. </li>
+            <li><span style="font-family: monospace;">Sel1VSAll</span>: Checks actors in <span style="font-family: monospace;">&lt;selection1&gt;</span> against all other actors. </li>
+            <li><span style="font-family: monospace;">Sel1VSSel2</span>: Checks actors in <span style="font-family: monospace;">&lt;selection1&gt;</span> against the actors in <span style="font-family: monospace;">&lt;selection2&gt;</span>.</li>
+          </ul>
+        </li>
+        <li><span style="font-family: monospace;">&lt;selection1&gt;</span>: Specifies the first selection set.</li>
+        <li><span style="font-family: monospace;">&lt;selection2&gt;</span>: Specifies the second selection set. Required when <span style="font-family: monospace;">&lt;mode&gt;</span> is <span style="font-family: monospace;">Sel1VSSel2</span>.<br>
+        </li>
+      </ul>
+      <span class="note">Note:</span> Specify all files with absolute paths.<br>
+      <br>
+This command creates a new file with the same names as <span style="font-family: monospace;">&lt;fileInput&gt;</span> but with a <span style="font-family: monospace;">.xml</span> extension. </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span style="font-family: monospace;">Composer.exe -clearanceChecking &lt;fileInput&gt; &lt;fileProfile&gt; &lt;mode&gt; &lt;selection1&gt; [&lt;selection2&gt;]</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1"><span class="kbd">Example:<br>
+      </span> <span style="font-family: monospace;">Composer.exe –clearanceChecking "C:\Models\model1.smg" "C:\Models\profileModel1.smgClashStaticSet" Sel1VSAll "Selection 1"<br>
+      <br>
+      </span> <span class="note">Note:</span> This example creates a <span style="font-family: monospace;">model1.xml</span> output file.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="commande introduction"><a name="SyncParams" id="SyncParams"></a>Sync Parameters</p>
+
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+
+  <tbody>
+    <tr>
+      <td class="introduction">Syntax</td>
+      <td>
+      <p class="introduction">Description</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="font-family: monospace;">Sync.exe [-batch] [&lt;fileSettings&gt;] [-verbose:no]</td>
+      <td> <span class="commande">Launches Sync.<br>
+      <br>
+Parameters:<br>
+      </span>
+      <ul>
+        <li><span style="font-family: monospace;">&lt;fileSettings&gt;</span>: Specifies the Sync batch file to load in the graphical interface at startup (when <span style="font-family: monospace;">-batch</span> is not specified) or to execute (when <span style="font-family: monospace;">-batch</span> is specified).<br>
+          <span style="font-family: monospace;"></span></li>
+        <li><span style="font-family: monospace;">-batch</span>: Executes the specified batch file without opening the graphical interface.<br>
+        </li>
+<li><span style="font-family: monospace;">-verbose:no</span>: Disables output messages. Use with <span style="font-family: monospace;">-batch</span>.<br>
+</li></ul>Return Values: Sync always returns "0" (success). To get return codes for file translations, call Converter&nbsp; (<span class="style1">Composer</span><span style="font-family: monospace;">Converter.exe</span>) directly.<br>
+
+      </td>
+    </tr><tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;"><span style="font-family: monospace;">Sync.exe -batch </span><span style="font-family: monospace;">c:\My_Folder\</span><span style="font-family: monospace;">mybatch.seeb -verbose:no</span></td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+<br>
+<p class="commande introduction"><a name="ConverterParams" id="ConverterParams"></a>Converter Parameters</p>
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td class="introduction">Syntax</td>
+      <td>
+      <p class="introduction">Description</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="font-family: monospace;">Converter.exe &lt;fileInput&gt; &lt;fileSettings.xml&gt;</td>
+      <td> <span class="commande">Translates a file to another format. Called by Sync to perform file conversions.<br>
+      <br>
+      <span class="kbd"></span></span><span class="commande">Parameters:<br>
+      </span>
+      <ul>
+        <li><span class="commande"><span style="font-family: monospace;">&lt;fileInput&gt;</span>:</span> Specifies the file to convert.</li>
+        <li><span style="font-family: monospace;">&lt;</span><span style="font-family: monospace;">fileSettings.xml&gt;</span>: Specifies the formats to convert to. See an <a href="CommandLineParameters.htm#fileSettingsExample">example</a>. See the <a href="3DOutputFormatValue.htm">list</a> of formats.</li>
+      </ul>Return Values: See <a href="3DVIAConverterErrorCodes.htm">Converter Return Codes</a>.<br>
+      <br>
+      <span class="commande"><span class="note">Note:</span> <br>
+      </span>
+      <ul>
+<li><span class="commande">Call Sync (<span style="font-family: monospace;">Sync.exe</span>), not Converter (</span><span class="style2">Composer</span><span style="font-family: monospace;">Converter.exe</span><span class="commande">), except in cases where return codes are required.</span></li><li><span class="commande">To suppress message boxes during conversion, specify the following in your <span style="font-family: monospace;">fileSettings.xml</span> file: </span><font style="font-family: monospace;">
+&lt;Batch.VerboseMode Value="0"/&gt;</font></li>
+      </ul>
+
+
+
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1"><span style="font-family: monospace;">ComposerConverter.exe c:\My_Folder\Name_Of_CAD_File.CATProduct Settings.xml</span></td>
+    </tr>
+  </tbody>
+</table><br>
+<p class="introduction"><a name="fileSettingsExample" id="fileSettingsExample"></a>Sample fileSettings.xml File<br>
+</p>
+
+<span class="commande">The settings you use in command-line operations are the same as in Sync batch (<span style="font-family: monospace;">.seeb</span>) files. To determine the syntax and values for your <span style="font-family: monospace;">fileSettings.xml</span> file, set the corresponding options in the Sync graphical interface, save the batch file, and then examine the file.<br>
+<br>
+The following is a sample settings file.<br>
+</span>
+<p style="font-family: monospace; color: red;"><font style="font-family: monospace;">&lt;SeemageBatch Version="6.9.0.1696"&gt;</font></p>
+
+<div style="margin-left: 2em; color: red;"> <font style="font-family: monospace;">&lt;Properties&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.AppendToLog Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.BBoxMax X="0" Y="0" Z="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.BBoxMin X="0" Y="0" Z="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.Healing Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.IOCheckOriginalFileChange Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.IOCompressionBits Value="16" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.IOImportAsBodies Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.IOImportMassProperties Value="0" /&gt;<br>
+&lt;Batch.IOImportCurves Value="0" /&gt;<br>
+&lt;Batch.IOImportPoints Value="0" /&gt;<br>
+&lt;Batch.IOImportFreeFaces Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.IORefinement Value="0.5" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.IORefinementAdapt Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.LogFilePath Value="" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.PerformLogging Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.SaveFolder Value="" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.SaveInSameFolder Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.ShowProgress Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.OverwriteChoice Value="0" /&gt;<br>
+&lt;Batch.VerboseMode Value="0" /&gt;<br>
+&lt;Batch.IOUseSmgView Value="0"/&gt;<br>
+&lt;Batch.IOSmgViewFile Value=""/&gt;<br>
+&lt;Batch.IOProfileHighRes Value="my profile"/&gt;<br>
+&lt;Batch.IOProfileVecto Value="HLR (high)"/&gt;<br>
+&lt;Batch.HasExpirationDate Value="0" /&gt;<br>
+&lt;Batch.StartDate Value="1112738400" /&gt;<br>
+&lt;Batch.UseCurrentDate Value="1" /&gt;<br>
+&lt;Batch.IsRelativeDate Value="1" /&gt;<br>
+&lt;Batch.RelativeExpirationDays Value="15" /&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/Properties&gt;</font> </div>
+
+<div style="margin-left: 2em; color: red;"> <font style="font-family: monospace;">&lt;Translate&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.3DOutputFormat Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.OptionPro Value="0" /&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/Translate&gt;</font> </div>
+
+<div style="margin-left: 2em; color: red;"> <font style="font-family: monospace;">&lt;Update&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry.AddNewObjects Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry.AllOccurences Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry.CheckIssuedFrom Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry.DeleteOldObjects Value="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry.ModifyExistingObjects Value="1" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.UpdateGeometry.ComponentName Value="" /&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/Update&gt;<br>
+<br>
+&lt;GenerateImage&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Batch.ImageOutputFormat Value="3" /&gt;<br>
+&lt;Batch.ImageAntiAliasing Value="0" /&gt;<br>
+&lt;ListCameras&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Camera IsOrtho="0"&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;FrameCam IsOk="1"&gt;</font>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;Origin X="0" Y="0" Z="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;VX X="1" Y="0" Z="0" /&gt;</font> </div>
+<div style="margin-left: 2em;"> <font style="font-family: monospace;">&lt;VY X="0" Y="0" Z="1" /&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/FrameCam&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/Camera&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/ListCameras&gt;</font> </div>
+<font style="font-family: monospace;">&lt;/GenerateImage&gt;<br>
+</font> </div>
+
+<font style="font-family: monospace; color: red;" color="#ff9999">&lt;/SeemageBatch&gt;</font><font color="#ff9999"><font color="#ff8080"><br>
+</font></font>
+<p class="introduction"><a name="listfilesToMergeExample" id="listfilesToMergeExample"></a>Sample listFilesToMerge.xml File</p>
+
+<p>The <span style="font-family: monospace;">Composer.exe -merge</span> command requires an XML file that lists the files to merge. For example:</p>
+
+<p style="font-family: monospace; color: red;">&lt;ListFiles&gt;<br>
+</p>
+
+<div style="margin-left: 2em; color: red;"><span style="font-family: monospace;"> &lt;File ComponentName="" CreateSubComponent="1"&gt;C:\Bureau\Part1.CATPart&lt;/File&gt;</span><br style="font-family: monospace;">
+<span style="font-family: monospace;"> &lt;File ComponentName="Sample" CreateSubComponent="0"&gt;D:\Models\batch\Part2.model&lt;/File&gt;</span><br style="font-family: monospace;">
+<span style="font-family: monospace;"> &lt;File&gt;D:...&lt;/File&gt;<br>
+...<br>
+</span> </div>
+
+<font color="#ff9999"><font color="#ff8080"><span style="color: red; font-family: monospace;">&lt;/ListFiles&gt;</span></font></font><font color="#ff9999"><font color="#ff8080"><br>
+</font></font>
+<br>
+</body></html>

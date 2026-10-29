@@ -1,0 +1,17 @@
+27/10/2026 1:29:14 PM - Starting this root bullshit again, visibility first, you fucker...
+27/10/2026 1:29:14 PM - Raw GetAllActorsByType('CLitKAssyRoot') output: '<CLitSelection Name="" Ident="-1"></CLitSelection>'
+27/10/2026 1:29:14 PM - Identified root (Step 1.1): '<CLitSelection Name="" Ident="-1"></CLitSelection>' from GetAllActorsByType
+27/10/2026 1:29:14 PM - GetAssyParents of rootID: ''
+27/10/2026 1:29:14 PM - Confirmed: '<CLitSelection Name="" Ident="-1"></CLitSelection>' is the root, no parents!
+27/10/2026 1:29:14 PM - Processing root with ID: '<CLitSelection Name="" Ident="-1"></CLitSelection>'
+27/10/2026 1:29:14 PM - Selection string: '<CLitSelection Name="" Ident="-1"></CLitSelection>'
+27/10/2026 1:29:14 PM - Root selected successfully, you goddamn genius!
+27/10/2026 1:29:15 PM - Root Meta.PartNo: ''
+27/10/2026 1:29:15 PM - Root Actor.Name: ''
+27/10/2026 1:29:15 PM - GetAllActors(1) with AssySelectionMode: '<CLitSelection Name="" Ident="-1"></CLitSelection>'
+27/10/2026 1:29:15 PM - Sub-actor '<CLitSelection Name="" Ident="-1">' Meta.PartNo: ''
+27/10/2026 1:29:15 PM - No Meta.PartNo, using fallback: 'Root_CLitKAssyRoot'
+27/10/2026 1:29:16 PM - Created view: 'Root_CLitKAssyRoot' - fucking finally!
+27/10/2026 1:29:16 PM - Trying to get Meta.PartNo from document-level properties.
+27/10/2026 1:29:16 PM - No Meta.PartNo at document level, moving to Plan B.
+27/10/2026 1:29:16 PM - Done with this root crap, check the goddamn log!

@@ -1,0 +1,598 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+
+
+
+
+
+
+  
+  <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"><title> 
+	Composer Players API - Players Plug-in Properties</title>
+  
+
+  
+  
+  <link href="tabs.css" rel="stylesheet" type="text/css">
+
+  
+  <link href="doxygen.css" rel="stylesheet" type="text/css"></head><body>
+<h1> Composer Player API - Player Plug-in Properties</h1>
+
+The tables below have the following color coding:<br>
+
+<br>
+
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(255, 204, 153);">&nbsp;&nbsp; <br>
+      </td>
+      <td>Orange shading indicates advanced Player Plug-in features. An application 
+		using advanced features must be run from a computer with a Composer 
+		Player Pro license installed. An error message appears when an advanced 
+		function is run without a Composer Player Pro license.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><br>
+      </td>
+      <td>Green shading indicates Composer Player plug-in properties that you 
+		can specify as application parameters. For example, to enable 
+		ground grid but disable auto play, specify:<br>
+      <div style="margin-left: 40px; font-family: monospace;">&lt;param 
+					name=&quot;GroundGrid&quot; value=&quot;1&quot;&gt;<br>
+					&lt;param name=&quot;AutoPlay&quot; value=&quot;0&quot;&gt;<br>
+      </div>
+		Specifying properties that are stored in the Composer document has no 
+		effect.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following table describes all control properties.</p>
+
+<p><span style="font-weight: bold;">Note:</span> Each property has a &quot;set&quot; and a 
+&quot;get&quot; mode. Use arguments for &quot;set&quot; mode but not &quot;get&quot; mode.</p>
+
+<table style="width: 100%;" border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr style="background-color: rgb(210, 210, 210);">
+      <td> <br>
+      </td>
+      <td><small><small><strong>Description</strong></small></small></td>
+      <td><small><small><strong>Arguments</strong></small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>AllNameOccurences</b> as Boolean</small></small></td>
+      <td><small><small>Manages the ability to select all the occurences of the object.<br>
+      </small></small></td>
+      <td>
+      <p><small><small>1: True. All the occurences of the object will be selected <br>
+		0: False. Only the object that matches the Net Guid (if UseGUID is True) or the name will be selected</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		AntiAliasingOnIdle</b> as Boolean</small></small></td>
+      <td><small><small>Applies anti-aliasing when no action is performed.</small></small></td>
+      <td>
+      <p><small><small>1: True <br>
+		0: False</small></small></p>
+      </td>
+    </tr>
+    <tr>
+<td style="background-color: white;"><small><small><b>ApplicationProfile</b> as 
+Integer<br>
+</small></small></td><td><small><small>Specifies the application-settings 
+profile used by all Composer applications.<br>
+</small></small></td><td>
+      <p><small><small><b>CrApplicationProfile</b> enum value:<br>
+      </small></small></p>
+      <ul><li><small><small><b>crApplicationProfileStandard</b> (<span style="font-weight: bold;">0</span>): 
+					Standard<br>
+</small></small></li><li><small><small><b>cr</b></small></small><small><small><b>ApplicationProfile</b></small></small><small><small><b></b></small></small><small><small><b>HighSpeed</b></small></small><small><small><b> </b>
+					(<span style="font-weight: bold;">2</span>): High speed</small></small></li><li><small><small><b>
+					cr</b></small></small><small><small><b>ApplicationProfile</b></small></small><small><small><b>HighQuality</b></small></small><small><small><b> </b>
+					(<span style="font-weight: bold;">3</span>): High quality<br>
+          </small></small></li><li><small><small> </small></small><small><small><b>
+					cr</b></small></small><small><small><b>ApplicationProfile</b></small></small><small><small><b>Safe</b></small></small><small><small><b> </b>
+					(<span style="font-weight: bold;">4</span>): Safe</small></small></li></ul>
+      </td></tr>
+<tr>
+      <td><small><small><b>AssySelectionMode</b> as Boolean</small></small></td>
+      <td><small><small>Enables assembly selection mode.<br>
+      </small></small></td>
+      <td>
+      <p><small><small>1: True <br>
+		0: False</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><span style="font-weight: bold;">
+		AssySelectionModeViewportIndicator</span> as Boolean</small></small><br>
+      </td>
+      <td><small><small>Displays a blue border around the viewport to indicate 
+		assembly selection mode.</small></small><br>
+      </td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>AutoKeyMode</b> as Boolean</small></small></td>
+      <td><small><small>Enables auto-key mode.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		AutoPlay</b> as Boolean</small></small></td>
+      <td><small><small>Automatically plays the animation when Composer Player 
+		opens the Composer file.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>BorderMask</b> as Boolean</small></small></td>
+      <td><small><small>Applies a border on the plug-in window.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>CameraInertia</b> as Boolean</small></small></td>
+      <td><small><small>Enables camera inertia mode.<br>
+      </small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		CameraPlayMode</b> as Boolean</small></small></td>
+      <td><small><small>Shows camera movement during animation.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>CameraSmoothTime</b> as Integer</small></small></td>
+      <td><small><small>Applies smooth transitions between view changes.</small></small></td>
+      <td>
+      <p><small><small>0: No transitions<br>
+		100: Smooth transitions</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>EventsMask</b> as Long</small></small></td>
+      <td><small><small>Filters some fired events which can be time consuming on 
+		big models (<span style="font-weight: bold;">OnChangeVisibility</span>, <span style="font-weight: bold;">
+		OnChangeSelection</span>, and <span style="font-weight: bold;">
+		OnChangeProperties</span>). <br>
+      <br>
+      <span style="font-weight: bold;">Note:</span> By default, these events are 
+		not sent anymore.</small></small></td>
+      <td><small><small><span style="font-weight: bold;">OnChangeVisibility</span>: 
+		1 (bit 0)<br>
+      <span style="font-weight: bold;">OnChangeSelection</span>: 2 (bit 1)<br>
+      <span style="font-weight: bold;">OnChangeProperties</span>: 4 (bit 2)<br>
+      <br>
+      <u>Example</u>: To catch <span style="font-weight: bold;">
+		OnChangeVisibility</span> and <span style="font-weight: bold;">
+		OnChangeProperties</span>: events mask = 1 + 4 = 5<br>
+      <br>
+		The default value is 2.</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		FileName</b> as String</small></small></td>
+      <td><small><small>Opens a Composer file. The path to the file can be 
+		relative or absolute.</small></small></td>
+      <td><small><small><b>Filename</b>, for example: <span style="font-family: monospace;">
+		&quot;scenes/animation.smg&quot;</span></small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		GroundGrid</b> as Boolean</small></small></td>
+      <td><small><small>Turns on the ground actor.<br>
+      <br>
+      <span style="font-weight: bold;">Note:</span> By default, this property overrides the corresponding document property when a document 
+		is opened. Use </small></small><small style="font-weight: bold;"><small>
+		OverloadedDocProperties</small></small><small><small> to disable 
+		overloading.</small></small><small style="font-weight: bold;"><small><br>
+      </small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>HighlightedObject</b> as String</small></small></td>
+      <td><small><small>Allows highlighting actors or seeing which one is 
+		currently highlighted. <br>
+      <br>
+      <span style="font-weight: bold;">Note:</span> &quot;set&quot; mode requires a 
+		Composer Player Pro license.</small></small> <small><small><span style="color: rgb(255, 0, 0);"><br>
+      </span></small></small></td>
+      <td><small><small>Selection, for example:<br>
+      <br>
+      <span style="font-weight: bold;">By name:</span><br>
+      </small></small>
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;&nbsp;<br>  &lt;CLitModifiable Name=&quot;Body01&quot;/&gt;<br>&lt;/CLitSelection&gt;</small></small></pre>
+      <small><small><span style="font-weight: bold;">By ID</span><span style="font-weight: bold;">:</span><br>
+      </small></small>
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;<br>  8cb9b30b4874ac23#<br>&lt;/CLitSelection&gt;</small></small></pre>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><span style="font-weight: bold;">LoopPlay</span> as 
+		Boolean</small></small><br>
+      </td>
+      <td><small><small>Enables Loop Play mode, which plays the animation 
+		continuously.</small></small><br>
+      </td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>NoHighlight</b> as Boolean</small></small></td>
+      <td><small><small>Disables actor highlighting.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small><small><b>OverloadedDocProperties</b> 
+		as Long</small></small></td>
+      <td style="vertical-align: top;"><small><small>Specifies which Player plug-in 
+		properties (specified as a </small></small><small style="font-weight: bold;"><small>
+		CrOverloadedDocumentProperties</small></small> <small><small>mask) 
+		override the corresponding document properties. By default, all these 
+		document properties are overloaded by Player plug-in properties.<br>
+      </small></small></td>
+      <td style="vertical-align: top;">
+      <p><small style="font-weight: bold;"><small>CrOverloadedDocumentProperties</small></small><small><small> 
+		enum values:<br>
+      </small></small></p>
+
+      
+      <ul>
+<li><small><small><span style="font-weight: bold;">crOdpNone (0)</span>: 
+Disables overloading for all these properties<br>
+</small></small></li><li style="font-weight: bold;"><small><small> 
+crOdpRenderGroundShadow (1)</small></small></li>
+        <li><small><small><span style="font-weight: bold;">crOdpRenderMode (2)</span><br>
+          </small></small></li>
+<li style="font-weight: bold;"><small><small> crOdpGroundGrid (4)</small></small></li>
+        <li><small><small><span style="font-weight: bold;">crOdpAll (7)</span>: 
+		Enables overloading for all these properties (the default)<b><br>
+          </b></small></small></li>
+      </ul>
+      <small><small><u>Example</u>: To disable the <span style="font-weight: bold;">
+		RenderGroundShadow</span> property from overriding document 
+		settings, specify 6 (2 + 4).</small></small></td>
+    </tr>
+    <tr>
+      <td style="height: 33px;" bgcolor="#ffcc99"><small><small><b>
+		PMICrossHLOpacity</b> as Single</small></small></td>
+      <td><small><small>Specifies the opacity of the surface attached to product 
+		manufacturing information (PMI)</small></small>.</td>
+      <td><small><small>0: Transparent <br>
+      255: Translucent</small></small></td>
+    </tr>
+    <tr>
+      <td style="height: 33px;" bgcolor="#ffcc99"><small><small><b>
+		PMICrossHLStayOnTop</b> as Boolean</small></small></td>
+      <td><small><small>Makes hidden surfaces visible when selecting or 
+		highlighting related PMI.</small></small></td>
+      <td><small><small>1: True <br>
+      0: False</small></small></td>
+    </tr>
+<tr>
+      <td style="height: 33px;" bgcolor="#ffcc99"><small><small><b>Pos</b> as 
+		Long</small></small></td>
+      <td><small><small>Changes the position of the animation cursor in the 
+		timeline. The &quot;get&quot; mode returns the current frame; the &quot;set&quot; mode put 
+		the cursor on the specified frame.</small></small></td>
+      <td><small><small>Targeted frame</small></small></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small><small><b>PromptToUpdateView</b> 
+		as Boolean</small></small></td>
+      <td style="vertical-align: top;"><small><small>Enables the display of the 
+		dialog box when switching from one view to another, or when leaving the 
+		view mode. <br>
+</small></small></td>
+      <td style="vertical-align: top;"><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small><small><b>
+		RemoveMeasurementCommands</b> as Boolean</small></small></td>
+      <td style="vertical-align: top;"><small><small>Removes all measurement 
+		commands, including the measurement toolbar. To make measurement 
+		commands available but hide the measurement toolbar, set this property 
+		to 0 and set <span style="font-weight: bold;">ShowMeasurementToolBar</span> 
+		to 0. <br>
+</small></small></td>
+      <td style="vertical-align: top;"><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+<tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		RenderGroundShadow</b> as Boolean</small></small></td>
+      <td><small><small>Displays model shadows on the ground actor.<br>
+      <br>
+</small></small><small><small><span style="font-weight: bold;">Note:</span> By 
+		default, this property overrides the corresponding document 
+		property when a document is opened. Use </small></small><small style="font-weight: bold;"><small>
+		OverloadedDocProperties</small></small><small><small> to disable 
+		overloading.</small></small><small style="font-weight: bold;"><small></small></small><br>
+</td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		RenderMode</b> as Integer</small></small></td>
+      <td><small><small>Changes the render mode of the 3D scene.<br>
+      <br>
+</small></small><small><small><span style="font-weight: bold;">Note:</span> By 
+		default, this property overrides the corresponding document 
+		property when a document is opened. Use </small></small><small style="font-weight: bold;"><small>
+		OverloadedDocProperties</small></small><small><small> to disable 
+		overloading.</small></small><small style="font-weight: bold;"><small></small></small><br>
+</td>
+      <td>
+      <p><small><small><b>CrRender</b> enum value:<br>
+      </small></small></p>
+      <ul>
+        <li><small><small><b>crRrmSmooth</b> (<span style="font-weight: bold;">0</span>): 
+		Smooth</small></small></li>
+        <li><small><small> <b>crRrmSmoothWithOutlines </b>(<span style="font-weight: bold;">1</span>): 
+		Smooth with Outline <b>crRrmTechnical</b> (<span style="font-weight: bold;">2</span>): 
+		Technical</small></small></li>
+        <li><small><small> <b>crRrmTechnicalFlat </b>(<span style="font-weight: bold;">3</span>): 
+		Flat Technical</small></small></li>
+        <li><small><small> <b>crRrmSilhouette </b>(<span style="font-weight: bold;">4</span>): 
+		Silhouette</small></small></li>
+        <li><small><small> <b>crRrmFlat </b>(<span style="font-weight: bold;">5</span>): 
+		Flat</small></small></li>
+        <li><small><small> <b>crRrmWireframe </b>(<span style="font-weight: bold;">6</span>): 
+		Wireframe</small></small></li>
+        <li><small><small> <b>crRrmPoint </b>(<span style="font-weight: bold;">7</span>): 
+		Points</small></small></li>
+        <li><small><small> <b>crRrmShadedIllustration </b>(<span style="font-weight: bold;">8</span>): 
+		Shaded Illustration</small></small></li>
+        <li><small><small> <b>crRrmShadedIllustrationWithColors </b>(<span style="font-weight: bold;">9</span>): 
+		Shaded Illustration with Color</small></small></li>
+        <li><small><small> <b>crRrmShadedIllustrationSimple </b>(<span style="font-weight: bold;">10</span>): 
+		Shaded Illustration Without Silhouette</small></small></li>
+        <li><small><small> <b>crRrmCustomRendering </b>(<span style="font-weight: bold;">11</span>): 
+		Custom</small></small></li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="height: 108px;"><small><small><b>Selection</b> as String</small></small></td>
+      <td style="height: 108px;"><small><small>Lets you select an actor or to 
+		see which one is currently selected.<br><small>Additionally its allows you to select from Selection Sets.
+      <br>
+      <span style="color: rgb(255, 0, 0);"></span></small></small><small><small><span style="font-weight: bold;">
+		Note:</span> &quot;set&quot; mode requires a Composer Player Pro license.</small></small> </td>
+      <td style="height: 108px;" valign="bottom"><small><small>Selection, for 
+		example:<br>
+      <br>
+ <span style="font-weight: bold;">By name:</span><br>
+      </small></small>
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;&nbsp;<br>  &lt;CLitModifiable Name=&quot;Body01&quot;/&gt;<br>&lt;/CLitSelection&gt;</small></small></pre>
+      <small><small><span style="font-weight: bold;">By ID</span><span style="font-weight: bold;">:</span><br>
+      </small></small>
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;<br>  8cb9b30b4874ac23#<br>&lt;/CLitSelection&gt;</small></small></pre>
+	  <small><small>Selection Sets, for 
+		example:<br>
+		<br>
+      <span style="font-weight: bold;">By name:</span><br>
+	   <pre><small><small>&lt;CLitList&gt;<br>  &lt;CLitSelection Name="Selection 1"/&gt;<br>  &lt;CLitSelection Name="Selection 2"/&gt;<br>&lt;/CLitList&gt;</pre>
+	   <small><small><span style="font-weight: bold;">By ID</span><span style="font-weight: bold;">:</span><br>
+      </small></small>
+	    <pre><small><small>&lt;CLitList&gt;<br>  &lt;CLitSelection Ident="b6cf29c6bac8ea4a"/&gt;<br>  &lt;CLitSelection Ident="8cb9b30b4874ac23"/&gt;<br>&lt;/CLitList&gt;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowAnnotationToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the annotation toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowAssemblyTreeBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Assembly pane (if the file has the Right 
+		Manager right).</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowBOMTreeBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the BOM pane </small></small><small><small>(if 
+		the file has the Right Manager right).</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowCameraToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the camera toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowCameraViewToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the camera view toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowCollabToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the collaboration toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowCollabTreeBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Collaboration pane (if the file has the 
+		Right Manager right).</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowCuttingPlaneToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the cutting plane toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowGeometryToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the geometry toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowInformationBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Information bar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowMain3DToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Main 3D toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowMarkerBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Marker pane. <span style="font-weight: bold;">
+		Note:</span> The marker pane is visible only when the animation has at 
+		least one marker.<br>
+      </small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowMeasurementToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the measurement toolbar. See also </small></small><small><small><b>
+		RemoveMeasurementCommands</b>.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><span style="font-weight: bold;">ShowPaper</span> as 
+		Boolean</small></small><br>
+      </td>
+      <td><small><small>Displays the paper space.</small></small><br>
+      </td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowPropertyBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Properties </small></small><small><small>
+		pane.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowRedlineToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the redline toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowRenderToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the render toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowStandardToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the standard toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 255, 153);"><small><small><b>
+		ShowStatusBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the status bar</small></small><small><small>.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowTimelineBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the timeline </small></small><small><small>
+		pane.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowTreesBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the Assembly and Collaboration panes (if the 
+		file has the Right Manager right).</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowViewBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the View pane. </small></small><small><small><span style="font-weight: bold;">
+		Note:</span> The view pane is visible only when the file has at least 
+		one view.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ShowVisibilityToolBar</b> as Boolean</small></small></td>
+      <td><small><small>Displays the visibility toolbar.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td bgcolor="#ffcc99"><small><small><b>StartupView</b> as String</small></small></td>
+      <td>
+      <p><small><small>Opens a file on a specific view.</small></small></p>
+      </td>
+      <td>
+      <p><small><small>Name of the view</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>TooltipVisibility</b> as Boolean</small></small></td>
+      <td><small><small>Turns on or off the tooltip visibility of the objects in the viewport.</small></small></td>
+      <td><small><small>1: True</small></small> <small><small><br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>UseGUID</b> as Boolean</small></small></td>
+      <td><small><small>Specifies whether to return actor names or GUIDs in 
+		selections.</small></small></td>
+      <td><small><small>1: True (use GUIDs) <br>
+		0: False (use names)</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>WarningIfLessThan32Bits</b> as Boolean</small></small></td>
+      <td><small><small>Displays a warning if colors of the graphic card are in 
+		16 bits.</small></small></td>
+      <td><small><small>1: Yes</small></small> <small><small><br>
+		0: False</small></small></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<br>
+
+</body></html>

@@ -1,0 +1,1553 @@
+6/10/2026 11:35:35 AM - Starting description fix test...
+6/10/2026 11:35:35 AM - Connected to document
+6/10/2026 11:35:35 AM - Mesh actors (length 10309) | View actors (length 50)
+6/10/2026 11:35:35 AM - Found 243 total actors
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-FRONT GUIDE SEAL HSG'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (59.5x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #1: 'ABG 009 287 40-2.A7372 2649 01.PVORING0005' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0005"><Meta.Description Value="O-RING (59.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0005"><Meta.Description Value="O-RING (59.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (59.5x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (59.5x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'ROD SEAL (37x47.7x4.2 Ø37, NBR)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - BLANK Description for part #2: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PPart1^BG 008 621 74-1'
+6/10/2026 11:35:35 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value ''
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PPart1^BG 008 621 74-1"><Meta.Description Value=""/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="PPart1^BG 008 621 74-1"><Meta.Description Value=""/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value=""/></CLitPropertySet>
+6/10/2026 11:35:35 AM - Method 3 failed. All methods exhausted while resetting Meta.Description.
+6/10/2026 11:35:35 AM - FAILED: Could not reset Meta.Description for actor 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PPart1^BG 008 621 74-1'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - INVALID Description for part #3: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00002' | Current: 'GRUB SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00002"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVGSC00002"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - INVALID Description for part #4: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00001' | Current: 'GRUB SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00001"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVGSC00001"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - INVALID Description for part #5: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00004' | Current: 'GRUB SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00004"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVGSC00004"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - INVALID Description for part #6: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00005' | Current: 'GRUB SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00005"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVGSC00005"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-CYLINDER'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - INVALID Description for part #7: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC0000' | Current: 'GRUB SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC0000"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVGSC0000"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - INVALID Description for part #8: 'ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00003' | Current: 'GRUB SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.ABG 008 621 74.PVGSC00003"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVGSC00003"><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="GRUB SCREW M6x8, 12.9 DIN916"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'GRUB SCREW M6x8, 12.9 DIN916'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-REAR GUIDE-BUSH'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-REAR GUIDE-HOUSE (37)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-FRONT GUIDE BUSH'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-FRONT GUIDE'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #9: 'ABG 009 287 40-2.A7372 2649 01.PVORING0003' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0003"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0003"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (55x2, 90 SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #10: 'ABG 009 287 40-2.A7372 2649 01.PVORING0004' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0004"><Meta.Description Value="O-RING (55x2, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0004"><Meta.Description Value="O-RING (55x2, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (55x2, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (55x2, 90 SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'ROD SEAL (45x55.7x4.2 Ø45, NBR)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #11: 'ABG 009 287 40-2.A7372 2649 01.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING000"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'ROD SEAL (45x55.7x4.2 Ø45, NBR)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'ROD SEAL (37x47.7x4.2 Ø37, NBR)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #12: 'ABG 009 287 40-2.A7372 2649 01.PVORING0007' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0007"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0007"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-DISTRIBUTOR'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'ROD SEAL (45x55.7x4.2 Ø45, NBR)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #13: 'ABG 009 287 40-2.A7372 2649 01.PVORING0002' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0002"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0002"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (55x2, 90 SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #14: 'ABG 009 287 40-2.A7372 2649 01.PVORING0006' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0006"><Meta.Description Value="O-RING (55x2, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0006"><Meta.Description Value="O-RING (55x2, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (55x2, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (55x2, 90 SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #15: 'ABG 009 287 40-2.PVORING0003' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0003"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0003"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'O-RING (245x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:35 AM - INVALID Description for part #16: 'ABG 009 287 40-2.PVWSHLOCK3' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK3"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK3"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #17: 'ABG 009 287 40-2.PVORING0004' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0004"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0004"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - INVALID Description for part #18: 'ABG 009 287 40-2.A7372 2649 01.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A7372 2649 01.PVORING0001"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:35 AM - INVALID Description for part #19: 'ABG 009 287 40-2.PVHEX00008' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00008"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00008"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:35 AM - INVALID Description for part #20: 'ABG 009 287 40-2.PVHEX00001' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00001"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00001"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RD927-DOME NUT (M24x2)'
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:35 AM - INVALID Description for part #21: 'ABG 009 287 40-2.PVHEX00002' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00002"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00002"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:35 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:35 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:35 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:35 AM - Meta.Description already has value: 'RDX5-IB-PISTON (510x8)'
+6/10/2026 11:35:35 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:35 AM - INVALID Description for part #22: 'ABG 009 287 40-2.PVHEX000011' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:35 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX000011"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:35 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:35 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX000011"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - INVALID Description for part #23: 'ABG 009 287 40-2.PVWSHLOCK10' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK10"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK10"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #24: 'ABG 009 287 40-2.PVWSHLOCK4' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK4"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK4"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'RD927-DOME NUT (M24x2)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (22.3x2.4, 90 SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #25: 'ABG 009 287 40-2.PVORING0006' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0006"><Meta.Description Value="O-RING (22.3x2.4, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0006"><Meta.Description Value="O-RING (22.3x2.4, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (22.3x2.4, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (22.3x2.4, 90 SHORE)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (74.5x3, 70SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #26: 'ABG 009 287 40-2.PVORING0005' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0005"><Meta.Description Value="O-RING (74.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0005"><Meta.Description Value="O-RING (74.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (74.5x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (74.5x3, 70SHORE)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #27: 'ABG 009 287 40-2.PVHEX00005' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00005"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00005"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #28: 'ABG 009 287 40-2.PVORING0008' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0008"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0008"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #29: 'ABG 009 287 40-2.PVHEX00009' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00009"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00009"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - INVALID Description for part #30: 'ABG 009 287 40-2.PVWSHLOCK9' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK9"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK9"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #31: 'ABG 009 287 40-2.PVHEX00004' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00004"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00004"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #32: 'ABG 009 287 40-2.PVWSHLOCK7' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK7"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK7"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (22.3x2.4, 90 SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #33: 'ABG 009 287 40-2.PVORING0007' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0007"><Meta.Description Value="O-RING (22.3x2.4, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0007"><Meta.Description Value="O-RING (22.3x2.4, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (22.3x2.4, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (22.3x2.4, 90 SHORE)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #34: 'ABG 009 287 40-2.PVHEX00003' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00003"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00003"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'HLX-IB-AC-GASKET (s0.5)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - INVALID Description for part #35: 'ABG 009 287 40-2.PVWSHLOCK8' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK8"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK8"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'RD927-DOME NUT (M24x2)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #36: 'ABG 009 287 40-2.PVWSHLOCK6' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK6"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK6"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #37: 'ABG 009 287 40-2.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING000"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'RD927-DOME NUT (M24x2)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #38: 'ABG 009 287 40-2.PVORING0002' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0002"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0002"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'HLX-IB-GASKET (s0.5)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #39: 'ABG 009 287 40-2.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVORING0001"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (34.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (34.2x3, 70SHORE)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #40: 'ABG 009 287 40-2.PVHEX0000' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX0000"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX0000"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #41: 'ABG 009 287 40-2.PVWSHLOCK1' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK1"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK1"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'RD927-DOME NUT (M24x2)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #42: 'ABG 009 287 40-2.PVHEX000010' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX000010"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX000010"><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M12x30-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M12x30-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'RD927-DOME NUT (M24x2)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #43: 'ABG 009 287 40-2.PVWSHLOCK2' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK2"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK2"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #44: 'ABG 009 287 40-2.PVHEX00007' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00007"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00007"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - INVALID Description for part #45: 'ABG 009 287 40-2.PVWSHLOCK11' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK11"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK11"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'HLX-IB-AC-GASKET (s0.5)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - INVALID Description for part #46: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P3115 1010 72' | Current: 'MOTOR INLET FLANGE'
+6/10/2026 11:35:36 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'MOTOR INLET FLANGE'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P3115 1010 72"><Meta.Description Value="MOTOR INLET FLANGE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P3115 1010 72"><Meta.Description Value="MOTOR INLET FLANGE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="MOTOR INLET FLANGE"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Reset Meta.Description to 'MOTOR INLET FLANGE'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - INVALID Description for part #47: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-23' | Current: 'COG PIN'
+6/10/2026 11:35:36 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-23"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-23"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - INVALID Description for part #48: 'ABG 009 287 40-2.PVHEX00006' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVHEX00006"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00006"><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x70-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x70-8.8ZP'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #49: 'ABG 009 287 40-2.PVWSHLOCK' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'RDX5-IB-REAR COVER'
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - INVALID Description for part #50: 'ABG 009 287 40-2.PVWSHLOCK5' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.PVWSHLOCK5"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK5"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'COG WHEEL PLATE (80)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'SPACER PIN (HLX)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.Description already has value: 'COG WHEEL (80 MOTOR)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: 'O-RING (70x2, 90SHORE)'
+6/10/2026 11:35:36 AM - INVALID Description for part #51: 'ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING000"><Meta.Description Value="O-RING (70x2, 90SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:36 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (70x2, 90SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:36 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:36 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (70x2, 90SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:36 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (70x2, 90SHORE)'
+6/10/2026 11:35:36 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:36 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:36 AM - INVALID Description for part #52: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 097 85-1' | Current: 'HLX-MTR-CHANNEL PLATE'
+6/10/2026 11:35:36 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-MTR-CHANNEL PLATE'
+6/10/2026 11:35:36 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 097 85-1"><Meta.Description Value="HLX-MTR-CHANNEL PLATE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 097 85-1"><Meta.Description Value="HLX-MTR-CHANNEL PLATE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-MTR-CHANNEL PLATE"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-MTR-CHANNEL PLATE'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #53: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-21' | Current: 'COG PIN'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-21"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-21"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.Description already has value: 'SPRING WASHER (20-26.5)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (24x2, 70SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #54: 'ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0001"><Meta.Description Value="O-RING (24x2, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (24x2, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (24x2, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (24x2, 70SHORE)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #55: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P3115 1010 14' | Current: 'MOTOR DISTRIBUTOR VALVE'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'MOTOR DISTRIBUTOR VALVE'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P3115 1010 14"><Meta.Description Value="MOTOR DISTRIBUTOR VALVE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P3115 1010 14"><Meta.Description Value="MOTOR DISTRIBUTOR VALVE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="MOTOR DISTRIBUTOR VALVE"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'MOTOR DISTRIBUTOR VALVE'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #56: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-24' | Current: 'COG PIN'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-24"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-24"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #57: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-26' | Current: 'COG PIN'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-26"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-26"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (82x2, 70SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #58: 'ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0003' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0003"><Meta.Description Value="O-RING (82x2, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0003"><Meta.Description Value="O-RING (82x2, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (82x2, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (82x2, 70SHORE)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (45x2, 90 SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #59: 'ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0004' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0004"><Meta.Description Value="O-RING (45x2, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0004"><Meta.Description Value="O-RING (45x2, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (45x2, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (45x2, 90 SHORE)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #60: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P3115 1010 12' | Current: 'DISTRIBUTOR SHAFT'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'DISTRIBUTOR SHAFT'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P3115 1010 12"><Meta.Description Value="DISTRIBUTOR SHAFT"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P3115 1010 12"><Meta.Description Value="DISTRIBUTOR SHAFT"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="DISTRIBUTOR SHAFT"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'DISTRIBUTOR SHAFT'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (82x2, 70SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #61: 'ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0002' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.PVORING0002"><Meta.Description Value="O-RING (82x2, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0002"><Meta.Description Value="O-RING (82x2, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (82x2, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (82x2, 70SHORE)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #62: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-22' | Current: 'COG PIN'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-22"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-22"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - INVALID Description for part #63: 'ABG 009 287 40-2.A550 097 85.PVWSHLOCK2' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVWSHLOCK2"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK2"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.Description already has value: 'CARDAN SHAFT (HLX)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #64: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-2' | Current: 'COG PIN'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-2"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-2"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - INVALID Description for part #65: 'ABG 009 287 40-2.A550 097 85.PVNUT00002' | Current: 'HEXGON NUT'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVNUT00002"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVNUT00002"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #66: 'ABG 009 287 40-2.A550 097 85.P550 065 903' | Current: 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.P550 065 903"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 065 903"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (74.5x3, 70SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #67: 'ABG 009 287 40-2.A550 097 85.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVORING000"><Meta.Description Value="O-RING (74.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (74.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (74.5x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (74.5x3, 70SHORE)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #68: 'ABG 009 287 40-2.A550 097 85.P550 065 901' | Current: 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.P550 065 901"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 065 901"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #69: 'ABG 009 287 40-2.A550 097 85.P550 065 90' | Current: 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.P550 065 90"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 065 90"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #70: 'ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-25' | Current: 'COG PIN'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'COG PIN'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.A550 019 03.P550 019 03-25"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 019 03-25"><Meta.Description Value="COG PIN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="COG PIN"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'COG PIN'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - INVALID Description for part #71: 'ABG 009 287 40-2.A550 097 85.PVWSHLOCK1' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVWSHLOCK1"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK1"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.Description already has value: 'HLX-MOTOR FLANGE (OMS80)'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - INVALID Description for part #72: 'ABG 009 287 40-2.A550 097 85.PVNUT0000' | Current: 'HEXGON NUT'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVNUT0000"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVNUT0000"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #73: 'ABG 009 287 40-2.A550 036 25.P550 036 25-2' | Current: 'HLX-AC-INNER'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-AC-INNER'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.P550 036 25-2"><Meta.Description Value="HLX-AC-INNER"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 036 25-2"><Meta.Description Value="HLX-AC-INNER"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-AC-INNER"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-AC-INNER'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - INVALID Description for part #74: 'ABG 009 287 40-2.A550 097 85.PVWSHLOCK3' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVWSHLOCK3"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK3"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (129.5x3, 70SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #75: 'ABG 009 287 40-2.A550 036 25.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.PVORING000"><Meta.Description Value="O-RING (129.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (129.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (129.5x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (129.5x3, 70SHORE)'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - INVALID Description for part #76: 'ABG 009 287 40-2.A550 097 85.PVNUT00003' | Current: 'HEXGON NUT'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVNUT00003"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVNUT00003"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.Description already has value: 'BUTTON (L42.5 80MOTOR)'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - INVALID Description for part #77: 'ABG 009 287 40-2.A550 097 85.PVWSHLOCK' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVWSHLOCK"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK"><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M12)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M12)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #78: 'ABG 009 287 40-2.A550 097 85.P550 065 902' | Current: 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.P550 065 902"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 065 902"><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-IB-MOTOR STUD"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-IB-MOTOR STUD'
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - INVALID Description for part #79: 'ABG 009 287 40-2.A550 097 85.PVNUT00001' | Current: 'HEXGON NUT'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 097 85.PVNUT00001"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVNUT00001"><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD NUT (M12x1.75)-8.8 FZB"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD NUT (M12x1.75)-8.8 FZB'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.Description already has value: 'CAP (.305-32UNS)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: 'O-RING (14x1.78, 70SHORE)'
+6/10/2026 11:35:37 AM - INVALID Description for part #80: 'ABG 009 287 40-2.A550 036 25.A807 590 69.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.A807 590 69.PVORING000"><Meta.Description Value="O-RING (14x1.78, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (14x1.78, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (14x1.78, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (14x1.78, 70SHORE)'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #81: 'ABG 009 287 40-2.A550 036 25.A807 590 69.P807 590 69-1' | Current: 'VALVE BODY'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'VALVE BODY'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.A807 590 69.P807 590 69-1"><Meta.Description Value="VALVE BODY"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P807 590 69-1"><Meta.Description Value="VALVE BODY"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="VALVE BODY"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'VALVE BODY'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #82: 'ABG 009 287 40-2.A550 036 25.P550 036 25-1' | Current: 'HLX-LP ACCUMULATOR HOUSING'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-LP ACCUMULATOR HOUSING'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.P550 036 25-1"><Meta.Description Value="HLX-LP ACCUMULATOR HOUSING"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:37 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 036 25-1"><Meta.Description Value="HLX-LP ACCUMULATOR HOUSING"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:37 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:37 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-LP ACCUMULATOR HOUSING"/></CLitPropertySet>
+6/10/2026 11:35:37 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-LP ACCUMULATOR HOUSING'
+6/10/2026 11:35:37 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:37 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:37 AM - INVALID Description for part #83: 'ABG 009 287 40-2.A550 036 25.P092 602 98' | Current: 'HLX-AC-DIAPHRAGM'
+6/10/2026 11:35:37 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-AC-DIAPHRAGM'
+6/10/2026 11:35:37 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.P092 602 98"><Meta.Description Value="HLX-AC-DIAPHRAGM"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P092 602 98"><Meta.Description Value="HLX-AC-DIAPHRAGM"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-AC-DIAPHRAGM"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-AC-DIAPHRAGM'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #84: 'ABG 009 287 40-2.A550 036 25.P085 370 18' | Current: 'CHARGE VALVE RUBBER CAP'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'CHARGE VALVE RUBBER CAP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.P085 370 18"><Meta.Description Value="CHARGE VALVE RUBBER CAP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P085 370 18"><Meta.Description Value="CHARGE VALVE RUBBER CAP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="CHARGE VALVE RUBBER CAP"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'CHARGE VALVE RUBBER CAP'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.Description already has value: 'CAP (.305-32UNS)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'O-RING (14x1.78, 70SHORE)'
+6/10/2026 11:35:38 AM - INVALID Description for part #85: 'ABG 009 287 40-2.A550 036 27.A807 590 69.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.A807 590 69.PVORING000"><Meta.Description Value="O-RING (14x1.78, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (14x1.78, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (14x1.78, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (14x1.78, 70SHORE)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #86: 'ABG 009 287 40-2.A550 036 27.A807 590 69.P807 590 69-1' | Current: 'VALVE BODY'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'VALVE BODY'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.A807 590 69.P807 590 69-1"><Meta.Description Value="VALVE BODY"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P807 590 69-1"><Meta.Description Value="VALVE BODY"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="VALVE BODY"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'VALVE BODY'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'O-RING (64.5x3, 90 SHORE)'
+6/10/2026 11:35:38 AM - INVALID Description for part #87: 'ABG 009 287 40-2.A550 036 25.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 25.PVORING0001"><Meta.Description Value="O-RING (64.5x3, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (64.5x3, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (64.5x3, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (64.5x3, 90 SHORE)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #88: 'ABG 009 287 40-2.A550 036 27.P092 602 98' | Current: 'HLX-AC-DIAPHRAGM'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-AC-DIAPHRAGM'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.P092 602 98"><Meta.Description Value="HLX-AC-DIAPHRAGM"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P092 602 98"><Meta.Description Value="HLX-AC-DIAPHRAGM"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-AC-DIAPHRAGM"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-AC-DIAPHRAGM'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.Description already has value: 'NIPPLE (1/2BSPP x 1-1/16 JIC)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'O-RING (64.5x3, 90 SHORE)'
+6/10/2026 11:35:38 AM - INVALID Description for part #89: 'ABG 009 287 40-2.A550 036 27.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.PVORING0001"><Meta.Description Value="O-RING (64.5x3, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (64.5x3, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (64.5x3, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (64.5x3, 90 SHORE)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #90: 'ABG 009 287 40-2.A550 036 27.P085 370 18' | Current: 'CHARGE VALVE RUBBER CAP'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'CHARGE VALVE RUBBER CAP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.P085 370 18"><Meta.Description Value="CHARGE VALVE RUBBER CAP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P085 370 18"><Meta.Description Value="CHARGE VALVE RUBBER CAP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="CHARGE VALVE RUBBER CAP"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'CHARGE VALVE RUBBER CAP'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.Description already has value: 'CAP (1-1/16JICF)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #91: 'ABG 009 287 40-2.A550 036 27.P550 036 27-1' | Current: 'HLX-HP ACCUMULATOR HOUSING'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-HP ACCUMULATOR HOUSING'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.P550 036 27-1"><Meta.Description Value="HLX-HP ACCUMULATOR HOUSING"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 036 27-1"><Meta.Description Value="HLX-HP ACCUMULATOR HOUSING"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-HP ACCUMULATOR HOUSING"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-HP ACCUMULATOR HOUSING'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #92: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP1' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP1"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP1"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #93: 'ABG 009 287 40-2.A550 036 27.P151 548 58' | Current: 'ACCUMULATOR SIGN'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'ACCUMULATOR SIGN'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.P151 548 58"><Meta.Description Value="ACCUMULATOR SIGN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P151 548 58"><Meta.Description Value="ACCUMULATOR SIGN"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="ACCUMULATOR SIGN"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'ACCUMULATOR SIGN'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'O-RING (129.5x3, 70SHORE)'
+6/10/2026 11:35:38 AM - INVALID Description for part #94: 'ABG 009 287 40-2.A550 036 27.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.PVORING000"><Meta.Description Value="O-RING (129.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (129.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (129.5x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (129.5x3, 70SHORE)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - INVALID Description for part #95: 'ABG 009 287 40-2.A550 036 27.P550 036 25-2' | Current: 'HLX-AC-INNER'
+6/10/2026 11:35:38 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-AC-INNER'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.A550 036 27.P550 036 25-2"><Meta.Description Value="HLX-AC-INNER"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P550 036 25-2"><Meta.Description Value="HLX-AC-INNER"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-AC-INNER"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-AC-INNER'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #96: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP22' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP22"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP22"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'O-RING (17.3x2.4, 70SHORE)'
+6/10/2026 11:35:38 AM - INVALID Description for part #97: 'ABG 009 287 40-2.ABG 007 879 64.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVORING0001"><Meta.Description Value="O-RING (17.3x2.4, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (17.3x2.4, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (17.3x2.4, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (17.3x2.4, 70SHORE)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.Description already has value: 'CAP (1-1/16JICF)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #98: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP8' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP8"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP8"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #99: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP9' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP9"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP9"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #100: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP15' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP15"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP15"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:38 AM - Meta.Description already has value: 'SPRING-TYPE PIN (5x12)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'BONDED SEAL U16.7X24X1.5-M16'
+6/10/2026 11:35:38 AM - INVALID Description for part #101: 'ABG 009 287 40-2.ABG 007 879 64.PVDOWWASH' | Current: 'DOWTY WASHER'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVDOWWASH"><Meta.Description Value="BONDED SEAL U16.7X24X1.5-M16"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVDOWWASH"><Meta.Description Value="BONDED SEAL U16.7X24X1.5-M16"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="BONDED SEAL U16.7X24X1.5-M16"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'BONDED SEAL U16.7X24X1.5-M16'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #102: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP17' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP17"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP17"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #103: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP19' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP19"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP19"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/8BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #104: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP21' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP21"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP21"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/8BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #105: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP7' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP7"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP7"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #106: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP18' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP18"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP18"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #107: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP23' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP23"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP23"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #108: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP11' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP11"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP11"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #109: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP12' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP12"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP12"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #110: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP6' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP6"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP6"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #111: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP16' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP16"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP16"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:38 AM - INVALID Description for part #112: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:38 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:38 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:38 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:38 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:38 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:38 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #113: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP26' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP26"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP26"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'CAP (1-1/16JICF)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #114: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP13' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP13"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP13"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #115: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP3' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP3"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP3"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #116: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP4' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP4"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP4"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #117: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP2' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP2"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP2"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #118: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP14' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP14"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP14"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'NIPPLE (3/4BSPP x 1-1/16JIC)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'HL500-IB-PLUG'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #119: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP25' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP25"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP25"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'CAP (1-1/16JICF)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-IB-RETRUN ORIFACE (1/2BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'CAP (3/4JICF)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #120: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP20' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP20"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP20"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'NIPPLE (3/4BSPP x 1-1/16JIC)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #121: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP10' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP10"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP10"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-IMPACT BODY'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'NIPPLE (1/2BSPP x 1-1/16 JIC)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #122: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP5' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP5"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP5"><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 3/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 3/8BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'PLUG (HEX HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'O-RING (17.3x2.4, 70SHORE)'
+6/10/2026 11:35:39 AM - INVALID Description for part #123: 'ABG 009 287 40-2.ABG 007 879 64.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVORING000"><Meta.Description Value="O-RING (17.3x2.4, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (17.3x2.4, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (17.3x2.4, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (17.3x2.4, 70SHORE)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'NIPPLE (1/2 BSPP x 3/4-16JIC)'
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x25-8.8ZP'
+6/10/2026 11:35:39 AM - INVALID Description for part #124: 'ABG 009 287 40-2.ABG 007 879 64.PVHEX0000' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVHEX0000"><Meta.Description Value="HEX HEAD BOLT M16x25-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX0000"><Meta.Description Value="HEX HEAD BOLT M16x25-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x25-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x25-8.8ZP'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #125: 'ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP24' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-2.ABG 007 879 64.PVPLGBSPP24"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP24"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #126: 'ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP1' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP1"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP1"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-GEAR HOUSING'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - INVALID Description for part #127: 'ABG 009 287 40-1.ABG 007 882 24.ABG 008 007 28.P551 714 41-2' | Current: 'HLX-GH-TUNGSTEN BUTTON'
+6/10/2026 11:35:39 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-GH-TUNGSTEN BUTTON'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.ABG 008 007 28.P551 714 41-2"><Meta.Description Value="HLX-GH-TUNGSTEN BUTTON"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P551 714 41-2"><Meta.Description Value="HLX-GH-TUNGSTEN BUTTON"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-GH-TUNGSTEN BUTTON"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-GH-TUNGSTEN BUTTON'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #128: 'ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-GH-SCREW RETAINER (1/4x22)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/8BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #129: 'ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP2' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP2"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP2"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/8BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/8BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/8BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'O-RING (26.2x3, 90 SHORE)'
+6/10/2026 11:35:39 AM - INVALID Description for part #130: 'ABG 009 287 40-1.ABG 007 882 24.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.PVORING000"><Meta.Description Value="O-RING (26.2x3, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (26.2x3, 90 SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (26.2x3, 90 SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (26.2x3, 90 SHORE)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-GH-BUSHING (D25d19L16.5)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-GH-MTR FRONT BEARING HSG'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #131: 'ABG 009 287 40-1.ABG 009 205 35.af273d6cf616a684.PVPLGBSPP' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.af273d6cf616a684.PVPLGBSPP"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/2BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/2BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'HLX-GH-BUSHING (D135d130L40)'
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:39 AM - INVALID Description for part #132: 'ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-FRONT HEAD'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - INVALID Description for part #133: 'ABG 009 287 40-1.ABG 009 205 35.A152 747 98.P152 697 08' | Current: 'HLX-FH-REAR BUSHING-BUSH'
+6/10/2026 11:35:39 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-FH-REAR BUSHING-BUSH'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.A152 747 98.P152 697 08"><Meta.Description Value="HLX-FH-REAR BUSHING-BUSH"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P152 697 08"><Meta.Description Value="HLX-FH-REAR BUSHING-BUSH"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-FH-REAR BUSHING-BUSH"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-FH-REAR BUSHING-BUSH'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.Description already has value: 'RDX5-GH-REAR BUSHING (95x106x72)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - INVALID Description for part #134: 'ABG 009 287 40-1.ABG 009 205 35.A152 745 38.P152 745 38-1' | Current: 'HLX-FH-FRONT COVER'
+6/10/2026 11:35:39 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-FH-FRONT COVER'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.A152 745 38.P152 745 38-1"><Meta.Description Value="HLX-FH-FRONT COVER"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P152 745 38-1"><Meta.Description Value="HLX-FH-FRONT COVER"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-FH-FRONT COVER"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-FH-FRONT COVER'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'DOWTY WAHSER (1/4 BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #135: 'ABG 009 287 40-1.ABG 007 882 24.PVDOWWASH' | Current: 'DOWTY WASHER'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.PVDOWWASH"><Meta.Description Value="DOWTY WAHSER (1/4 BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVDOWWASH"><Meta.Description Value="DOWTY WAHSER (1/4 BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="DOWTY WAHSER (1/4 BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'DOWTY WAHSER (1/4 BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - INVALID Description for part #136: 'ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP3' | Current: 'PLUG SCREW - BSPP'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 007 882 24.PVPLGBSPP3"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVPLGBSPP3"><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="PLUG SCREW-(RND HEAD 1/4BSPP)"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Set Meta.Description to 'PLUG SCREW-(RND HEAD 1/4BSPP)'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - INVALID Description for part #137: 'ABG 009 287 40-1.ABG 009 205 35.A152 747 98.P152 747 98-1' | Current: 'HLX-FH-REAR BUSHING-HOUSE'
+6/10/2026 11:35:39 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-FH-REAR BUSHING-HOUSE'
+6/10/2026 11:35:39 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.A152 747 98.P152 747 98-1"><Meta.Description Value="HLX-FH-REAR BUSHING-HOUSE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:39 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P152 747 98-1"><Meta.Description Value="HLX-FH-REAR BUSHING-HOUSE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:39 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:39 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-FH-REAR BUSHING-HOUSE"/></CLitPropertySet>
+6/10/2026 11:35:39 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-FH-REAR BUSHING-HOUSE'
+6/10/2026 11:35:39 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:39 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:39 AM - INVALID Description for part #138: 'ABG 009 287 40-1.ABG 009 205 35.A152 745 38.P152 744 08' | Current: 'HLX-FH-FRONT BUSHING'
+6/10/2026 11:35:40 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-FH-FRONT BUSHING'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.A152 745 38.P152 744 08"><Meta.Description Value="HLX-FH-FRONT BUSHING"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P152 744 08"><Meta.Description Value="HLX-FH-FRONT BUSHING"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-FH-FRONT BUSHING"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-FH-FRONT BUSHING'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'RDX5-FH-SEAL HOUSING, 45'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX SHANK 45-500-T38'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - INVALID Description for part #139: 'ABG 009 287 40-1.ABG 009 205 35.PVHEX00002' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVHEX00002"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00002"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: 'O-RING (62.2x3, 70SHORE)'
+6/10/2026 11:35:40 AM - INVALID Description for part #140: 'ABG 009 287 40-1.ABG 009 205 35.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVORING000"><Meta.Description Value="O-RING (62.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (62.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (62.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (62.2x3, 70SHORE)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: 'O-RING (124.5x3, 70SHORE)'
+6/10/2026 11:35:40 AM - INVALID Description for part #141: 'ABG 009 287 40-1.ABG 009 205 35.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVORING0001"><Meta.Description Value="O-RING (124.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (124.5x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (124.5x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (124.5x3, 70SHORE)'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - INVALID Description for part #142: 'ABG 009 287 40-1.ABG 009 205 35.PVHEX00003' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVHEX00003"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00003"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-GASKET PLATE (s1.0)'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:40 AM - INVALID Description for part #143: 'ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK1' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK1"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK1"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:40 AM - INVALID Description for part #144: 'ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK3' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK3"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK3"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'CUP SEAL (45x60x10)'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:40 AM - INVALID Description for part #145: 'ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK2' | Current: 'NORD LOCK WASHER'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVWSHLOCK2"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVWSHLOCK2"><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="NORD LOCK WASHER (M16)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'NORD LOCK WASHER (M16)'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - INVALID Description for part #146: 'ABG 009 287 40-1.ABG 009 205 35.PVHEX0000' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVHEX0000"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX0000"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - INVALID Description for part #147: 'ABG 009 287 40-1.ABG 009 205 35.PVHEX00001' | Current: 'HEXAGON HEAD SCREW'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.ABG 009 205 35.PVHEX00001"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVHEX00001"><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="HEX HEAD BOLT M16x50-8.8ZP"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'HEX HEAD BOLT M16x50-8.8ZP'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'CUP SEAL (45x60x10)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'BEARING (HK 3026)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'CAP (1-1/16JICF)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'CUP SEAL (45x60x10)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'CUP SEAL (45x60x10)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-WEAR RING (45x50x9.7)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-75 DEG ELBOW(R3/4SWx 1-1/16JIC)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'CUP SEAL (45x60x10)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-WEAR RING (45x50x9.7)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-GASKET PLATE (s1.0)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'RDX5-ROTATION SHAFT BRG HSG'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-GH-STUD (M24x2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX5D-GH-ROTATION CHUCK'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'RDX5-GH-SLIDE PLATE (55x30)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-GH-STUD (M24x2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - INVALID Description for part #148: 'ABG 009 287 40-1.P150 797 18' | Current: 'HLX-GH-SLIDE PLATE'
+6/10/2026 11:35:40 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-GH-SLIDE PLATE'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.P150 797 18"><Meta.Description Value="HLX-GH-SLIDE PLATE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P150 797 18"><Meta.Description Value="HLX-GH-SLIDE PLATE"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-GH-SLIDE PLATE"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-GH-SLIDE PLATE'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX5D-GH-CHUCK'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'RDX5-GH-ROTATION SHAFT'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-GH-STUD (M24x2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'DRILL COLLAR (38)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'SCRAPER (30x36.8x5)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:40 AM - INVALID Description for part #149: 'ABG 009 287 40-1.PVORING000' | Current: 'O-RING'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.PVORING000"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING000"><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (72x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (72x3, 70SHORE)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX5-GH-DRIVER'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - INVALID Description for part #150: 'ABG 009 287 40-1.P154 194 08' | Current: 'HLX-GH-GEAR'
+6/10/2026 11:35:40 AM - No Meta.Description_cfg value; resetting Meta.Description to sanitized value 'HLX-GH-GEAR'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description reset with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.P154 194 08"><Meta.Description Value="HLX-GH-GEAR"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description reset with last segment: <CLitPropertyMap><CLitModifiable Name="P154 194 08"><Meta.Description Value="HLX-GH-GEAR"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description reset: <CLitPropertySet><Meta.Description Value="HLX-GH-GEAR"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Reset Meta.Description to 'HLX-GH-GEAR'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-GH-STUD (M24x2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HOSE CLAMP (d50)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'ROTARY SEAL (30x37.5x3.2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-SCREW (M24X57)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'DEEP GR BALL BEARING 6208'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-GH-STUD (M24x2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-SCREW (M24X57)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: 'O-RING (41.2x3, 70SHORE)'
+6/10/2026 11:35:40 AM - INVALID Description for part #151: 'ABG 009 287 40-1.PVORING0001' | Current: 'O-RING'
+6/10/2026 11:35:40 AM - Method 1: Trying SetPropertyMap for Description with full path: <CLitPropertyMap><CLitModifiable Name="ABG 009 287 40-1.PVORING0001"><Meta.Description Value="O-RING (41.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 1 failed, trying Method 2...
+6/10/2026 11:35:40 AM - Method 2: Trying SetPropertyMap for Description with last segment: <CLitPropertyMap><CLitModifiable Name="PVORING0001"><Meta.Description Value="O-RING (41.2x3, 70SHORE)"/></CLitModifiable></CLitPropertyMap>
+6/10/2026 11:35:40 AM - Method 2 failed, trying Method 3...
+6/10/2026 11:35:40 AM - Method 3: Trying SetPropertySet for Description: <CLitPropertySet><Meta.Description Value="O-RING (41.2x3, 70SHORE)"/></CLitPropertySet>
+6/10/2026 11:35:40 AM - SUCCESS (Method 3): Set Meta.Description to 'O-RING (41.2x3, 70SHORE)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-GH-STUD (M24x2)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-SCREW (M24X57)'
+6/10/2026 11:35:40 AM - Meta.Description_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.DESCRIPTION_cfg value: ''
+6/10/2026 11:35:40 AM - Meta.Description already has value: 'HLX-FH-SCREW (M24X57)'
+6/10/2026 11:35:40 AM - Total parts processed: 151
+6/10/2026 11:35:40 AM - Test complete

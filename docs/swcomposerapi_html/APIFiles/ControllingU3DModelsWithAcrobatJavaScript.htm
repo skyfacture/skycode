@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Controlling U3D Models with Acrobat JavaScript</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="3dviacomposer.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <h1>Controlling U3D Models with Acrobat JavaScript</h1>
+    <span class="commande"><span class="note">Note:</span> This topic
+      requires knowledge of the Adobe JavaScript implementation. It is
+      recommended that you read the Acrobat JavaScript and Acrobat 3D
+      JavaScript reference documentation.<br>
+      <br>
+      Composer uses the Adobe 3D JavaScript engine to control
+      camera animations, views, and interactive BOMs of Universal 3D
+      (U3D) content. If you need additional control over the 3D model,
+      use Acrobat to add your own JavaScript code. To access the
+      functions attached to the U3D scene from within the PDF document,
+      use the <span style="font-family: monospace;">getAnnot3D</span>
+      method, from which you can access annotation 3D context:<br>
+      <br>
+    </span>
+    <div style="margin-left: 40px;"> <span style="font-family:
+        monospace;">c3D = getAnnot3D( 0 , "Seemage3DAnnot0" ).context3D;</span><br>
+    </div>
+    <span class="commande"><br>
+      You can now use Acrobat 3D JavaScript to control the model. For
+      example, the following code prints the number of meshes in the
+      scene to the console:<br>
+      <br>
+    </span>
+    <div style="margin-left: 40px;"> <span style="font-family:
+        monospace;">console.println( c3D.scene.meshes.count );</span><br>
+    </div>
+    <span class="commande"><br>
+      Depending on the U3D publication options you selected, Composer adds certain methods to the <span style="font-family:
+        monospace;">c3D</span> object:<br>
+    </span>
+    <ul>
+      <li><span class="commande"><span style="font-family: monospace;">setConfig(n)</span>
+          - Sets the 0-based nth configuration.</span></li>
+      <li><span class="commande"><span style="font-family: monospace;">layerManager.hideLayer("layer
+
+            name")</span> - Hides the specified layer.</span></li>
+      <li><span class="commande"><span style="font-family: monospace;">layerManager.showAllLayers()</span>
+          - Shows all layers.</span></li>
+      <li><span class="commande"><span style="font-family: monospace;">layerManager.hideAllLayers()</span>
+          - Hides all layers.</span></li>
+      <li><span class="commande"><span style="font-family: monospace;">setLayerToOriginalRenderMode("layer
+
+            name")</span> - Shows the layer in question.</span></li>
+    </ul>
+    <span class="commande"><span class="note">Note:</span> A layer is a
+      group in the BOM.</span>
+  </body>
+</html>

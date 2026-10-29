@@ -1,0 +1,265 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+  
+  <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"><title> 
+	Composer API - Document Properties</title>
+  
+
+  
+  
+  <link href="tabs.css" rel="stylesheet" type="text/css">
+
+  
+  <link href="doxygen.css" rel="stylesheet" type="text/css"></head><body>
+<h1> Composer API - Document Properties</h1><span style="font-weight: bold;"><br>
+Note:</span> Each property has a &quot;set&quot; and a &quot;get&quot; mode. Use arguments for &quot;set&quot; 
+mode but not &quot;get&quot; mode.<br>
+<br>
+
+
+<table border="1" cellpadding="5" cellspacing="0">
+
+  <tbody>
+    <tr style="background-color: rgb(210, 210, 210);">
+      <td style="text-align: left; vertical-align: middle;"> <small><small><strong>
+		Property</strong></small></small><br>
+</td>
+      <td><small><small><strong>Description</strong></small></small></td>
+      <td><small><small><strong>Arguments and Examples</strong></small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>AllNameOccurences</b> as Boolean</small></small></td>
+      <td><small><small>Manages the ability to select all the occurences of the object.</small></small></td>
+      <td>
+      <p><small><small>1: True. All the occurences of the object will be selected<br>
+		0: False. Only the object that matches the Net Guid (if UseGUID is True) or the name will be selected</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>AssySelectionMode</b> as Boolean</small></small></td>
+      <td><small><small>Enables assembly selection mode.</small></small></td>
+      <td>
+      <p><small><small>1: True<br>
+		0: False</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>AutoKeyMode</b> as Boolean</small></small></td>
+      <td><small><small>Enables auto-key mode.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>CameraInertia</b> as Boolean</small></small></td>
+      <td><small><small>Enables camera inertia mode.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>CameraPlayMode</b> as Boolean</small></small></td>
+      <td><small><small>Shows camera movement during animation.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>CameraSmoothTime</b> as Integer</small></small></td>
+      <td><small><small>Applies smooth transitions between view changes.</small></small></td>
+      <td>
+      <p><small><small>0: No transitions<br>
+		100: Smooth transitions</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>DropInViewport</b> as Boolean</small></small></td>
+      <td><small><small>Manages the ability to drag and drop files in the 
+		viewport, for merging in the current document.</small></small></td>
+      <td>
+      <p><small><small>1: True. Enables drag and drop<br>
+		0: False. Disables drag and drop</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>EventsMask</b> as Long</small></small></td>
+      <td><small><small>Filters the specified events. These events (<span style="font-weight: bold;">OnChangeVisibility</span>, <span style="font-weight: bold;">
+		OnChangeSelection</span>, and <span style="font-weight: bold;">
+		OnChangeProperties</span>) can be time consuming on large models<br>
+      <br>
+      <span style="font-weight: bold;">Note:</span> By default, these events are 
+		not sent anymore.</small></small></td>
+      <td><small><small><span style="font-weight: bold;">OnChangeVisibility</span>: 
+		1 (bit 0)<br>
+      <span style="font-weight: bold;">OnChangeSelection</span>: 2 (bit 1)<br>
+      <span style="font-weight: bold;">OnChangeProperties</span>: 4 (bit 2)<br>
+      <br>
+      <span style="font-weight: bold;">Example</span>: To catch <span style="font-weight: bold;">
+		OnChangeVisibility</span> and <span style="font-weight: bold;">
+		OnChangeProperties</span>: events mask = 1 + 4 = 5<br>
+      <br>
+		The default value is 2.</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>FileName</b> as String</small></small></td>
+      <td><small><small>Returns which file is opened. The main method to open a 
+		new file is <span style="font-weight: bold;">Open()</span>.</small></small></td>
+      <td><small><small><b>Filename</b>, for example: <font style="font-family: monospace;">
+		&quot;scenes/animation.smg&quot;</font></small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>GroundGrid</b> as Boolean</small></small></td>
+      <td><small><small>Shows the ground actor.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>HighlightedObject</b> as String</small></small></td>
+      <td><small><small>Enables highlighting actors or seeing which one is 
+		currently highlighted. <br>
+      <br>
+      <span style="font-weight: bold;">Note:</span> &quot;set&quot; mode requires a 
+		Composer Player Pro license.</small></small> </td>
+      <td><small><small>Selection, for example:<br>
+      <br>
+      <span style="font-weight: bold;">By name:</span><br>
+      </small></small>
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;&nbsp;<br>  &lt;CLitModifiable Name=&quot;Body01&quot;/&gt;<br>&lt;/CLitSelection&gt;</small></small></pre>
+      <small><small><span style="font-weight: bold;">By ID</span><span style="font-weight: bold;">:</span><br>
+      </small></small>
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;<br>  8cb9b30b4874ac23#<br>&lt;/CLitSelection&gt;</small></small></pre>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>NoHighlight</b> as Boolean</small></small></td>
+      <td><small><small>Disables actor highlighting.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>Pos</b> as Long</small></small></td>
+      <td><small><small>Changes the position of the animation cursor in the 
+		timeline. The &quot;get&quot; mode returns the current frame; the &quot;set&quot; mode put 
+		the cursor at the specified frame.</small></small></td>
+      <td><small><small>Targeted frame</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>PMICrossHLOpacity</b> as Single</small></small></td>
+      <td><small><small>Specifies the opacity of the surface attached to product 
+		manufacturing information (PMI).</small></small></td>
+      <td><small><small>0: Transparent <br>
+      255: Translucent</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>PMICrossHLStayOnTop</b> as Boolean</small></small></td>
+      <td><small><small>Makes hidden surfaces visible when selecting or 
+		highlighting related PMI.</small></small></td>
+      <td><small><small>1: True <br>
+      0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>RenderGroundShadow</b> as Boolean</small></small></td>
+      <td><small><small>Displays model shadows on the ground actor.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>RenderMirror</b> as Boolean</small></small></td>
+      <td><small><small>Displays the model mirror image on the ground actor.</small></small></td>
+      <td><small><small>1: True <br>
+		0: False</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>RenderMode</b> as CrRender</small></small></td>
+      <td><small><small>Changes the render mode of the 3D scene.</small></small></td>
+      <td>
+      <p><small><small><b>CrRender</b> enum value:<br>
+      </small></small></p>
+      <ul>
+        <li><small><small><b>crRrmSmooth</b> (<span style="font-weight: bold;">0</span>): 
+		Smooth</small></small></li>
+        <li><small><small> <b>crRrmSmoothWithOutlines </b>(<span style="font-weight: bold;">1</span>): 
+		Smooth with Outline <br>
+          </small></small></li>
+        <li><small><small><b>crRrmTechnical</b> (<span style="font-weight: bold;">2</span>): 
+		Technical</small></small></li>
+        <li><small><small> <b>crRrmTechnicalFlat </b>(<span style="font-weight: bold;">3</span>): 
+		Flat Technical</small></small></li>
+        <li><small><small> <b>crRrmSilhouette </b>(<span style="font-weight: bold;">4</span>): 
+		Silhouette</small></small></li>
+        <li><small><small> <b>crRrmFlat </b>(<span style="font-weight: bold;">5</span>): 
+		Flat</small></small></li>
+        <li><small><small> <b>crRrmWireframe </b>(<span style="font-weight: bold;">6</span>): 
+		Wireframe</small></small></li>
+        <li><small><small> <b>crRrmPoint </b>(<span style="font-weight: bold;">7</span>): 
+		Points</small></small></li>
+        <li><small><small> <b>crRrmShadedIllustration </b>(<span style="font-weight: bold;">8</span>): 
+		Shaded Illustration</small></small></li>
+        <li><small><small> <b>crRrmShadedIllustrationWithColors </b>(<span style="font-weight: bold;">9</span>): 
+		Shaded Illustration with Color</small></small></li>
+        <li><small><small> <b>crRrmShadedIllustrationSimple </b>(<span style="font-weight: bold;">10</span>): 
+		Shaded Illustration Without Silhouette</small></small></li>
+        <li><small><small> <b>crRrmCustomRendering </b>(<span style="font-weight: bold;">11</span>): 
+		Custom</small></small></li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="height: 108px;"><small><small><b>Selection</b> as String</small></small></td>
+      <td style="height: 108px;"><small><small>Lets you select an actor or see 
+		which one is currently selected.<br><small><small>Additionally its allows you to select from Selection Sets.
+      <br>
+      <span style="color: rgb(255, 0, 0);"></span></small></small><small><small><span style="font-weight: bold;">
+		Note:</span> &quot;set&quot; mode requires a Composer Player Pro license.</small></small><small><small><br>
+      </small></small></td>
+      <td style="height: 108px;"><small><small>Selection, for example:<br>
+      <br>
+      <span style="font-weight: bold;">By name:</span><br>
+      </small></small>
+      
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;&nbsp;<br>  &lt;CLitModifiable Name=&quot;Body01&quot;/&gt;<br>&lt;/CLitSelection&gt;</small></small></pre>
+      <small><small><span style="font-weight: bold;">By ID</span><span style="font-weight: bold;">:</span><br>
+      </small></small>
+      
+      <pre><small><small>&lt;CLitSelection Name=&quot;&quot;&gt;<br>  8cb9b30b4874ac23#<br>&lt;/CLitSelection&gt;</small></small></pre>
+	 	  <small><small>Selection Sets, for 
+		example:<br>
+		<br>
+      <span style="font-weight: bold;">By name:</span><br>
+	   <pre><small><small>&lt;CLitList&gt;<br>  &lt;CLitSelection Name="Selection 1"/&gt;<br>  &lt;CLitSelection Name="Selection 2"/&gt;<br>&lt;/CLitList&gt;</pre>
+	   <small><small><span style="font-weight: bold;">By ID</span><span style="font-weight: bold;">:</span><br>
+      </small></small>
+	    <pre><small><small>&lt;CLitList&gt;<br>  &lt;CLitSelection Ident="b6cf29c6bac8ea4a"/&gt;<br>  &lt;CLitSelection Ident="8cb9b30b4874ac23"/&gt;<br>&lt;/CLitList&gt;</pre>
+</td>
+    </tr>
+    <tr>
+      <td><small><small><b>StartupView</b> as String</small></small></td>
+      <td>
+      <p><small><small>Opens a file on a specific view.</small></small></p>
+      </td>
+      <td>
+      <p><small><small>Name of the view.</small></small></p>
+      </td>
+    </tr>
+    <tr>
+      <td><small><small><b>UseGUID</b> as Boolean</small></small></td>
+      <td><small><small>Specifies whether to return actor names or GUIDs in 
+		selections.</small></small></td>
+      <td><small><small>1: True, use GUIDs <br>
+		0: False, use names</small></small></td>
+    </tr>
+    <tr>
+      <td><small><small><b>ViewNameTemplate</b> as String</small></small></td>
+      <td><small><small>Defines the template to use for view names when creating views. 
+		<br>
+		You can use alphanumeric characters, as well as the following optional variables, in any order:
+		<br>
+		- %filename%: inserts the name of the file containing the model, without its extension.
+		<br>
+		- %viewnumber%: inserts the number of the view, such as 1 for the first-created view.</small></small></td>
+      <td><small><small>Value of the template, for example: 
+		&quot;%filename%_View_%viewnumber%&quot;, or &quot;Demo of %filename%, View %viewnumber%&quot;</small></small></td>
+    </tr>
+  </tbody>
+</table>
+
+</body></html>

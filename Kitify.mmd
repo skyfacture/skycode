@@ -1,0 +1,9 @@
+flowchart TD
+    A["Select kit parts in the main assy or relevant sub assemblies"] --> B["Copy + paste parts (creating duplicates)"]
+    B --> C["Form new subassembly from pasted parts, reuse parent assembly origin"]
+    C --> D["Save new subassembly as external file, overwriting the relevant existing kit file in PDM"]
+    D --> E["Open the new kit file ensuring part number and description properties are set correctly and save again"]
+    E --> F["Insert kit assembly back into main assembly, restore relative position with mates, create config(s) for kit(s)"]
+    F --> G["Composer imports kit SKU with metadata"]
+    G --> H["Partlink consumes kit SKU for BOM + exploded views and downstream data integration"]
+    H --> I["M3 consumes kit SKU for item creation + catalog alignment"]
