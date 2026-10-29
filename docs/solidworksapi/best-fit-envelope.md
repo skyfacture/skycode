@@ -30,7 +30,9 @@ renamed from the initial extensionless working file.
 3. Keep the intended part or assembly active in the running SOLIDWORKS session.
 4. Run `SldworksBoundingBox`, or call `GetCurrentModelBestFitEnvelope`.
    `GetCurrentModelBestFitEnvelope(False)` returns the report without a message
-   box, for programmatic use.
+   box, for programmatic use. Both forms first show a **Save As** dialog for
+   the TXT report. Cancelling returns an empty string without changing the
+   model or creating output files.
 
 The script attaches using `GetObject(, "SldWorks.Application")`, rather than
 launching another SOLIDWORKS instance. It gets `ActiveDoc` and rejects missing
@@ -43,8 +45,9 @@ than silently modifying an existing feature.
 
 Creating the feature changes the open model and clears the current selection.
 The script rebuilds the model but does **not** save the source model or write
-custom properties. It now saves a separate solid proxy part and a text report
-beside the saved source model. For assemblies, the proxy is inserted as a fixed
+custom properties. It saves a separate solid proxy part beside the saved source
+model and a text report at the location chosen in the Save As dialog.
+For assemblies, the proxy is inserted as a fixed
 envelope component and excluded from the BOM; tree ordering is not changed.
 Save the source assembly manually to persist that component reference.
 On failure the script logs the stage and raises the error; partially created
@@ -143,9 +146,13 @@ constructs a right-handed placement transform and applies it to a modeler box.
 
 The source model must already have a saved path, and SOLIDWORKS must have a
 valid default part template. Outputs are named
-`<source-name>_BestFitEnvelope.SLDPRT` and a matching `.txt`,
-in the source model's folder, not the VBA script's folder. Existing output
-files are overwritten on subsequent runs. The existing generated body feature
+`<source-name>_BestFitEnvelope.SLDPRT` in the source model's folder, not the
+VBA script's folder. The TXT report's Save As dialog suggests a matching
+filename and initially opens in the source folder; choose its name and location
+before processing begins. The dialog supplies `.txt` when no extension is
+entered and confirms replacement of an existing report. It uses the Windows
+common dialog API, compatible with 32-bit and 64-bit VBA hosts.
+The proxy is overwritten on subsequent runs. The existing generated body feature
 is replaced in the same part document and saved, including when that document
 is loaded through the source assembly. An existing output lacking the named
 generated feature is rejected rather than replacing an unrelated part.

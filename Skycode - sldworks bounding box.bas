@@ -9,6 +9,68 @@ Private Const BOUNDING_BOX_BEST_FIT As Long = 1
 Private Const SKETCH_SEGMENT_LINE As Long = 0
 Private Const BOX_FEATURE_NAME As String = "Skycode_BestFitEnvelope"
 
+#If VBA7 Then
+Private Declare PtrSafe Function GetSaveFileNameW Lib "comdlg32.dll" (ByRef dialog As SaveFileDialog) As Long
+Private Declare PtrSafe Function CommDlgExtendedError Lib "comdlg32.dll" () As Long
+#Else
+Private Declare Function GetSaveFileNameW Lib "comdlg32.dll" (ByRef dialog As SaveFileDialog) As Long
+Private Declare Function CommDlgExtendedError Lib "comdlg32.dll" () As Long
+#End If
+
+Private Type SaveFileDialog
+    structureSize As Long
+#If VBA7 Then
+    ownerWindow As LongPtr
+    instance As LongPtr
+    filter As LongPtr
+    customFilter As LongPtr
+#Else
+    ownerWindow As Long
+    instance As Long
+    filter As Long
+    customFilter As Long
+#End If
+    maxCustomFilter As Long
+    filterIndex As Long
+#If VBA7 Then
+    file As LongPtr
+#Else
+    file As Long
+#End If
+    maxFile As Long
+#If VBA7 Then
+    fileTitle As LongPtr
+#Else
+    fileTitle As Long
+#End If
+    maxFileTitle As Long
+#If VBA7 Then
+    initialDirectory As LongPtr
+    title As LongPtr
+#Else
+    initialDirectory As Long
+    title As Long
+#End If
+    flags As Long
+    fileOffset As Integer
+    fileExtension As Integer
+#If VBA7 Then
+    defaultExtension As LongPtr
+    customData As LongPtr
+    hook As LongPtr
+    templateName As LongPtr
+    reserved As LongPtr
+#Else
+    defaultExtension As Long
+    customData As Long
+    hook As Long
+    templateName As Long
+    reserved As Long
+#End If
+    reservedValue As Long
+    extendedFlags As Long
+End Type
+
 Public Sub SldworksBoundingBox()
     Call GetCurrentModelBestFitEnvelope
 End Sub
@@ -62,7 +124,16 @@ Public Function GetCurrentModelBestFitEnvelope( _
     Set fs = CreateObject("Scripting.FileSystemObject")
     proxyPath = fs.BuildPath(fs.GetParentFolderName(sourcePath), _
         fs.GetBaseName(sourcePath) & "_BestFitEnvelope.SLDPRT")
-    reportPath = fs.BuildPath(fs.GetParentFolderName(sourcePath), fs.GetBaseName(proxyPath) & ".txt")
+    stage = "Choosing where to save the text report"
+    reportPath = ChooseReportPath(fs.GetBaseName(proxyPath) & ".txt", fs.GetParentFolderName(sourcePath))
+    If Len(reportPath) = 0 Then
+        Debug.Print "Cancelled: no report location selected; no model changes or output files were made."
+        Exit Function
+    End If
+    If StrComp(reportPath, sourcePath, vbTextCompare) = 0 _
+        Or StrComp(reportPath, proxyPath, vbTextCompare) = 0 Then
+        Err.Raise vbObjectError + 2140, , "The text report cannot replace the source model or proxy part."
+    End If
 
     stage = "Checking for an existing root-model bounding box"
     Set boxFeature = FindBoundingBox(swModel)
@@ -184,7 +255,7 @@ Public Function GetCurrentModelBestFitEnvelope( _
             "Enable envelope-component import in Composer."
     End If
 
-    stage = "Writing the popup report to the source folder"
+    stage = "Writing the popup report to the selected file"
     Set textOutput = fs.CreateTextFile(reportPath, True, True)
     textOutput.Write report
     textOutput.Close
@@ -206,6 +277,40 @@ Failed:
     End If
     Debug.Print "ERROR: " & failureDescription
     Err.Raise failureNumber, "GetCurrentModelBestFitEnvelope", failureDescription
+End Function
+
+Private Function ChooseReportPath(ByVal suggestedName As String, ByVal initialFolder As String) As String
+    Dim dialog As SaveFileDialog
+    Dim fileBuffer As String
+    Dim filter As String
+    Dim title As String
+    Dim extension As String
+    Dim dialogError As Long
+
+    fileBuffer = suggestedName & String$(32768 - Len(suggestedName), vbNullChar)
+    filter = "Text files (*.txt)" & vbNullChar & "*.txt" & vbNullChar & vbNullChar
+    title = "Save Best Fit envelope text report"
+    extension = "txt"
+    dialog.structureSize = LenB(dialog)
+    dialog.filter = StrPtr(filter)
+    dialog.filterIndex = 1
+    dialog.file = StrPtr(fileBuffer)
+    dialog.maxFile = Len(fileBuffer)
+    dialog.initialDirectory = StrPtr(initialFolder)
+    dialog.title = StrPtr(title)
+    dialog.defaultExtension = StrPtr(extension)
+    ' Confirm overwrites, preserve the current directory, and require an existing folder.
+    dialog.flags = &H2 Or &H8 Or &H800
+
+    If GetSaveFileNameW(dialog) <> 0 Then
+        ChooseReportPath = Left$(fileBuffer, InStr(fileBuffer, vbNullChar) - 1)
+    Else
+        dialogError = CommDlgExtendedError()
+        If dialogError <> 0 Then
+            Err.Raise vbObjectError + 2139, "ChooseReportPath", _
+                "The report Save As dialog failed. Windows dialog error: " & dialogError
+        End If
+    End If
 End Function
 
 Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
