@@ -3,5 +3,24 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"editor.background": "#111113",
+			"activityBar.background": "#111113",
+			"sideBar.background": "#111113",
+			"sideBarSectionHeader.background": "#111113",
+			"panel.background": "#111113",
+			"panelSectionHeader.background": "#111113",
+			"editorGroupHeader.tabsBackground": "#111113",
+			"editorGroupHeader.noTabsBackground": "#111113",
+			"tab.activeBackground": "#111113",
+			"tab.inactiveBackground": "#111113",
+			"statusBar.background": "#111113",
+			"statusBar.noFolderBackground": "#111113",
+			"titleBar.activeBackground": "#111113",
+			"titleBar.inactiveBackground": "#111113",
+			"terminal.background": "#111113"
+		}
+	}
 }

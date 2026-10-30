@@ -1,3 +1,20 @@
 {
     "snyk.advanced.autoSelectOrganization": true,
+    "workbench.colorCustomizations": {
+        "editor.background": "#1E1E1E",
+        "activityBar.background": "#1E1E1E",
+        "sideBar.background": "#1E1E1E",
+        "sideBarSectionHeader.background": "#1E1E1E",
+        "panel.background": "#1E1E1E",
+        "panelSectionHeader.background": "#1E1E1E",
+        "editorGroupHeader.tabsBackground": "#1E1E1E",
+        "editorGroupHeader.noTabsBackground": "#1E1E1E",
+        "tab.activeBackground": "#1E1E1E",
+        "tab.inactiveBackground": "#1E1E1E",
+        "statusBar.background": "#1E1E1E",
+        "statusBar.noFolderBackground": "#1E1E1E",
+        "titleBar.activeBackground": "#1E1E1E",
+        "titleBar.inactiveBackground": "#1E1E1E",
+        "terminal.background": "#1E1E1E"
     }
+}
