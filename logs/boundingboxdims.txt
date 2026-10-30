@@ -1,6 +1,6 @@
-30/10/2026 12:16:51 PM - BoundingBoxDimensions starting...
-30/10/2026 12:16:52 PM - Set opacity to 100 for actor ADefault.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907
-30/10/2026 12:16:52 PM - Skipped ADefault.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907: no Meta.BestFitOrigin (regenerate the proxy with the SOLIDWORKS macro).
-30/10/2026 12:16:52 PM - Set opacity to 100 for actor AKits.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907
-30/10/2026 12:16:52 PM - Set opacity; skipped hidden actor AKits.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907
-30/10/2026 12:16:52 PM - Finished. Dimensioned: 0, skipped: 1
+30/10/2026 1:44:24 PM - BoundingBoxDimensions starting...
+30/10/2026 1:44:25 PM - Set opacity to 100 for actor P7382 5000 80_BoundingBox
+30/10/2026 1:44:25 PM - P7382 5000 80_BoundingBox Length 1363.85 mm -> a4933a9c5d135871
+30/10/2026 1:44:25 PM - P7382 5000 80_BoundingBox Width 437.18 mm -> b4fdaa9799a6cbf7
+30/10/2026 1:44:25 PM - P7382 5000 80_BoundingBox Height 394.08 mm -> 83eb954ac9108ff2
+30/10/2026 1:44:25 PM - Finished. Dimensioned: 1, skipped: 0

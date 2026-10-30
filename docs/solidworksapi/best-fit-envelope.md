@@ -257,12 +257,14 @@ sets `Actor.Alpha` to `100` (about 39% opacity). For visible matches, it also:
    `(L/2, k�(d�VY), k�(d�VZ))`, where `d` is the snapped offset direction,
    `VX`/`VY` come from Composer's computed `Actor.Location`, and
    `k = OFFSET_DISTANCE` (150 mm).
-5. Applies the `Dims` style. `Actor.Style` must hold the style file's full
-   path (`...\SOLIDWORKSComposer\User\Profiles\Dims.smgStyleSet`); a bare
-   name shows as `STYLE(MISSING)`. Setting `Actor.Style` alone does not
-   restyle, so the file's properties (minus `Profile.*` and `Link*`) are also
-   written via `SetPropertyMap`. The style turns endpoints off
-   (`Text.ShowEndPoints = 0`).
+5. Copies the `Dims` style's visual properties (minus `Profile.*` and `Link*`)
+   via `SetPropertyMap`, with `Actor.Style` empty to avoid a live style
+   subscription overriding labels. The appearance is retained, including
+   endpoints off (`Text.ShowEndPoints = 0`).
+6. Displays dimensions rounded upward to whole millimetres with zero decimal
+   places (`1363.85` becomes `1364`), using the same fixed-label override as the
+   combined macro. Anchors and placement retain full precision. The override
+   is applied after appearance and positioning, and read back for verification.
 
 Composer world coordinates match the source model coordinates: the actor
 pivot equals the box centre computed from the manual dimensions. Output is
@@ -338,6 +340,10 @@ The label override is applied in a separate property-map call after styling and
 positioning, avoiding the style's conflicting automatic-value and empty-text
 properties. Both display properties are read back; failure to retain the override
 is logged as a BOX-phase error rather than capturing a known incorrect label.
+The combined macro copies the visual properties from `Dims.smgStyleSet` directly
+but sets `Actor.Style` to empty, leaving dimensions unsubscribed from the style.
+The copied colours, font, lines and other appearance settings are retained,
+without a live style association reapplying two-decimal values later.
 
 Validation: the full module compiled in an isolated Access database with the
 installed Composer reference. VBA mock tests compared ordered normal-view names

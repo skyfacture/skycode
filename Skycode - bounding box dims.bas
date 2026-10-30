@@ -171,12 +171,16 @@ Private Sub PlaceDimension(ByVal doc As DSComposer.Document, ByVal id As String,
     ByVal length As Double, offsetDir As Variant, ByVal dimName As String, ByVal styleProps As String)
 
     Dim frame As String, vx As Variant, vy As Variant, vz As Variant
+    Dim roundedLabel As String, labelXml As Object, labelNode As Object
 
-    doc.SetPropertyMap "<CLitPropertyMap><CLitModifiable Ident=""" & id & """>" & _
+    ' Copy the visual properties without subscribing the dimension to the style.
+    If Not doc.SetPropertyMap("<CLitPropertyMap><CLitModifiable Ident=""" & id & """>" & _
         AnchorXml(0, a) & AnchorXml(1, b) & styleProps & _
-        "<Actor.Style Value=""" & XmlEscape(STYLE_PATH) & """></Actor.Style>" & _
+        "<Actor.Style Value=""""></Actor.Style>" & _
         "<Actor.Name Value=""" & XmlEscape(dimName) & """></Actor.Name>" & _
-        "</CLitModifiable></CLitPropertyMap>"
+        "</CLitModifiable></CLitPropertyMap>") Then
+        Err.Raise vbObjectError + 3108, , "Could not set unlinked dimension appearance: " & id
+    End If
 
     ' Composer builds the dimension frame from the anchors (VX along the edge); Text.Position is local to it.
     frame = doc.GetPropertyValue(Sel(id), "Actor.Location")
@@ -188,6 +192,30 @@ Private Sub PlaceDimension(ByVal doc As DSComposer.Document, ByVal id As String,
     doc.SetPropertyMap "<CLitPropertyMap><CLitModifiable Ident=""" & id & """><Text.Position X=""" & Num(length / 2) & _
         """ Y=""" & Num(OFFSET_DISTANCE * Dot(offsetDir, vy)) & """ Z=""" & Num(OFFSET_DISTANCE * Dot(offsetDir, vz)) & _
         """></Text.Position></CLitModifiable></CLitPropertyMap>"
+
+    ' Apply separately: the style contains conflicting automatic-value and text properties.
+    roundedLabel = Format$(-Int(-length), "0")
+    If Not doc.SetPropertyMap("<CLitPropertyMap><CLitModifiable Ident=""" & id & """>" & _
+        "<Actor.DisplayValue Value=""0""></Actor.DisplayValue>" & _
+        "<Text.MiddleString Value=""" & roundedLabel & """></Text.MiddleString>" & _
+        "</CLitModifiable></CLitPropertyMap>") Then
+        Err.Raise vbObjectError + 3106, , "Could not set whole-number dimension label: " & id
+    End If
+    If AttrValue(doc.GetPropertyValue(Sel(id), "Actor.DisplayValue"), "Actor.DisplayValue", "Value") <> 0 Then
+        Err.Raise vbObjectError + 3107, , "Composer did not disable the automatic dimension value: " & id
+    End If
+    Set labelXml = CreateObject("MSXML2.DOMDocument.6.0")
+    labelXml.async = False
+    If Not labelXml.LoadXML(doc.GetPropertyValue(Sel(id), "Text.MiddleString")) Then
+        Err.Raise vbObjectError + 3107, , "Invalid dimension label XML: " & id & ": " & labelXml.parseError.reason
+    End If
+    Set labelNode = labelXml.SelectSingleNode("//Text.MiddleString/@Value")
+    If labelNode Is Nothing Then
+        Err.Raise vbObjectError + 3107, , "Composer returned no dimension label: " & id
+    End If
+    If labelNode.Text <> roundedLabel Then
+        Err.Raise vbObjectError + 3107, , "Composer did not retain the whole-number dimension label: " & id
+    End If
 End Sub
 
 Private Sub RemovePreviousDimensions(ByVal doc As DSComposer.Document, ByVal proxyId As String)

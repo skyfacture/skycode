@@ -433,11 +433,14 @@ Private Sub PlaceDimension(ByVal doc As DSComposer.Document, ByVal id As String,
     Dim frame As String, vx As Variant, vy As Variant, vz As Variant
     Dim roundedLabel As String
 
-    doc.SetPropertyMap "<CLitPropertyMap><CLitModifiable Ident=""" & id & """>" & _
+    ' Copy the visual properties without subscribing the dimension to the style.
+    If Not doc.SetPropertyMap("<CLitPropertyMap><CLitModifiable Ident=""" & id & """>" & _
         AnchorXml(0, a) & AnchorXml(1, b) & styleProps & _
-        "<Actor.Style Value=""" & XmlEscape(STYLE_PATH) & """></Actor.Style>" & _
+        "<Actor.Style Value=""""></Actor.Style>" & _
         "<Actor.Name Value=""" & XmlEscape(dimName) & """></Actor.Name>" & _
-        "</CLitModifiable></CLitPropertyMap>"
+        "</CLitModifiable></CLitPropertyMap>") Then
+        Err.Raise vbObjectError + 3108, , "Could not set unlinked dimension appearance: " & id
+    End If
 
     ' Composer builds the dimension frame from the anchors (VX along the edge); Text.Position is local to it.
     frame = doc.GetPropertyValue(Sel(id), "Actor.Location")
