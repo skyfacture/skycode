@@ -7,7 +7,7 @@ Private Const DOCUMENT_ASSEMBLY As Long = 2
 Private Const FEATURE_BOUNDING_BOX As Long = 114
 Private Const BOUNDING_BOX_BEST_FIT As Long = 1
 Private Const SKETCH_SEGMENT_LINE As Long = 0
-Private Const BOX_FEATURE_NAME As String = "Skycode_BestFitEnvelope"
+Private Const BOX_FEATURE_NAME As String = "Skycode_BoundingBox"
 
 #If VBA7 Then
 Private Declare PtrSafe Function GetSaveFileNameW Lib "comdlg32.dll" (ByRef dialog As SaveFileDialog) As Long
@@ -72,10 +72,10 @@ Private Type SaveFileDialog
 End Type
 
 Public Sub SldworksBoundingBox()
-    Call GetCurrentModelBestFitEnvelope
+    Call GetCurrentModelBoundingBox
 End Sub
 
-Public Function GetCurrentModelBestFitEnvelope( _
+Public Function GetCurrentModelBoundingBox( _
     Optional ByVal showMessage As Boolean = True) As String
 
     Dim swApp As SldWorks.SldWorks
@@ -123,7 +123,7 @@ Public Function GetCurrentModelBestFitEnvelope( _
     End If
     Set fs = CreateObject("Scripting.FileSystemObject")
     proxyPath = fs.BuildPath(fs.GetParentFolderName(sourcePath), _
-        fs.GetBaseName(sourcePath) & "_BestFitEnvelope.SLDPRT")
+        fs.GetBaseName(sourcePath) & "_BoundingBox.SLDPRT")
     stage = "Choosing where to save the text report"
     reportPath = ChooseReportPath(fs.GetBaseName(proxyPath) & ".txt", fs.GetParentFolderName(sourcePath))
     If Len(reportPath) = 0 Then
@@ -262,7 +262,7 @@ Public Function GetCurrentModelBestFitEnvelope( _
     Set textOutput = Nothing
 
     Debug.Print report
-    GetCurrentModelBestFitEnvelope = report
+    GetCurrentModelBoundingBox = report
     If showMessage Then MsgBox report, vbInformation, "SOLIDWORKS Best Fit envelope"
     Exit Function
 
@@ -276,7 +276,7 @@ Failed:
             " A new bounding-box feature was added before the failure; inspect it in the unsaved model."
     End If
     Debug.Print "ERROR: " & failureDescription
-    Err.Raise failureNumber, "GetCurrentModelBestFitEnvelope", failureDescription
+    Err.Raise failureNumber, "GetCurrentModelBoundingBox", failureDescription
 End Function
 
 Private Function ChooseReportPath(ByVal suggestedName As String, ByVal initialFolder As String) As String
@@ -447,6 +447,7 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
     Set feature = part.CreateFeatureFromBody3(body, False, 0)
     If feature Is Nothing Then Err.Raise vbObjectError + 2131, , "Could not add the solid body to the proxy part."
     feature.Name = BOX_FEATURE_NAME
+    WriteBoxFrameProperties partModel, origin, directions, lengths
     Dim saved As Boolean
     If existingPart Then
         saved = partModel.Save3(1, errors, warnings)
@@ -462,6 +463,39 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
         Err.Raise vbObjectError + 2133, , "Could not reactivate the source model. Error flags: " & errors
     End If
 End Sub
+
+' Stores the box corner and three edge vectors (model coordinates, mm) as file
+' custom properties. Composer imports them as Meta.BestFitOrigin/Edge1..3 for
+' "Skycode - bestfit envelope dimensions.bas".
+Private Sub WriteBoxFrameProperties(ByVal partModel As SldWorks.ModelDoc2, _
+    ByVal origin As Variant, ByRef directions() As Double, ByRef lengths() As Double)
+
+    Dim properties As SldWorks.CustomPropertyManager
+    Dim i As Long
+
+    Set properties = partModel.Extension.CustomPropertyManager("")
+    If properties Is Nothing Then Err.Raise vbObjectError + 2141, , "Proxy custom properties are unavailable."
+    SetTextProperty properties, "BestFitOrigin", _
+        VectorText(origin(0) * 1000#, origin(1) * 1000#, origin(2) * 1000#)
+    For i = 0 To 2
+        SetTextProperty properties, "BestFitEdge" & (i + 1), VectorText( _
+            directions(i, 0) * lengths(i) * 1000#, _
+            directions(i, 1) * lengths(i) * 1000#, _
+            directions(i, 2) * lengths(i) * 1000#)
+    Next i
+End Sub
+
+Private Sub SetTextProperty(ByVal properties As SldWorks.CustomPropertyManager, _
+    ByVal name As String, ByVal value As String)
+    ' 30 = swCustomInfoText, 2 = swCustomPropertyReplaceValue; 0 = swCustomInfoAddResult_AddedOrChanged
+    If properties.Add3(name, 30, value, 2) <> 0 Then
+        Err.Raise vbObjectError + 2142, , "Could not write proxy custom property " & name & "."
+    End If
+End Sub
+
+Private Function VectorText(ByVal x As Double, ByVal y As Double, ByVal z As Double) As String
+    VectorText = Trim$(Str$(Round(x, 6))) & ";" & Trim$(Str$(Round(y, 6))) & ";" & Trim$(Str$(Round(z, 6)))
+End Function
 
 Private Function FindProxyComponent(ByVal assembly As SldWorks.AssemblyDoc, _
     ByVal proxyPath As String) As SldWorks.Component2

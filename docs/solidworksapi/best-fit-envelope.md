@@ -28,8 +28,8 @@ renamed from the initial extensionless working file.
    `C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\sldworks.tlb`.
    A separate constants-library reference is not required.
 3. Keep the intended part or assembly active in the running SOLIDWORKS session.
-4. Run `SldworksBoundingBox`, or call `GetCurrentModelBestFitEnvelope`.
-   `GetCurrentModelBestFitEnvelope(False)` returns the report without a message
+4. Run `SldworksBoundingBox`, or call `GetCurrentModelBoundingBox`.
+   `GetCurrentModelBoundingBox(False)` returns the report without a message
    box, for programmatic use. Both forms first show a **Save As** dialog for
    the TXT report. Cancelling returns an empty string without changing the
    model or creating output files.
@@ -38,14 +38,14 @@ The script attaches using `GetObject(, "SldWorks.Application")`, rather than
 launching another SOLIDWORKS instance. It gets `ActiveDoc` and rejects missing
 models and drawings.
 
-A new feature is named `Skycode_BestFitEnvelope`. An existing root bounding-box
+A new feature is named `Skycode_BoundingBox`. An existing root bounding-box
 feature is reused only when its settings match the requested geometry scope.
 Conflicting settings and multiple root boxes produce explicit errors rather
 than silently modifying an existing feature.
 
 Creating the feature changes the open model and clears the current selection.
 The script rebuilds the model but does **not** save the source model or write
-custom properties. It saves a separate solid proxy part beside the saved source
+custom properties to it. It saves a separate solid proxy part beside the saved source
 model and a text report at the location chosen in the Save As dialog.
 For assemblies, the proxy is inserted as a fixed
 envelope component and excluded from the BOM; tree ordering is not changed.
@@ -146,7 +146,7 @@ constructs a right-handed placement transform and applies it to a modeler box.
 
 The source model must already have a saved path, and SOLIDWORKS must have a
 valid default part template. Outputs are named
-`<source-name>_BestFitEnvelope.SLDPRT` in the source model's folder, not the
+`<source-name>_BoundingBox.SLDPRT` in the source model's folder, not the
 VBA script's folder. The TXT report's Save As dialog suggests a matching
 filename and initially opens in the source folder; choose its name and location
 before processing begins. The dialog supplies `.txt` when no extension is
@@ -181,6 +181,11 @@ the successful proxy component remains in the unsaved assembly.
 
 The three sorted lengths currently reported are insufficient to reconstruct
 the original oriented box: its position and orientation must also be retained.
+The proxy part therefore carries text custom properties `BestFitOrigin` (box
+corner) and `BestFitEdge1..3` (the three edge vectors from that corner), each
+`x;y;z` in source model millimetres. Composer imports them as
+`Meta.BestFitOrigin` / `Meta.BestFitEdge1..3`; see
+[Composer dimensions](#composer-dimensions).
 If the proxy becomes an assembly component, keep it out of subsequent envelope
 calculations (for example, make it an envelope component and retain
 `IncludeEnvelopeComponents = False`). Adding an ordinary solid box component
@@ -221,3 +226,132 @@ the fixed proxy path. The overwritten part contained one solid body with eight
 vertices; its volume matched the current sketch at `0.0947491544624082 m^3`.
 Fixed, envelope and BOM-exclusion flags were verified. The source assembly
 remained unsaved. Older timestamped proxy components were not removed.
+
+## Composer dimensions
+
+[Skycode - bounding box dims.bas](../../Skycode%20-%20bounding%20box%20dims.bas)
+is a separate Composer macro (Access VBA host with a reference to
+`composer.exe`, like the other Skycode Composer macros). Run
+`BoundingBoxDimensions` with the Composer document open.
+
+For every actor whose name contains `BoundingBox` or `BestFitEnvelope` (case-insensitively), it
+sets `Actor.Alpha` to `100` (about 39% opacity). For visible matches, it also:
+
+1. Reads `Meta.BestFitOrigin` and `Meta.BestFitEdge1..3`. Actors without them
+   are skipped and logged; regenerate the proxy with the SOLIDWORKS macro and
+   re-import. The Composer API exposes only an actor's pivot, area, volume and
+   world-axis box, not its vertices, so the oriented box cannot be recovered
+   from the geometry itself.
+2. Labels edges by size: longest = length, middle = width, shortest = height.
+3. Removes its previous dimensions for that actor (named
+   `SkycodeBBoxDim <role> <actor id>`), selects the actor and runs
+   `RunRibbonCommand(178)` (Dimensions) to create three
+   `CLitQuotationBetweenPoints` actors, then moves their anchors onto the
+   Best Fit edges.
+4. Offsets length and width towards world -Y and height towards world -X.
+   Each world direction is snapped to the closest of the other two box axes,
+   keeping its sign, so every leader is normal to its edge and the length and
+   width leaders coincide at their shared corner. Of the parallel edges on
+   that side of the box, the one facing the camera is used.
+   `Text.Position` is set in the dimension's local frame:
+   `(L/2, k�(d�VY), k�(d�VZ))`, where `d` is the snapped offset direction,
+   `VX`/`VY` come from Composer's computed `Actor.Location`, and
+   `k = OFFSET_DISTANCE` (150 mm).
+5. Applies the `Dims` style. `Actor.Style` must hold the style file's full
+   path (`...\SOLIDWORKSComposer\User\Profiles\Dims.smgStyleSet`); a bare
+   name shows as `STYLE(MISSING)`. Setting `Actor.Style` alone does not
+   restyle, so the file's properties (minus `Profile.*` and `Link*`) are also
+   written via `SetPropertyMap`. The style turns endpoints off
+   (`Text.ShowEndPoints = 0`).
+
+Composer world coordinates match the source model coordinates: the actor
+pivot equals the box centre computed from the manual dimensions. Output is
+logged to `logs\boundingboxdims.txt`. If no `BoundingBox` or `BestFitEnvelope` proxy actor is found,
+the macro logs an error directing you to run `Skycode - sldworks bounding box.bas`
+on the source model and import or re-import the generated proxy into Composer.
+Legacy actors named `BestFitEnvelope` are also supported.
+
+### Combined assembly, part and BOX views
+
+[Skycode - views [assemblies + all nonnumeric parts + bounding box dims].bas](../../Skycode%20-%20views%20%5Bassemblies%20%2B%20all%20nonnumeric%20parts%20%2B%20bounding%20box%20dims%5D.bas)
+is a standalone combined module. Run `CreateViewsAllWithBoundingBoxDims`.
+The original two macros are unchanged and are not called by this module.
+
+The combined macro identifies the root in `AssySelectionMode = 1`, caches its
+`Actor.Name`, then creates root, unique subassembly and all eligible nested-part
+views. Normal part eligibility, configuration-part-number precedence and
+duplicate-name handling follow the original views macro. Proxy actors containing
+`BoundingBox` or `BestFitEnvelope` (case-insensitive substring matching) bypass
+ordinary part naming, so their missing `Meta.PartNo` is not an error. Existing
+collaboration actors, including old `SkycodeBBoxDim` dimensions, are hidden
+before normal views are captured.
+
+The final phase returns to the newly created root view, switches to individual
+actor selection and processes visible proxies belonging to that root, not hidden
+configuration proxies. It validates corner/edge metadata before creating any
+dimensions, applies opacity `100` and uses the existing dimension-placement
+routines. It captures the root assembly, proxy and dimensions directly in a new
+`<root Actor.Name> BOX` view, for example `7382 5000 80 BOX`. No
+`UpdateCurrentView` or `UpdateView` call is required.
+
+Missing root actor names, missing visible proxies, missing metadata or BOX-phase
+errors are logged without undoing completed normal views or creating a knowingly
+incomplete BOX view. A missing root name does not produce a placeholder root view.
+Subassembly and part naming/fallback rules remain unchanged.
+Like the original views macro, existing view names are not overwritten or deleted
+on reruns; Composer view-creation failures are logged.
+
+The combined log is
+`logs\views [assys + all nonnumeric parts + bounding box dims].txt`.
+View creation changes the open document; save the Composer document manually
+after inspecting the result.
+
+The macro temporarily sets `CameraSmoothTime = 0` to disable smooth camera
+transitions, restoring the original value on completion or error. Its effect on
+`ZoomFitAll` runtime has not been measured. Root naming reads the `Actor.Name`
+XML value explicitly rather than treating missing `Meta.PartNo` XML as a name.
+The document root is addressed using Composer's documented selection
+`<CLitSelection Name="" Ident="-1">-1</CLitSelection>`, not the first actor
+returned by enumeration. The supplied XML identifies this node as `CLitAssyRoot`.
+Because it is the document root, BOX proxy discovery checks all visible document
+actors rather than requiring an artificial `-1.` path prefix. A focused live
+read confirmed that this root selection returns `7382 5000 80`; no views were
+created during that check.
+
+All existing collaboration actors are hidden before each normal view's zoom and
+capture, and before the BOX zoom and final capture. This includes cameras,
+compass, ground, focal-point markers, annotations and other collaboration
+categories. `GroundGrid` is explicitly turned off and is not restored to an
+initially enabled state. Before dimension creation, all collaboration actors
+are hidden. The final BOX guard exempts `SkycodeBBoxDim` actors without showing
+any hidden actors, so newly generated dimensions remain visible and old
+dimensions for other proxies remain hidden. Actors are enumerated afresh at
+each guard to avoid referencing dimensions deleted during replacement.
+Hiding focal-point markers does not disable the depth-of-field rendering effect.
+
+Combined-macro dimension labels are rounded upward to whole millimetres
+(`1363.85` becomes `1364`). The automatic numeric label is disabled using
+`Actor.DisplayValue`, and `Text.MiddleString` holds the ceiling of the measured
+length. Anchors, edge lengths and label positions retain their original precision.
+These are fixed display labels regenerated whenever the macro runs.
+The label override is applied in a separate property-map call after styling and
+positioning, avoiding the style's conflicting automatic-value and empty-text
+properties. Both display properties are read back; failure to retain the override
+is logged as a BOX-phase error rather than capturing a known incorrect label.
+
+Validation: the full module compiled in an isolated Access database with the
+installed Composer reference. VBA mock tests compared ordered normal-view names
+against the original macro (root, subassembly, nested parts, numeric/blank/spaced
+part numbers, configuration precedence, fallbacks and duplicates), with only the
+intentional proxy exclusion. BOX tests covered successful capture, hidden and
+other-root proxy exclusion, and missing root number/proxy/origin/edge failures.
+Twenty opacity/dimension helpers were compared to the standalone dimensions
+macro and retained unchanged apart from whitespace/comments. No full live
+Composer view-generation run has been performed for the combined macro.
+
+Validated in Composer 7.12 against `auto dims.smg`, with the meta-properties
+added through `AddMetaProperties` to stand in for a re-imported proxy. The
+anchors and label positions matched the approved manual placement, and a
+second run replaced the dimensions instead of duplicating them. Import of the
+SOLIDWORKS custom properties as `Meta.BestFit*` has not yet been verified
+end to end.
