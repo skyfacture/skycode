@@ -10,11 +10,11 @@ Convert the MHT locally with Microsoft Word. Do not send the document to online 
 ## Procedure
 
 1. Keep the original MHT unchanged. Confirm Microsoft Word is installed.
-2. From the workspace root, run [convert.ps1](./scripts/convert.ps1) with the MHT path and, optionally, a PDF output path:
+2. Run [convert.ps1](./scripts/convert.ps1) with the MHT path and, optionally, a PDF output path:
 
    ```powershell
-   & '.\.github\skills\pdf-cleanup-from-onenote\scripts\convert.ps1' -InputPath 'C:\path\to\export.mht'
-   & '.\.github\skills\pdf-cleanup-from-onenote\scripts\convert.ps1' -InputPath 'C:\path\to\export.mht' -OutputPath 'C:\path\to\clean.pdf'
+   .\convert.ps1 -InputPath 'C:\path\to\export.mht'
+   .\convert.ps1 -InputPath 'C:\path\to\export.mht' -OutputPath 'C:\path\to\clean.pdf'
    ```
 
 3. The script opens the MHT read-only in Word, sets portrait A4 with 18-point margins, and scales oversized inline content proportionally to fit the printable width and height. Word's headless browser mode may not render MHT reliably.

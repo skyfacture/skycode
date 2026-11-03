@@ -35,7 +35,10 @@ try {
     $word = New-Object -ComObject Word.Application
     $word.Visible = $false
     $word.DisplayAlerts = 0
+<<<<<<< HEAD
     $word.ScreenUpdating = $false
+=======
+>>>>>>> c721a88d56e2f8fc6b0705fd5f3cb67879913259
     $document = $word.Documents.Open($inputFile.FullName, $false, $true)
 
     foreach ($section in $document.Sections) {
@@ -54,9 +57,12 @@ try {
 
     for ($index = 1; $index -le $document.InlineShapes.Count; $index++) {
         $image = $document.InlineShapes.Item($index)
+<<<<<<< HEAD
         if ($image.Width -le 0 -or $image.Height -le 0) {
             continue
         }
+=======
+>>>>>>> c721a88d56e2f8fc6b0705fd5f3cb67879913259
         $scale = [Math]::Min(1.0, [Math]::Min($maxWidth / $image.Width, $maxHeight / $image.Height))
         if ($scale -lt 1.0) {
             $image.LockAspectRatio = -1
