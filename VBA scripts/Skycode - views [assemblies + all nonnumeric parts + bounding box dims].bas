@@ -1,3 +1,4 @@
+Attribute VB_Name = "Module1"
 Option Compare Database
 Option Explicit
 ' ============================================================
@@ -201,11 +202,11 @@ NextPart:
     GoTo Cleanup
 
 PartFailed:
-    LogPrint logFile, Now & " - ERROR: Part processing failed for " & actorPath & ": " & Err.Number & ": " & Err.Description
+    LogPrint logFile, Now & " - ERROR: Part processing failed for " & actorPath & ": " & Err.Number & ": " & Err.description
     Resume NextPart
 Failed:
     errorNumber = Err.Number
-    errorDescription = Err.Description
+    errorDescription = Err.description
     LogPrint logFile, Now & " - ERROR " & errorNumber & ": " & errorDescription
     MsgBox "Combined view creation failed:" & vbCrLf & errorDescription, vbExclamation
 Cleanup:
@@ -221,7 +222,7 @@ Private Function ReadRootActorName(ByVal doc As DSComposer.Document, ByVal rootI
         Err.Raise vbObjectError + 3104, , "Invalid Actor.Name XML for root " & rootID & ": " & xml.parseError.reason
     End If
     Set nameNode = xml.SelectSingleNode("//Actor.Name/@Value")
-    If Not nameNode Is Nothing Then ReadRootActorName = Trim$(nameNode.Text)
+    If Not nameNode Is Nothing Then ReadRootActorName = Trim$(nameNode.text)
 End Function
 
 Private Sub RestoreCameraSmoothTime(ByVal doc As DSComposer.Document, ByVal previousValue As Integer, _
@@ -230,8 +231,8 @@ Private Sub RestoreCameraSmoothTime(ByVal doc As DSComposer.Document, ByVal prev
     doc.CameraSmoothTime = previousValue
     Exit Sub
 Failed:
-    LogPrint logFile, Now & " - ERROR: Could not restore CameraSmoothTime: " & Err.Number & ": " & Err.Description
-    MsgBox "Could not restore CameraSmoothTime to " & previousValue & ":" & vbCrLf & Err.Description, vbExclamation
+    LogPrint logFile, Now & " - ERROR: Could not restore CameraSmoothTime: " & Err.Number & ": " & Err.description
+    MsgBox "Could not restore CameraSmoothTime to " & previousValue & ":" & vbCrLf & Err.description, vbExclamation
 End Sub
 
 Private Sub AddUniqueAssembly(ByVal assemblies As Collection, ByVal path As String)
@@ -239,7 +240,7 @@ Private Sub AddUniqueAssembly(ByVal assemblies As Collection, ByVal path As Stri
     assemblies.Add path, path
     Exit Sub
 Failed:
-    If Err.Number <> 457 Then Err.Raise Err.Number, "AddUniqueAssembly", Err.Description
+    If Err.Number <> 457 Then Err.Raise Err.Number, "AddUniqueAssembly", Err.description
 End Sub
 
 Private Function AddUniquePart(ByVal parts As Collection, ByVal key As String) As Boolean
@@ -248,7 +249,7 @@ Private Function AddUniquePart(ByVal parts As Collection, ByVal key As String) A
     AddUniquePart = True
     Exit Function
 Failed:
-    If Err.Number <> 457 Then Err.Raise Err.Number, "AddUniquePart", Err.Description
+    If Err.Number <> 457 Then Err.Raise Err.Number, "AddUniquePart", Err.description
 End Function
 
 Private Function IsBoxProxy(ByVal actorName As String) As Boolean
@@ -293,7 +294,7 @@ Private Sub CreateBoxView(ByVal app As DSComposer.Application, ByVal doc As DSCo
         Err.Raise vbObjectError + 3101, , "Could not return to root view: " & rootViewName
     End If
     doc.AssySelectionMode = 0
-    oldSelection = doc.Selection
+    oldSelection = doc.selection
     ids = SelectionIds(doc.GetAllActors(0))
     For Each id In ids
         If rootID = "-1" Or Left$(CStr(id), Len(rootID) + 1) = rootID & "." Then
@@ -303,7 +304,7 @@ Private Sub CreateBoxView(ByVal app As DSComposer.Application, ByVal doc As DSCo
             End If
         End If
     Next id
-    If candidates.Count = 0 Then
+    If candidates.count = 0 Then
         LogPrint logFile, Now & " - ERROR: No visible BoundingBox or BestFitEnvelope proxy under root " & rootID & ". Run Skycode - sldworks bounding box.bas and import or re-import the proxy into Composer."
         Exit Sub
     End If
@@ -330,11 +331,11 @@ Private Sub CreateBoxView(ByVal app As DSComposer.Application, ByVal doc As DSCo
     For Each candidate In candidates
         If Not DimensionProxy(app, doc, CStr(candidate), styleProps, logFile) Then
             LogPrint logFile, Now & " - ERROR: BOX view not created because dimension creation failed."
-            doc.Selection = oldSelection
+            doc.selection = oldSelection
             Exit Sub
         End If
     Next candidate
-    doc.Selection = oldSelection
+    doc.selection = oldSelection
     boxViewName = rootViewName & " BOX"
     HideCollaborations doc, True
     If Not doc.CreateView(boxViewName, -1) Then
@@ -343,7 +344,7 @@ Private Sub CreateBoxView(ByVal app As DSComposer.Application, ByVal doc As DSCo
     LogPrint logFile, Now & " - Created BOX view: " & boxViewName
     Exit Sub
 Failed:
-    LogPrint logFile, Now & " - ERROR: BOX phase failed; normal views have already been processed. " & Err.Number & ": " & Err.Description
+    LogPrint logFile, Now & " - ERROR: BOX phase failed; normal views have already been processed. " & Err.Number & ": " & Err.description
 End Sub
 
 Private Sub ApplyBoundingBoxOpacity(ByVal doc As DSComposer.Document, ByVal actorId As String, _
@@ -397,7 +398,7 @@ Private Function DimensionProxy(ByVal app As DSComposer.Application, ByVal doc A
 
     RemovePreviousDimensions doc, proxyId
     before = doc.GetAllCollaborations
-    doc.Selection = Sel(proxyId)
+    doc.selection = Sel(proxyId)
     app.RunRibbonCommand CMD_DIMENSIONS
     created = NewIds(before, doc.GetAllCollaborations)
     If UBound(created) < 2 Then
@@ -488,9 +489,9 @@ Private Function LoadStyleProperties(ByVal path As String) As String
     text = Mid$(text, p + Len("<CLitStyleProperties>"), q - p - Len("<CLitStyleProperties>"))
     Set re = CreateObject("VBScript.RegExp")
     re.Global = True
-    re.Pattern = "<(Profile\.[^ /]+|Link[^ /]*)[^>]*/>"
+    re.pattern = "<(Profile\.[^ /]+|Link[^ /]*)[^>]*/>"
     text = re.Replace(text, "")
-    re.Pattern = "<([A-Za-z0-9.]+)([^>]*)/>"
+    re.pattern = "<([A-Za-z0-9.]+)([^>]*)/>"
     LoadStyleProperties = re.Replace(text, "<$1$2></$1>")
 End Function
 
