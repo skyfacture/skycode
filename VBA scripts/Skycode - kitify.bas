@@ -93,6 +93,7 @@ Public Function KitifyDrifter( _
     DiscoverKits
     MatchOccurrences
     AssignDestinations
+    CollectKits
     WritePlan
 
     template = mApp.GetUserPreferenceStringValue(DEFAULT_ASSEMBLY_TEMPLATE)
@@ -117,6 +118,7 @@ Public Function KitifyDrifter( _
     mStage = "Verifying reopened output against the source and reference"
     ValidateOutput result
     ValidateMetadata
+    ValidateAppearances
     For Each key In mGroups.Keys
         Set n = mGroups(key)
         If key <> "ROOT" And Len(n("file")) > 0 Then mApp.CloseDoc mFS.GetFileName(n("file"))
@@ -534,8 +536,8 @@ Private Sub ValidateMetadata()
     Dim name As Variant
     Dim present As Boolean
     Dim count As Long
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "metadata.csv"), False, True)
-    report.WriteLine "Group,GeneratedAssembly,Scope,Property,SourceFile,SourceConfiguration,ExpectedValue,ActualValue,Type,Status"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Group,GeneratedAssembly,Scope,Property,SourceFile,SourceConfiguration,ExpectedValue,ActualValue,Type,Status"
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If group("count") > 0 Then
@@ -556,12 +558,12 @@ Private Sub ValidateMetadata()
                 Set found = values(propertyKey)
                 If found("value") <> entry("value") Or found("type") <> entry("type") Then _
                     Err.Raise vbObjectError + 2450, , "Changed metadata in group " & key & ": " & propertyKey
-                report.WriteLine Csv(CStr(key)) & "," & Csv(group("file")) & "," & Csv(entry("scope")) & "," & _
+                WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("file")) & "," & Csv(entry("scope")) & "," & _
                     Csv(entry("name")) & "," & Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & "," & _
                     Csv(entry("value")) & "," & Csv(found("value")) & "," & entry("type") & ",PASS"
                 count = count + 1
             Next entry
-            If group("kind") <> "KIT" Then
+            If group("kind") = "ROOT" Or group("kind") = "STRUCTURE" Then
                 For Each name In Array("PartNo", "Description")
                     present = False
                     For Each entry In expected
@@ -570,14 +572,14 @@ Private Sub ValidateMetadata()
                     Next entry
                     If present = False Then
                         LogLine "SOURCE METADATA MISSING: " & key & "; " & name & "; " & group("sourcePath")
-                        report.WriteLine Csv(CStr(key)) & "," & Csv(group("file")) & ",effective," & Csv(CStr(name)) & "," & _
+                        WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("file")) & ",effective," & Csv(CStr(name)) & "," & _
                             Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & ",,,,SOURCE_MISSING"
                     End If
                 Next name
             End If
         End If
     Next key
-    report.Close
+    SaveCsvReport report, "metadata.csv"
     LogLine "Metadata preservation PASS: " & count & _
         " source properties retain scope, type and resolved value after reopen; no production identity leaked into kits."
 End Sub
@@ -646,6 +648,7 @@ Private Sub AddGroup(ByVal key As String, ByVal parent As String, ByVal kind As 
     group.Add "metadata", metadata
     group.Add "sourcePath", ""
     group.Add "sourceConfig", ""
+    group.Add "colourIndex", -1&
     mGroups.Add key, group
 End Sub
 
@@ -974,6 +977,123 @@ Private Function SafeName(ByVal value As String) As String
     SafeName = Left$(pattern.Replace(value, "_"), 55)
 End Function
 
+Private Sub CollectKits()
+    Dim key As Variant
+    Dim group As Object
+    Dim total As Long
+    Dim colourIndex As Long
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("kind") = "KIT" And group("count") > 0 Then
+            group("colourIndex") = colourIndex
+            colourIndex = colourIndex + 1
+            If group("parent") = "ROOT" Then total = total + group("count")
+        End If
+    Next key
+    If total = 0 Then Exit Sub
+    AddGroup "COMPLETE", "ROOT", "COLLECTION", "", "Generated complete-kit collection"
+    mGroups("COMPLETE")("count") = total
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("kind") = "KIT" And group("count") > 0 And group("parent") = "ROOT" Then _
+            group("parent") = "COMPLETE"
+    Next key
+End Sub
+
+Private Function KitAppearance(ByVal index As Long) As Variant
+    Dim colours As Variant
+    Dim rgb As Variant
+    Dim values(0 To 8) As Double
+    colours = Array(Array(1#, 0#, 1#), Array(1#, 0.4, 0.7), _
+        Array(0#, 1#, 0#), Array(0#, 1#, 1#), _
+        Array(0.65, 0#, 0.65), Array(0.75, 0.2, 0.45), _
+        Array(0#, 0.6, 0#), Array(0#, 0.6, 0.6), _
+        Array(1#, 0.55, 1#), Array(1#, 0.7, 0.85), _
+        Array(0.55, 1#, 0.55), Array(0.55, 1#, 1#))
+    rgb = colours(index Mod (UBound(colours) + 1))
+    ' SOLIDWORKS persists RGB channels at 8-bit precision.
+    values(0) = Fix(CDbl(rgb(0)) * 255#) / 255#
+    values(1) = Fix(CDbl(rgb(1)) * 255#) / 255#
+    values(2) = Fix(CDbl(rgb(2)) * 255#) / 255#
+    values(3) = 1#
+    values(4) = 1#
+    values(5) = 0.2
+    values(6) = 0.2
+    KitAppearance = values
+End Function
+
+Private Sub AssertNoMates(ByVal model As SldWorks.ModelDoc2)
+    Dim feature As SldWorks.Feature
+    Dim mate As SldWorks.Feature
+    Set feature = model.FirstFeature
+    Do While Not feature Is Nothing
+        If feature.GetTypeName2 = "MateGroup" Then
+            Set mate = feature.GetFirstSubFeature
+            If Not mate Is Nothing Then Err.Raise vbObjectError + 2451, , _
+                "Generated assembly contains mates: " & model.GetTitle & "; " & mate.Name
+        End If
+        Set feature = feature.GetNextFeature
+    Loop
+End Sub
+
+Private Sub ValidateAppearances()
+    Dim key As Variant
+    Dim group As Object
+    Dim model As SldWorks.ModelDoc2
+    Dim expected As Variant
+    Dim actual As Variant
+    Dim i As Long
+    Dim report As Object
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Group,Kind,Red,Green,Blue,Status"
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("count") > 0 Then
+            Set model = mApp.GetOpenDocumentByName(group("file"))
+            If model Is Nothing Then Err.Raise vbObjectError + 2452, , _
+                "Generated appearance document is not loaded: " & key
+            AssertNoMates model
+            If group("kind") = "KIT" Then
+                expected = KitAppearance(CLng(group("colourIndex")))
+                actual = model.MaterialPropertyValues
+                If Not IsArray(actual) Then Err.Raise vbObjectError + 2452, , _
+                    "Generated appearance is unavailable: " & key
+                For i = 0 To 8
+                    If Abs(CDbl(actual(i)) - CDbl(expected(i))) > MATRIX_TOLERANCE Then _
+                        Err.Raise vbObjectError + 2452, , "Generated appearance differs after reopen: " & key & _
+                            "; property=" & i & "; expected=" & expected(i) & "; actual=" & actual(i)
+                Next i
+                WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("kind")) & "," & _
+                    Csv(CStr(actual(0))) & "," & Csv(CStr(actual(1))) & "," & Csv(CStr(actual(2))) & ",PASS"
+            Else
+                If model.Extension.HasMaterialPropertyValues Then Err.Raise vbObjectError + 2452, , _
+                    "Unexpected assembly appearance outside an individual kit: " & key
+                WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("kind")) & ",,,,PASS"
+            End If
+        End If
+    Next key
+    SaveCsvReport report, "appearance.csv"
+    LogLine "Appearance PASS: individual kits coloured; complete-kit collection and non-kit assemblies have no assembly colour override."
+    LogLine "Mates PASS: no mates in any generated assembly; all occurrences verified fixed."
+End Sub
+
+Private Function KitFileName(ByVal key As String, ByVal group As Object) As String
+    Dim name As String
+    Dim pattern As Object
+    If Left$(key, 1) <> "K" Then
+        KitFileName = "KIT_" & mRunId & "_" & SafeName(key) & "_" & SafeName(group("category")) & ".SLDASM"
+        Exit Function
+    End If
+    name = CStr(group("provenance"))
+    name = Mid$(name, InStrRev(name, "/") + 1)
+    Set pattern = CreateObject("VBScript.RegExp")
+    pattern.IgnoreCase = True
+    pattern.Pattern = "[<>:""/\\|?*\x00-\x1F]|[ .]$|^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\.|$)"
+    If Len(name) = 0 Or pattern.Test(name) Then Err.Raise vbObjectError + 2447, , _
+        "Kit provenance does not provide a valid assembly filename: " & key & "; " & group("provenance")
+    KitFileName = name & ".SLDASM"
+End Function
+
 Private Function IdentityMatrix() As Variant
     Dim data(0 To 15) As Double
     data(0) = 1#
@@ -1024,6 +1144,11 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     PutProperty manager, "Skycode.Provenance", CStr(group("provenance"))
     PutProperty manager, "Skycode.Generated", "Kitify; fixed snapshot; do not edit by hand"
     ApplyMetadata model, group("metadata")
+    If model.Extension.HasMaterialPropertyValues Then
+        If model.Extension.RemoveMaterialProperty(2, Empty) = False Then Err.Raise vbObjectError + 2452, , _
+            "Could not clear previous working-document appearance: " & key
+    End If
+    If group("kind") = "KIT" Then model.MaterialPropertyValues = KitAppearance(CLng(group("colourIndex")))
 
     For Each n In mSource
         If IsLeaf(n) And n("destination") = key Then
@@ -1045,10 +1170,13 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     Next childKey
     If model.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2418, , _
         "Generated assembly rebuild failed: " & key
+    AssertNoMates model
     If key = "ROOT" Then
         fileName = sourceName & " kitified generated " & mRunId & ".SLDASM"
+    ElseIf group("kind") = "COLLECTION" Then
+        fileName = sourceName & " COMPLETE KIT.SLDASM"
     ElseIf group("kind") = "KIT" Then
-        fileName = "KIT_" & mRunId & "_" & SafeName(key) & "_" & SafeName(group("category")) & ".SLDASM"
+        fileName = KitFileName(key, group)
     Else
         fileName = group("nodeName") & "_" & mRunId & "_" & key & ".SLDASM"
     End If
@@ -1244,8 +1372,8 @@ Private Sub ValidateOutput(ByVal path As String)
     If model Is Nothing Then Err.Raise vbObjectError + 2428, , "Saved output is not loaded."
     Set actual = Snapshot(model)
     WriteTree actual, "generated-tree.csv"
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "validation.csv"), False, True)
-    report.WriteLine "SourceOccurrence,GeneratedOccurrence,TransformMaxError,Status"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "SourceOccurrence,GeneratedOccurrence,TransformMaxError,Status"
     For Each n In actual
         If n("fixed") = False Then Err.Raise vbObjectError + 2435, , _
             "Reopened output contains an unfixed occurrence: " & n("instance")
@@ -1271,7 +1399,7 @@ Private Sub ValidateOutput(ByVal path As String)
                         difference = MatrixError(s("matrix"), n("matrix"))
                         If difference > MATRIX_TOLERANCE Then matched = False
                         If matched Then
-                            report.WriteLine Csv(s("instance")) & "," & Csv(n("instance")) & "," & _
+                            WriteCsvLine report, Csv(s("instance")) & "," & Csv(n("instance")) & "," & _
                                 Csv(CStr(difference)) & ",PASS"
                             If difference > maxError Then maxError = difference
                             n("match") = s("id")
@@ -1292,7 +1420,7 @@ Private Sub ValidateOutput(ByVal path As String)
         If IsLeaf(s) And s("validated") = False Then Err.Raise vbObjectError + 2432, , _
             "Missing source occurrence: " & s("instance")
     Next s
-    report.Close
+    SaveCsvReport report, "validation.csv"
     LogLine "Source conservation PASS: " & count & " occurrences; max matrix error=" & CStr(maxError)
     ValidateGroupParents actual
 End Sub
@@ -1303,12 +1431,23 @@ Private Sub ValidateGroupParents(ByVal actual As Collection)
     Dim n As Object
     Dim parent As Object
     Dim found As Boolean
+    Dim expectedName As String
+    Dim actualName As String
+    Dim occurrenceNumber As String
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If key <> "ROOT" And group("count") > 0 Then
             found = False
             For Each n In actual
                 If StrComp(n("path"), group("file"), vbTextCompare) = 0 Then
+                    If group("kind") = "KIT" And Left$(CStr(key), 1) = "K" Then
+                        expectedName = mFS.GetBaseName(KitFileName(CStr(key), group)) & "-"
+                        actualName = Mid$(n("instance"), InStrRev(n("instance"), "/") + 1)
+                        occurrenceNumber = Mid$(actualName, Len(expectedName) + 1)
+                        If StrComp(Left$(actualName, Len(expectedName)), expectedName, vbTextCompare) <> 0 Or _
+                            Len(occurrenceNumber) = 0 Or occurrenceNumber Like "*[!0-9]*" Then _
+                            Err.Raise vbObjectError + 2448, , "Generated kit tree name differs from provenance: " & n("instance")
+                    End If
                     If group("parent") = "ROOT" Then
                         found = CBool(n("parent") = 0)
                     ElseIf n("parent") > 0 Then
@@ -1321,22 +1460,23 @@ Private Sub ValidateGroupParents(ByVal actual As Collection)
             If found = False Then Err.Raise vbObjectError + 2433, , "Generated group has the wrong parent: " & key
         End If
     Next key
-    LogLine "Kit hierarchy PASS: topmost kits at root; nested kit relationships preserved."
+    LogLine "Kit hierarchy PASS: complete-kit collection at root; nested kit relationships preserved."
+    LogLine "Kit naming PASS: reference kit filenames and reopened tree names retain the provenance tail."
     LogLine "Structure hierarchy PASS: all planned assembly parents and identity frames verified."
 End Sub
 
 Private Sub WriteTree(ByVal nodes As Collection, ByVal fileName As String)
     Dim report As Object
     Dim n As Object
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, fileName), False, True)
-    report.WriteLine "Id,ParentId,Occurrence,File,Configuration,NOTE,Category,Assembly,Suppressed,Envelope,Excluded,Fixed,RootTransform"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Id,ParentId,Occurrence,File,Configuration,NOTE,Category,Assembly,Suppressed,Envelope,Excluded,Fixed,RootTransform"
     For Each n In nodes
-        report.WriteLine CStr(n("id")) & "," & CStr(n("parent")) & "," & Csv(n("instance")) & "," & _
+        WriteCsvLine report, CStr(n("id")) & "," & CStr(n("parent")) & "," & Csv(n("instance")) & "," & _
             Csv(n("path")) & "," & Csv(n("config")) & "," & Csv(n("note")) & "," & Csv(n("category")) & "," & _
             CStr(n("assembly")) & "," & CStr(n("suppressed")) & "," & CStr(n("envelope")) & "," & _
             CStr(n("excluded")) & "," & CStr(n("fixed")) & "," & Csv(MatrixText(n("matrix")))
     Next n
-    report.Close
+    SaveCsvReport report, fileName
 End Sub
 
 Private Sub WriteLocations()
@@ -1359,12 +1499,12 @@ Private Sub WriteLocations()
             locations(key) = locations(key) + 1
         End If
     Next n
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "source-kit-locations.csv"), False, True)
-    report.WriteLine "SourceParentOccurrence,NormalizedNOTE,DirectPartCount"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "SourceParentOccurrence,NormalizedNOTE,DirectPartCount"
     For Each key In locations.Keys
-        report.WriteLine key & "," & CStr(locations(key))
+        WriteCsvLine report, key & "," & CStr(locations(key))
     Next key
-    report.Close
+    SaveCsvReport report, "source-kit-locations.csv"
     LogLine "Mapped " & mSource.Count & " source nodes; NOTE locations=" & locations.Count
 End Sub
 
@@ -1375,51 +1515,51 @@ Private Sub WritePlan()
     Dim r As Object
     Dim group As Object
     Dim key As Variant
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "membership.csv"), False, True)
-    report.WriteLine "SourceId,SourceOccurrence,File,Configuration,NOTE,Category,Destination,ReferenceId,Reason"
-    Set comparison = mFS.CreateTextFile(mFS.BuildPath(mFolder, "comparison.csv"), False, True)
-    comparison.WriteLine "Difference,SourceOccurrence,ReferenceOccurrence,Detail"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "SourceId,SourceOccurrence,File,Configuration,NOTE,Category,Destination,ReferenceId,Reason"
+    Set comparison = NewCsvReport()
+    WriteCsvLine comparison, "Difference,SourceOccurrence,ReferenceOccurrence,Detail"
     For Each n In mSource
         If IsLeaf(n) Then
-            report.WriteLine n("id") & "," & Csv(n("instance")) & "," & Csv(n("path")) & "," & _
+            WriteCsvLine report, n("id") & "," & Csv(n("instance")) & "," & Csv(n("path")) & "," & _
                 Csv(n("config")) & "," & Csv(n("note")) & "," & Csv(n("category")) & "," & _
                 Csv(n("destination")) & "," & n("match") & "," & Csv(n("reason"))
             If n("match") = 0 Then
-                comparison.WriteLine "SOURCE_UNMATCHED," & Csv(n("instance")) & ",," & Csv(n("reason"))
+                WriteCsvLine comparison, "SOURCE_UNMATCHED," & Csv(n("instance")) & ",," & Csv(n("reason"))
             Else
                 Set r = mReference(n("match"))
-                If n("config") <> r("config") Then comparison.WriteLine _
+                If n("config") <> r("config") Then WriteCsvLine comparison, _
                     "CONFIGURATION_DIFFERENCE," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
                     Csv(n("config") & " -> " & r("config") & "; grouping by explicit part-number key only; source configuration retained")
-                If n("identity") <> r("identity") Then comparison.WriteLine _
+                If n("identity") <> r("identity") Then WriteCsvLine comparison, _
                     "IDENTITY_ALIAS," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
                     Csv("Same embedded part-number key; source file/geometry/configuration retained")
-                If n("category") <> r("category") Then comparison.WriteLine _
+                If n("category") <> r("category") Then WriteCsvLine comparison, _
                     "NOTE_DIFFERENCE," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
                     Csv(n("note") & " -> " & r("note") & "; source NOTE retained")
-                If Len(n("category")) > 0 And Len(r("kit")) = 0 Then comparison.WriteLine _
+                If Len(n("category")) > 0 And Len(r("kit")) = 0 Then WriteCsvLine comparison, _
                     "PROMOTED_NOTE_PART," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
                     Csv("Reference leaves NOTE-tagged part outside a kit; generated output pools it")
                 If Len(r("kit")) > 0 And DestinationKit(CStr(n("destination"))) <> r("kit") Then _
-                    comparison.WriteLine "KIT_RULE_OVERRIDE," & Csv(n("instance")) & "," & _
+                    WriteCsvLine comparison, "KIT_RULE_OVERRIDE," & Csv(n("instance")) & "," & _
                     Csv(r("instance")) & "," & Csv("Source NOTE category takes precedence over reference category kit")
             End If
         End If
     Next n
     For Each r In mReference
-        If IsLeaf(r) And r("match") = 0 Then comparison.WriteLine _
+        If IsLeaf(r) And r("match") = 0 Then WriteCsvLine comparison, _
             "REFERENCE_UNMATCHED,," & Csv(r("instance")) & "," & Csv("Not copied: no matched source occurrence")
     Next r
-    report.Close
-    comparison.Close
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "groups.csv"), False, True)
-    report.WriteLine "Group,Parent,Kind,Category,PartCount,Provenance"
+    SaveCsvReport report, "membership.csv"
+    SaveCsvReport comparison, "comparison.csv"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Group,Parent,Kind,Category,PartCount,Provenance"
     For Each key In mGroups.Keys
         Set group = mGroups(key)
-        report.WriteLine Csv(CStr(key)) & "," & Csv(group("parent")) & "," & Csv(group("kind")) & "," & _
+        WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("parent")) & "," & Csv(group("kind")) & "," & _
             Csv(group("category")) & "," & group("count") & "," & Csv(group("provenance"))
     Next key
-    report.Close
+    SaveCsvReport report, "groups.csv"
     WriteReferenceKitComparison
 End Sub
 
@@ -1444,8 +1584,8 @@ Private Sub WriteReferenceKitComparison()
     Dim expected As Long
     Dim p As Long
     Dim referenceId As Long
-    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "reference-kit-comparison.csv"), False, True)
-    report.WriteLine "Group,ReferenceKit,ReferenceDescendantParts,PlannedSourceDescendantParts,CountDifference,GeneratedParent"
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Group,ReferenceKit,ReferenceDescendantParts,PlannedSourceDescendantParts,CountDifference,GeneratedParent"
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If group("kind") = "KIT" And Left$(key, 1) = "K" Then
@@ -1464,11 +1604,30 @@ Private Sub WriteReferenceKitComparison()
                     Loop
                 End If
             Next n
-            report.WriteLine Csv(CStr(key)) & "," & Csv(group("provenance")) & "," & _
+            WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("provenance")) & "," & _
                 CStr(expected) & "," & CStr(group("count")) & "," & _
                 CStr(group("count") - expected) & "," & Csv(group("parent"))
         End If
     Next key
+    SaveCsvReport report, "reference-kit-comparison.csv"
+End Sub
+
+Private Function NewCsvReport() As Object
+    Dim report As Object
+    Set report = CreateObject("ADODB.Stream")
+    report.Type = 2
+    report.Charset = "utf-8"
+    report.LineSeparator = -1
+    report.Open
+    Set NewCsvReport = report
+End Function
+
+Private Sub WriteCsvLine(ByVal report As Object, ByVal value As String)
+    report.WriteText value, 1
+End Sub
+
+Private Sub SaveCsvReport(ByVal report As Object, ByVal fileName As String)
+    report.SaveToFile mFS.BuildPath(mFolder, fileName), 1
     report.Close
 End Sub
 

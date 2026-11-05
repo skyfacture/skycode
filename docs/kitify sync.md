@@ -81,6 +81,8 @@ Default output:
 ```text
 <source folder>\kitify-generated_<yyyymmdd_hhnnss>\
     <part number> kitified generated <run-id>.SLDASM
+    <part number> COMPLETE KIT.SLDASM
+    <reference kit provenance tail>.SLDASM
     KIT_<run-id>_<generic identifier>_<category>.SLDASM
     <source non-kit assembly name>_<run-id>_<identifier>.SLDASM
     ...reports...
@@ -88,15 +90,50 @@ Default output:
 
 Runs use separate folders and do not overwrite existing output. Keep the whole
 run folder together: the root references its generated children. Run-specific
-document names avoid SOLIDWORKS same-title conflicts with earlier open results.
+root, structural and fallback-kit names avoid SOLIDWORKS same-title conflicts
+with earlier open results. Reference-backed kits retain their provenance names;
+close earlier results using those same kit titles before generating another run.
 Only one output directory is created per invocation, directly beside the source
 CAD. The older timestamp folders under `kitify-generated` are separate
 development attempts, including partial runs; they are not automatically deleted.
 
 Generated filenames and tree labels may differ from production. Non-kit backing
 filenames start with the source assembly filename and include a unique run/group
-identifier; kits use the provisional `KIT_...` convention. No SOLIDWORKS-wide
-component-naming preference is changed.
+identifier. Reference-backed kits use the segment after the final `/` in their
+`groups.csv` provenance, or the whole value when there is no `/`, unchanged:
+`7372 1045 03 RDX5 IB SEAL KIT-1.SLDASM`, for example. The provenance's final
+occurrence suffix is retained deliberately; SOLIDWORKS adds its own instance
+suffix in the tree (for example `7372 1045 03 RDX5 IB SEAL KIT-1-1`).
+Reopen validation checks that tree names follow these filenames. Invalid
+Windows filenames fail explicitly instead of being silently sanitized; duplicate
+output filenames are rejected by the existing no-overwrite check.
+Fallback kits have diagnostic provenance rather than a reference kit name and
+keep the provisional `KIT_...` convention. Root and non-kit naming are unchanged.
+No SOLIDWORKS-wide component-naming preference is changed.
+
+All individual kit trees are children of one generated, uncoloured collection
+at root level, named `<source root filename> COMPLETE KIT.SLDASM` (for example
+`7393 0800 45 COMPLETE KIT.SLDASM`). Its `Skycode.Kind` is `COLLECTION`, not
+`KIT`; it is a container, not another service kit. Existing nested kit
+relationships are retained and parts are not duplicated. Residual production
+assemblies stay outside the collection.
+
+Each individual kit, including nested and fallback kits, receives an assembly
+appearance from a deterministic non-grey palette: magenta, pink, green and cyan,
+followed by darker and lighter shades of those four colours (12 distinct
+colours total). No blue hues are used; cyan retains equal green/blue channels.
+The palette cycles if there are more than 12 individual kits. These colours are applied
+only to generated kit documents; original part/document appearances are not
+edited. Appearance is cleared on the reused working document before every
+group, so the collection, root and structural assemblies have no assembly
+colour override. The saved/reopened appearance values are checked explicitly.
+
+All generated CSV reports use comma delimiters, CRLF records and UTF-8 with a
+BOM, not UTF-16/tab-delimited text. Text fields are double-quoted and embedded
+quotes are doubled, preserving commas and Unicode in property values and names.
+For Excel Text to Columns/import, select **Delimited**, **Comma** only, and the
+double-quote text qualifier (UTF-8/65001 when an encoding choice is offered).
+The diagnostic `run.txt` remains a separate Unicode text log.
 
 The downstream identity contract is **properties**, not filenames/tree labels:
 preserve `PartNo`, `Description` and, when present, `Global Part Number` on the
@@ -167,8 +204,9 @@ Unresolved, unsaved/virtual or missing active components fail explicitly.
 - For matched members, reproduce the reference's internal kit hierarchy and
   physical subassemblies inside explicit kits. Examples include percussion
   and rotation kits, whose non-NOTE membership comes from the reference.
-- Promote each **topmost kit tree** out of its production ancestors to the new
-  root. Preserve nested kit-to-kit relationships.
+- Promote each **topmost kit tree** out of its production ancestors into the
+  generated complete-kit collection at the new root. Preserve nested kit-to-kit
+  relationships.
 - Pool NOTE-tagged parts that the reference has not kitified using normalized
   category and the nearest unambiguous source-scope evidence. If ambiguous,
   create a generic category pool per top-level source occurrence. Unmapped
@@ -200,6 +238,9 @@ assignment, **without `Set`**; the installed COM implementation rejects
 
 These are fixed geometry/configuration snapshots, not copies of production
 mates, assembly features, exploded views, display states or all configurations.
+Every generated component, including individual kits and the collection, is
+fixed. Each generated assembly is checked for mates before saving and after
+reopening; a nonempty mates group fails validation rather than being accepted.
 Assembly-level geometry/modifications are not reconstructed. Shared source part
 files retain their own dependencies; part-level in-context references are not
 removed or certified. Production-document references are forbidden as
@@ -207,8 +248,9 @@ removed or certified. Production-document references are forbidden as
 
 ## Reports and acceptance criteria
 
-Reports are UTF-16 CSV/text for Excel; commas, quotes and multiline values are
-quoted. Transform values use the VBA host's locale and semicolon separators.
+CSV reports are UTF-8 with a BOM and comma delimiters; text values containing
+commas, quotes or newlines are quoted. The separate `run.txt` log is UTF-16.
+Transform values use the VBA host's locale and semicolon separators.
 
 | File | Purpose |
 |---|---|
@@ -222,6 +264,7 @@ quoted. Transform values use the VBA host's locale and semicolon separators.
 | `generated-tree.csv` | Reopened generated occurrence tree |
 | `validation.csv` | One source-to-generated occurrence match per retained part |
 | `metadata.csv` | Source versus reopened generated identity properties by scope/type; explicit source gaps |
+| `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for uncoloured collection/root/structures |
 | `run.txt` | Stages, save/open warnings, dirty flags and explicit PASS/failure |
 
 Success requires:
@@ -230,6 +273,9 @@ Success requires:
   non-kit parts; no extra/reference-only parts.
 - Original source file and referenced configuration are preserved.
 - Each occurrence has its planned direct parent and fixed placement.
+- All generated assemblies are mate-free, including the complete-kit collection.
+- Every individual kit retains its assigned non-grey appearance after reopening;
+  the collection, root and residual structures have no assembly colour override.
 - Generation stays within the visible-window and separately opened generated
   document budgets above.
 - Root/non-kit assembly identity properties retain their source scope, type and
@@ -238,7 +284,8 @@ Success requires:
   `1e-8` (translation elements are metres; rotation/scale are dimensionless).
 - Every generated assembly component references the new run folder.
 - All generated assembly parents match the plan and all assembly transforms
-  are identity. Topmost kits are at root; nested kit parents match the reference.
+  are identity. The complete-kit collection is at root; topmost individual kits
+  are its children and nested kit parents match the reference.
 - Save, reopen and rebuild succeed. Warnings are logged; failures raise an error
   identifying the stage and partial-output folder.
 
@@ -353,3 +400,60 @@ file access. Output: `kitify-generated_20261105_120116`, with root
 The earlier partial `kitify-generated_20261105_114632` run remains unaccepted:
 Windows could not read its generated child or rules XML while the cloud file
 provider was unavailable. That error alone did not establish CAD corruption.
+
+### Provenance naming and comma-delimited reports, 5 November 2026
+
+The updated VBA compiled in an isolated Access host and completed a full run
+against the open `C:\skycode\partlink cad sandbox\7393 0800 45.SLDASM`.
+Verified output: `kitify-generated_20261105_135039`, root
+`7393 0800 45 kitified generated 20261105_135044_2F88FD4.SLDASM`.
+
+- Saved and reopened 36 assemblies; all 244 source part occurrences, fixed
+  placements and planned assembly parents passed.
+- All nine reference-backed kit filenames and reopened tree names retain the
+  final provenance segment, including its original occurrence suffix.
+- All 12 kit descendant part identities and quantities still match the supplied
+  `kitify-generated_20261105_120116\pdm kits.csv` baseline.
+- Independently parsed all 10 CSV reports: UTF-8 BOM, comma delimiters and
+  consistent expected field counts in every record.
+- An actual VBA CSV fixture round-tripped commas, embedded quotes, Unicode,
+  embedded CRLF and empty fields without changing values.
+- All 47 preserved identity properties passed; the same 10 pre-existing source
+  metadata gaps remain explicitly reported. No new SOLIDWORKS process was started.
+
+### Complete-kit collection and individual-kit colours, 5 November 2026
+
+Verified full output: `kitify-generated_20261105_142531`, root
+`7393 0800 45 kitified generated 20261105_142531_3186A28.SLDASM`.
+
+- Saved and reopened 37 assemblies, including the root-level uncoloured
+  `7393 0800 45 COMPLETE KIT.SLDASM` collection.
+- The collection contains 164 part occurrences across 12 individual kits;
+  nested seal/fastener subkits remain inside their original kit parents.
+- All 244 source parts remain conserved, with unchanged configurations and
+  fixed placement. Every generated assembly is mate-free.
+- All 12 individual kits retain distinct non-grey appearance colours after
+  reopening. RGB values use SOLIDWORKS' persisted 8-bit channel precision.
+- All 12 kit contents still match the supplied PDM CSV; all 11 generated CSV
+  reports parse with consistent comma-delimited columns and UTF-8 BOMs.
+- All 47 source identity properties still pass; the 10 pre-existing source
+  metadata gaps remain reported. The source CAD disk hash is unchanged and the
+  same SOLIDWORKS process was retained.
+
+The earlier `kitify-generated_20261105_141621` test is unaccepted: its strict
+appearance validation exposed 8-bit RGB rounding on mixed-channel colours.
+The palette was corrected and the full run above passed without relaxing the
+appearance comparison tolerance.
+
+### Magenta/pink/green/cyan palette retest, 5 November 2026
+
+Verified full output: `kitify-generated_20261105_150838`, root
+`7393 0800 45 kitified generated 20261105_150838_33FE31B.SLDASM`.
+Actual VBA compilation and complete save/reopen validation passed. The 12
+individual kits retain three distinct shades each of magenta, pink, green and
+cyan, with no blue hues; the complete-kit collection remains uncoloured.
+All 244 source part occurrences remain fixed, every generated assembly is
+mate-free, all 12 kit contents match the supplied PDM CSV, and all 11 CSV reports
+have consistent comma-delimited fields and UTF-8 BOMs. The 47 preserved identity
+properties pass; the same 10 pre-existing source metadata gaps remain reported.
+The source disk hash is unchanged and the same SOLIDWORKS process was retained.
