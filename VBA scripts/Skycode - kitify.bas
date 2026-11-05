@@ -14,7 +14,11 @@ Private mFolder As String
 Private mRunId As String
 Private mStage As String
 Private mLog As Object
-Private mCreated As Collection
+Private mWorking As SldWorks.ModelDoc2
+Private mSourcePath As String
+Private mChildPath As String
+Private mPeakGeneratedDocuments As Long
+Private mRootMetadata As Collection
 
 Public Sub SkycodeKitify()
     Dim result As String
@@ -46,6 +50,10 @@ Public Function KitifyDrifter( _
     Set original = mApp.ActiveDoc
     mStage = "Finding the saved production drifter"
     Set source = FindSource(sourcePath)
+    Set mRootMetadata = ReadMetadata(source, source.ConfigurationManager.ActiveConfiguration.Name)
+    mSourcePath = source.GetPathName
+    CheckVisibleDocuments
+    If Len(referencePath) = 0 Then Set mReference = LoadKitifyRules(source)
     mFolder = NewOutputFolder(source.GetPathName, outputFolder)
     mRunId = Format$(Now, "yyyymmdd_hhnnss") & "_" & Hex$(CLng(Timer * 1000#))
     Set mLog = mFS.CreateTextFile(mFS.BuildPath(mFolder, "run.txt"), False, True)
@@ -58,20 +66,30 @@ Public Function KitifyDrifter( _
     WriteTree mSource, "source-tree.csv"
     WriteLocations
 
-    mStage = "Mapping the open reference drifter"
-    Set reference = FindReference(source, referencePath)
-    If StrComp(source.GetPathName, reference.GetPathName, vbTextCompare) = 0 Then
-        Err.Raise vbObjectError + 2400, , "Source and reference must be different documents."
+    mStage = "Reading saved reference rules"
+    If Len(referencePath) > 0 Then
+        Set reference = FindReference(source, referencePath)
+        If StrComp(source.GetPathName, reference.GetPathName, vbTextCompare) = 0 Then
+            Err.Raise vbObjectError + 2400, , "Source and reference must be different documents."
+        End If
+        If reference.Visible Then Err.Raise vbObjectError + 2440, , _
+            "Close the development reference and use saved rules to keep only two visible documents."
+        LogLine "Reference: " & reference.GetPathName
+        LogLine "Reference configuration: " & reference.ConfigurationManager.ActiveConfiguration.Name
+        LogLine "Reference initially dirty: " & CStr(reference.GetSaveFlag)
+        Set mReference = Snapshot(reference)
+    Else
+        LogLine "Saved reference membership rules: " & KitifyRulesPath(source.GetPathName)
+        LogLine "Reference geometry was not opened. Rule-tree transforms are placeholders, not reference geometry."
     End If
-    LogLine "Reference: " & reference.GetPathName
-    LogLine "Reference configuration: " & reference.ConfigurationManager.ActiveConfiguration.Name
-    LogLine "Reference initially dirty: " & CStr(reference.GetSaveFlag)
-    Set mReference = Snapshot(reference)
     WriteTree mReference, "reference-tree.csv"
 
     mStage = "Learning kit hierarchy and matching source occurrences"
     Set mGroups = Dictionary()
     AddGroup "ROOT", "", "ROOT", "", ""
+    Set mGroups("ROOT")("metadata") = mRootMetadata
+    mGroups("ROOT")("sourcePath") = source.GetPathName
+    mGroups("ROOT")("sourceConfig") = source.ConfigurationManager.ActiveConfiguration.Name
     DiscoverKits
     MatchOccurrences
     AssignDestinations
@@ -81,6 +99,10 @@ Public Function KitifyDrifter( _
     If mFS.FileExists(template) = False Then
         Err.Raise vbObjectError + 2401, , "Set a valid default assembly template in SOLIDWORKS."
     End If
+    Set mWorking = mApp.NewDocument(template, 0, 0#, 0#)
+    If mWorking Is Nothing Then Err.Raise vbObjectError + 2416, , "Could not create the working kitified assembly."
+    mPeakGeneratedDocuments = 1
+    CheckVisibleDocuments
     mStage = "Building independent assembly documents inside-out"
     result = BuildGroup("ROOT", template, mFS.GetBaseName(source.GetPathName))
 
@@ -90,14 +112,20 @@ Public Function KitifyDrifter( _
     If reopened Is Nothing Or errors <> 0 Then Err.Raise vbObjectError + 2434, , _
         "Could not reopen saved output; errors=" & errors & "; warnings=" & warnings
     If warnings <> 0 Then LogLine "REOPEN WARNING: " & warnings
+    Set mWorking = reopened
+    CheckVisibleDocuments
     mStage = "Verifying reopened output against the source and reference"
     ValidateOutput result
+    ValidateMetadata
     For Each key In mGroups.Keys
         Set n = mGroups(key)
         If key <> "ROOT" And Len(n("file")) > 0 Then mApp.CloseDoc mFS.GetFileName(n("file"))
     Next key
     LogLine "Source finally dirty: " & CStr(source.GetSaveFlag)
-    LogLine "Reference finally dirty: " & CStr(reference.GetSaveFlag)
+    If Not reference Is Nothing Then LogLine "Reference finally dirty: " & CStr(reference.GetSaveFlag)
+    LogLine "Document budget PASS: maximum 2 visible documents; peak separately opened generated documents=" & _
+        CStr(mPeakGeneratedDocuments) & "; saved children closed after each insertion."
+    LogLine "Referenced child geometry remains loaded internally by SOLIDWORKS."
     LogLine "VERIFIED: " & result
     LogLine "Source/reference files were not saved or restructured. See comparison.csv for reference differences."
     mLog.Close
@@ -115,6 +143,10 @@ Failed:
         "Partial outputs may remain in: " & mFolder & vbCrLf & _
         "Source/reference files have not been saved by this macro."
     Debug.Print failureDescription
+    If Len(mChildPath) > 0 Then
+        mApp.CloseDoc mChildPath
+        mChildPath = ""
+    End If
     If Not mLog Is Nothing Then
         mLog.WriteLine "FAILED: " & failureDescription
         mLog.Close
@@ -130,7 +162,11 @@ Private Sub Initialise()
     Set mReference = Nothing
     Set mGroups = Nothing
     Set mLog = Nothing
-    Set mCreated = New Collection
+    Set mWorking = Nothing
+    mSourcePath = ""
+    mChildPath = ""
+    mPeakGeneratedDocuments = 0
+    Set mRootMetadata = Nothing
     mFolder = ""
     mRunId = ""
 End Sub
@@ -162,7 +198,8 @@ Private Function FindSource(ByVal path As String) As SldWorks.ModelDoc2
         Set doc = item
         If (Len(path) > 0 And StrComp(doc.GetPathName, path, vbTextCompare) = 0) Or _
             (Len(path) = 0 And pattern.Test(mFS.GetBaseName(doc.GetPathName)) And _
-                names.Exists(mFS.GetBaseName(doc.GetPathName) & " kitified")) Then
+                (names.Exists(mFS.GetBaseName(doc.GetPathName) & " kitified") Or _
+                    mFS.FileExists(KitifyRulesPath(doc.GetPathName)))) Then
             If Not found Is Nothing Then Err.Raise vbObjectError + 2402, , _
                 "Multiple production drifters are open; pass the intended sourcePath."
             Set found = doc
@@ -171,6 +208,108 @@ Private Function FindSource(ByVal path As String) As SldWorks.ModelDoc2
     If found Is Nothing Then Err.Raise vbObjectError + 2403, , _
         "Open the saved [part number].sldasm production drifter first."
     Set FindSource = found
+End Function
+
+Private Function KitifyRulesPath(ByVal sourcePath As String) As String
+    KitifyRulesPath = mFS.BuildPath(mFS.GetParentFolderName(sourcePath), _
+        mFS.GetBaseName(sourcePath) & " kitify-rules.xml")
+End Function
+
+Private Function KitifyRuleFields() As Variant
+    KitifyRuleFields = Array("id", "parent", "instance", "path", "config", "note", _
+        "assembly", "suppressed", "envelope", "excluded")
+End Function
+
+Public Sub LearnKitifyRules()
+    Dim source As SldWorks.ModelDoc2
+    Dim reference As SldWorks.ModelDoc2
+    Dim xml As Object
+    Dim root As Object
+    Dim element As Object
+    Dim field As Variant
+    Dim n As Object
+    Dim path As String
+    Initialise
+    Set source = FindSource("")
+    Set reference = FindReference(source, "")
+    Set mReference = Snapshot(reference)
+    Set mGroups = Dictionary()
+    AddGroup "ROOT", "", "ROOT", "", ""
+    DiscoverKits
+    path = KitifyRulesPath(source.GetPathName)
+    If mFS.FileExists(path) Then Err.Raise vbObjectError + 2441, , _
+        "Rules already exist; move them aside explicitly before relearning: " & path
+    Set xml = CreateObject("MSXML2.DOMDocument.6.0")
+    Set root = xml.createElement("KitifyRules")
+    root.setAttribute "version", "1"
+    root.setAttribute "source", Identity(source.GetPathName)
+    root.setAttribute "configuration", source.ConfigurationManager.ActiveConfiguration.Name
+    xml.appendChild root
+    For Each n In mReference
+        Set element = xml.createElement("Occurrence")
+        For Each field In KitifyRuleFields()
+            element.setAttribute CStr(field), CStr(n(field))
+        Next field
+        root.appendChild element
+    Next n
+    xml.Save path
+    Activate source
+    MsgBox "Saved kit rules. Close the development reference before normal runs:" & vbCrLf & path, _
+        vbInformation, "Skycode kitify"
+End Sub
+
+Private Function LoadKitifyRules(ByVal source As SldWorks.ModelDoc2) As Collection
+    Dim xml As Object
+    Dim root As Object
+    Dim element As Object
+    Dim field As Variant
+    Dim n As Object
+    Dim nodes As New Collection
+    Dim path As String
+    path = KitifyRulesPath(source.GetPathName)
+    If Not mFS.FileExists(path) Then Err.Raise vbObjectError + 2442, , _
+        "Missing saved kit rules: " & path & vbCrLf & _
+        "Run LearnKitifyRules once with the development reference open, then close it."
+    Set xml = CreateObject("MSXML2.DOMDocument.6.0")
+    xml.async = False
+    xml.resolveExternals = False
+    xml.setProperty "ProhibitDTD", True
+    If xml.Load(path) = False Then Err.Raise vbObjectError + 2443, , _
+        "Cannot load kit rules: " & xml.parseError.reason
+    Set root = xml.documentElement
+    If root Is Nothing Then Err.Raise vbObjectError + 2443, , "Empty kit rules: " & path
+    If root.nodeName <> "KitifyRules" Or root.getAttribute("version") <> "1" Or _
+        root.getAttribute("source") <> Identity(source.GetPathName) Or _
+        root.getAttribute("configuration") <> source.ConfigurationManager.ActiveConfiguration.Name Then _
+        Err.Raise vbObjectError + 2443, , "Kit rules do not match this source/configuration: " & path
+    For Each element In root.childNodes
+        If element.nodeType = 1 Then
+            If element.nodeName <> "Occurrence" Then Err.Raise vbObjectError + 2443, , "Unexpected kit rule element."
+            Set n = Dictionary()
+            For Each field In KitifyRuleFields()
+                If element.getAttributeNode(CStr(field)) Is Nothing Then Err.Raise vbObjectError + 2443, , _
+                    "Missing kit rule field: " & field
+                n.Add CStr(field), CStr(element.getAttribute(CStr(field)))
+            Next field
+            n("id") = CLng(n("id"))
+            n("parent") = CLng(n("parent"))
+            If n("id") <> nodes.Count + 1 Or n("parent") < 0 Or n("parent") >= n("id") Then _
+                Err.Raise vbObjectError + 2443, , "Invalid kit rule ancestry."
+            For Each field In Array("assembly", "suppressed", "envelope", "excluded")
+                n(field) = CBool(n(field))
+            Next field
+            n.Add "identity", Identity(CStr(n("path")))
+            n.Add "partKey", PartKey(CStr(n("identity")))
+            n.Add "category", Category(CStr(n("note")))
+            n.Add "match", 0&
+            n.Add "kit", ""
+            n.Add "fixed", False
+            n.Add "matrix", IdentityMatrix()
+            nodes.Add n
+        End If
+    Next element
+    If nodes.Count = 0 Then Err.Raise vbObjectError + 2443, , "No saved reference occurrences."
+    Set LoadKitifyRules = nodes
 End Function
 
 Private Function FindReference(ByVal source As SldWorks.ModelDoc2, ByVal path As String) As SldWorks.ModelDoc2
@@ -198,18 +337,19 @@ Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As 
     Dim parent As String
     Dim candidate As String
     Dim suffix As Long
+    Dim folderName As String
     If Len(requested) > 0 Then
         candidate = mFS.GetAbsolutePathName(requested)
         If mFS.FolderExists(candidate) Or mFS.FileExists(candidate) Then
             Err.Raise vbObjectError + 2406, , "Output folder must not already exist: " & candidate
         End If
     Else
-        parent = mFS.BuildPath(mFS.GetParentFolderName(sourcePath), "kitify-generated")
-        If mFS.FolderExists(parent) = False Then mFS.CreateFolder parent
-        candidate = mFS.BuildPath(parent, Format$(Now, "yyyymmdd_hhnnss"))
-        Do While mFS.FolderExists(candidate)
+        parent = mFS.GetParentFolderName(sourcePath)
+        folderName = "kitify-generated_" & Format$(Now, "yyyymmdd_hhnnss")
+        candidate = mFS.BuildPath(parent, folderName)
+        Do While mFS.FolderExists(candidate) Or mFS.FileExists(candidate)
             suffix = suffix + 1
-            candidate = mFS.BuildPath(parent, Format$(Now, "yyyymmdd_hhnnss") & "_" & CStr(suffix))
+            candidate = mFS.BuildPath(parent, folderName & "_" & CStr(suffix))
         Loop
     End If
     mFS.CreateFolder candidate
@@ -276,6 +416,8 @@ Private Sub WalkChildren(ByVal parent As SldWorks.Component2, ByVal parentId As 
                 Err.Raise vbObjectError + 2411, , "Save/resolve external component: " & component.Name2
         End If
         If Not model Is Nothing Then n("note") = ReadNote(model, CStr(n("config")))
+        If n("assembly") And n("excluded") = False Then _
+            Set n("metadata") = ReadMetadata(model, CStr(n("config")))
         n("category") = Category(CStr(n("note")))
         Set transform = component.Transform2
         If transform Is Nothing Then
@@ -306,6 +448,139 @@ Private Function ReadNote(ByVal model As SldWorks.ModelDoc2, ByVal config As Str
     End If
     ReadNote = Trim$(resolved)
 End Function
+
+Private Function IsIdentityProperty(ByVal name As String) As Boolean
+    Select Case UCase$(name)
+        Case "PARTNO", "DESCRIPTION", "GLOBAL PART NUMBER": IsIdentityProperty = True
+    End Select
+End Function
+
+Private Function ReadMetadata(ByVal model As SldWorks.ModelDoc2, ByVal config As String) As Collection
+    Dim result As New Collection
+    Dim manager As SldWorks.CustomPropertyManager
+    Dim scope As Variant
+    Dim names As Variant
+    Dim name As Variant
+    Dim entry As Object
+    Dim raw As String
+    Dim resolved As String
+    Dim wasResolved As Boolean
+    Dim linked As Boolean
+    Dim status As Long
+    For Each scope In Array("", config)
+        Set manager = model.Extension.CustomPropertyManager(CStr(scope))
+        names = manager.GetNames
+        If IsArray(names) Then
+            For Each name In names
+                If IsIdentityProperty(CStr(name)) Then
+                    status = manager.Get6(CStr(name), False, raw, resolved, wasResolved, linked)
+                    If status = 1 Or (linked And wasResolved = False) Then _
+                        Err.Raise vbObjectError + 2448, , "Cannot resolve source metadata: " & _
+                        model.GetPathName & "; configuration=" & config & "; property=" & name
+                    If Len(resolved) = 0 Then resolved = raw
+                    Set entry = Dictionary()
+                    entry.Add "scope", CStr(IIf(Len(scope) = 0, "", "CONFIG"))
+                    entry.Add "name", CStr(name)
+                    entry.Add "type", manager.GetType2(CStr(name))
+                    entry.Add "value", resolved
+                    result.Add entry
+                End If
+            Next name
+        End If
+    Next scope
+    Set ReadMetadata = result
+End Function
+
+Private Sub ApplyMetadata(ByVal model As SldWorks.ModelDoc2, ByVal metadata As Collection)
+    Dim manager As SldWorks.CustomPropertyManager
+    Dim scope As Variant
+    Dim names As Variant
+    Dim name As Variant
+    Dim entry As Object
+    Dim config As String
+    config = model.ConfigurationManager.ActiveConfiguration.Name
+    For Each scope In Array("", config)
+        Set manager = model.Extension.CustomPropertyManager(CStr(scope))
+        names = manager.GetNames
+        If IsArray(names) Then
+            For Each name In names
+                If IsIdentityProperty(CStr(name)) Then
+                    If manager.Delete2(CStr(name)) <> 0 Then Err.Raise vbObjectError + 2449, , _
+                        "Could not clear previous working-document metadata: " & name
+                End If
+            Next name
+        End If
+    Next scope
+    For Each entry In metadata
+        scope = ""
+        If entry("scope") = "CONFIG" Then scope = config
+        Set manager = model.Extension.CustomPropertyManager(CStr(scope))
+        If manager.Add3(CStr(entry("name")), CLng(entry("type")), CStr(entry("value")), 2) <> 0 Then _
+            Err.Raise vbObjectError + 2449, , "Could not preserve source metadata: " & entry("name")
+    Next entry
+End Sub
+
+Private Sub ValidateMetadata()
+    Dim report As Object
+    Dim key As Variant
+    Dim group As Object
+    Dim model As SldWorks.ModelDoc2
+    Dim actual As Collection
+    Dim expected As Collection
+    Dim values As Object
+    Dim entry As Object
+    Dim found As Object
+    Dim propertyKey As String
+    Dim name As Variant
+    Dim present As Boolean
+    Dim count As Long
+    Set report = mFS.CreateTextFile(mFS.BuildPath(mFolder, "metadata.csv"), False, True)
+    report.WriteLine "Group,GeneratedAssembly,Scope,Property,SourceFile,SourceConfiguration,ExpectedValue,ActualValue,Type,Status"
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("count") > 0 Then
+            Set model = mApp.GetOpenDocumentByName(group("file"))
+            If model Is Nothing Then Err.Raise vbObjectError + 2450, , "Generated metadata document is not loaded: " & key
+            Set expected = group("metadata")
+            Set actual = ReadMetadata(model, CStr(group("configuration")))
+            If actual.Count <> expected.Count Then Err.Raise vbObjectError + 2450, , _
+                "Missing or leaked identity properties in generated group: " & key
+            Set values = Dictionary()
+            For Each entry In actual
+                values.Add entry("scope") & "|" & entry("name"), entry
+            Next entry
+            For Each entry In expected
+                propertyKey = entry("scope") & "|" & entry("name")
+                If values.Exists(propertyKey) = False Then Err.Raise vbObjectError + 2450, , _
+                    "Missing preserved property in group " & key & ": " & propertyKey
+                Set found = values(propertyKey)
+                If found("value") <> entry("value") Or found("type") <> entry("type") Then _
+                    Err.Raise vbObjectError + 2450, , "Changed metadata in group " & key & ": " & propertyKey
+                report.WriteLine Csv(CStr(key)) & "," & Csv(group("file")) & "," & Csv(entry("scope")) & "," & _
+                    Csv(entry("name")) & "," & Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & "," & _
+                    Csv(entry("value")) & "," & Csv(found("value")) & "," & entry("type") & ",PASS"
+                count = count + 1
+            Next entry
+            If group("kind") <> "KIT" Then
+                For Each name In Array("PartNo", "Description")
+                    present = False
+                    For Each entry In expected
+                        If StrComp(entry("name"), CStr(name), vbTextCompare) = 0 And _
+                            Len(Trim$(entry("value"))) > 0 Then present = True
+                    Next entry
+                    If present = False Then
+                        LogLine "SOURCE METADATA MISSING: " & key & "; " & name & "; " & group("sourcePath")
+                        report.WriteLine Csv(CStr(key)) & "," & Csv(group("file")) & ",effective," & Csv(CStr(name)) & "," & _
+                            Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & ",,,,SOURCE_MISSING"
+                    End If
+                Next name
+            End If
+        End If
+    Next key
+    report.Close
+    LogLine "Metadata preservation PASS: " & count & _
+        " source properties retain scope, type and resolved value after reopen; no production identity leaked into kits."
+End Sub
 
 Private Function PartKey(ByVal value As String) As String
     Dim pattern As Object
@@ -356,6 +631,7 @@ End Function
 Private Sub AddGroup(ByVal key As String, ByVal parent As String, ByVal kind As String, _
     ByVal categoryName As String, ByVal provenance As String)
     Dim group As Object
+    Dim metadata As New Collection
     If mGroups.Exists(key) Then Exit Sub
     Set group = Dictionary()
     group.Add "parent", parent
@@ -365,6 +641,11 @@ Private Sub AddGroup(ByVal key As String, ByVal parent As String, ByVal kind As 
     group.Add "file", ""
     group.Add "count", 0&
     group.Add "building", False
+    group.Add "nodeName", ""
+    group.Add "configuration", ""
+    group.Add "metadata", metadata
+    group.Add "sourcePath", ""
+    group.Add "sourceConfig", ""
     mGroups.Add key, group
 End Sub
 
@@ -505,6 +786,7 @@ End Sub
 
 Private Function ReferenceDestination(ByVal id As Long) As String
     Dim n As Object
+    Dim source As Object
     Dim key As String
     Dim parentKey As String
     Set n = mReference(id)
@@ -518,7 +800,38 @@ Private Function ReferenceDestination(ByVal id As Long) As String
     parentKey = ReferenceDestination(n("parent"))
     If Len(parentKey) = 0 Then Err.Raise vbObjectError + 2414, , "Missing reference kit parent."
     AddGroup key, parentKey, "STRUCTURE", "", n("instance")
+    Set source = SourceStructure(n)
+    mGroups(key)("nodeName") = mFS.GetBaseName(source("path"))
+    Set mGroups(key)("metadata") = source("metadata")
+    mGroups(key)("sourcePath") = source("path")
+    mGroups(key)("sourceConfig") = source("config")
     ReferenceDestination = key
+End Function
+
+Private Function SourceStructure(ByVal reference As Object) As Object
+    Dim source As Object
+    Dim candidate As Object
+    Dim pass As Long
+    For pass = 1 To 2
+        For Each source In mSource
+            If source("assembly") And source("excluded") = False Then
+                If (pass = 1 And source("identity") = reference("identity")) Or _
+                    (pass = 2 And Len(reference("partKey")) > 0 And source("partKey") = reference("partKey")) Then
+                    If Not candidate Is Nothing Then
+                        If candidate("path") <> source("path") Or candidate("config") <> source("config") Then _
+                            Err.Raise vbObjectError + 2439, , _
+                            "Ambiguous production metadata owner for reference structure: " & reference("instance")
+                    End If
+                    Set candidate = source
+                End If
+            End If
+        Next source
+        If Not candidate Is Nothing Then
+            Set SourceStructure = candidate
+            Exit Function
+        End If
+    Next pass
+    Err.Raise vbObjectError + 2439, , "No production metadata owner for reference structure: " & reference("instance")
 End Function
 
 Private Function SourceDestination(ByVal id As Long) As String
@@ -533,6 +846,10 @@ Private Function SourceDestination(ByVal id As Long) As String
     key = "A" & Format$(id, "0000")
     parentKey = SourceDestination(n("parent"))
     AddGroup key, parentKey, "STRUCTURE", "", n("instance")
+    mGroups(key)("nodeName") = mFS.GetBaseName(n("path"))
+    Set mGroups(key)("metadata") = n("metadata")
+    mGroups(key)("sourcePath") = n("path")
+    mGroups(key)("sourceConfig") = n("config")
     SourceDestination = key
 End Function
 
@@ -680,6 +997,7 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     Dim errors As Long
     Dim warnings As Long
     Dim saved As Boolean
+    Dim saveOptions As Long
     Set group = mGroups(key)
     mStage = "Building group " & key
     If group("count") = 0 Then Exit Function
@@ -696,8 +1014,8 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
         End If
     Next childKey
 
-    Set model = mApp.NewDocument(template, 0, 0#, 0#)
-    If model Is Nothing Then Err.Raise vbObjectError + 2416, , "Could not create default-template assembly."
+    Set model = mWorking
+    If model Is Nothing Then Err.Raise vbObjectError + 2416, , "The working kitified assembly is unavailable."
     Set assembly = model
     Activate model
     Set manager = model.Extension.CustomPropertyManager("")
@@ -705,6 +1023,7 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     PutProperty manager, "Skycode.Category", CStr(group("category"))
     PutProperty manager, "Skycode.Provenance", CStr(group("provenance"))
     PutProperty manager, "Skycode.Generated", "Kitify; fixed snapshot; do not edit by hand"
+    ApplyMetadata model, group("metadata")
 
     For Each n In mSource
         If IsLeaf(n) And n("destination") = key Then
@@ -714,10 +1033,14 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     For Each childKey In mGroups.Keys
         Set child = mGroups(childKey)
         If child("parent") = key And child("count") > 0 Then
-            Set childModel = mApp.GetOpenDocumentByName(child("file"))
-            If childModel Is Nothing Then Err.Raise vbObjectError + 2417, , "Generated child is not loaded."
+            Set childModel = OpenGeneratedChild(CStr(child("file")), CStr(child("configuration")))
             InsertFixed model, assembly, child("file"), _
-                childModel.ConfigurationManager.ActiveConfiguration.Name, IdentityMatrix()
+                CStr(child("configuration")), IdentityMatrix()
+            SaveLoadedGeneratedDocuments
+            Set childModel = Nothing
+            LogLine "Closing inserted child document: " & mChildPath
+            mApp.CloseDoc mChildPath
+            mChildPath = ""
         End If
     Next childKey
     If model.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2418, , _
@@ -727,19 +1050,126 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     ElseIf group("kind") = "KIT" Then
         fileName = "KIT_" & mRunId & "_" & SafeName(key) & "_" & SafeName(group("category")) & ".SLDASM"
     Else
-        fileName = "STRUCT_" & mRunId & "_" & key & ".SLDASM"
+        fileName = group("nodeName") & "_" & mRunId & "_" & key & ".SLDASM"
     End If
     group("file") = mFS.BuildPath(mFolder, fileName)
     If mFS.FileExists(group("file")) Then Err.Raise vbObjectError + 2419, , "Refusing to overwrite an existing assembly."
-    saved = model.Extension.SaveAs3(group("file"), 0, 1, Nothing, Nothing, errors, warnings)
+    LogLine "Saving group copy/root: " & key
+    group("configuration") = model.ConfigurationManager.ActiveConfiguration.Name
+    saveOptions = 3
+    If key = "ROOT" Then saveOptions = 1
+    saved = model.Extension.SaveAs3(group("file"), 0, saveOptions, Nothing, Nothing, errors, warnings)
     If saved = False Or errors <> 0 Then Err.Raise vbObjectError + 2420, , _
         "Save failed: " & group("file") & "; errors=" & errors & "; warnings=" & warnings
     If warnings <> 0 Then LogLine "SAVE WARNING " & group("file") & ": " & warnings
-    mCreated.Add fileName
     group("building") = False
     BuildGroup = group("file")
     LogLine "Saved " & fileName & " (" & group("count") & " part occurrences)"
+    If key <> "ROOT" Then ClearWorkingAssembly
 End Function
+
+Private Sub CheckVisibleDocuments()
+    Dim doc As SldWorks.ModelDoc2
+    Dim allowed As Boolean
+    Dim count As Long
+    Set doc = mApp.GetFirstDocument
+    Do While Not doc Is Nothing
+        If doc.Visible Then
+            count = count + 1
+            allowed = CBool(StrComp(doc.GetPathName, mSourcePath, vbTextCompare) = 0)
+            If Not mWorking Is Nothing Then
+                If doc Is mWorking Then allowed = True
+            End If
+            If allowed = False Or count > 2 Then Err.Raise vbObjectError + 2444, , _
+                "Close other CAD document windows before running kitify: " & doc.GetTitle
+        End If
+        Set doc = doc.GetNext
+    Loop
+End Sub
+
+Private Function OpenGeneratedChild(ByVal path As String, ByVal configuration As String) As SldWorks.ModelDoc2
+    Dim previous As Boolean
+    Dim child As SldWorks.ModelDoc2
+    Dim errors As Long
+    Dim warnings As Long
+    Dim failureNumber As Long
+    Dim failureDescription As String
+    If Len(mChildPath) > 0 Then Err.Raise vbObjectError + 2445, , _
+        "Close the previous generated child before loading another: " & mChildPath
+    CheckVisibleDocuments
+    previous = mApp.GetDocumentVisible(ASSEMBLY_DOCUMENT)
+    On Error GoTo Failed
+    mApp.DocumentVisible False, ASSEMBLY_DOCUMENT
+    mChildPath = path
+    LogLine "Loading one hidden child document: " & path
+    Set child = mApp.OpenDoc6(path, ASSEMBLY_DOCUMENT, 1, configuration, errors, warnings)
+    mApp.DocumentVisible previous, ASSEMBLY_DOCUMENT
+    If child Is Nothing Or errors <> 0 Then Err.Raise vbObjectError + 2417, , _
+        "Could not load generated child: " & path & "; errors=" & errors & "; warnings=" & warnings
+    If warnings <> 0 Then LogLine "CHILD LOAD WARNING " & path & ": " & warnings
+    LogLine "Loaded child dirty: " & CStr(child.GetSaveFlag)
+    If child.Visible Then Err.Raise vbObjectError + 2445, , "Generated child unexpectedly has a visible window: " & path
+    If mPeakGeneratedDocuments < 2 Then mPeakGeneratedDocuments = 2
+    Set OpenGeneratedChild = child
+    Exit Function
+Failed:
+    failureNumber = Err.Number
+    failureDescription = Err.Description
+    mApp.DocumentVisible previous, ASSEMBLY_DOCUMENT
+    Err.Raise failureNumber, "Skycode.OpenGeneratedChild", failureDescription
+End Function
+
+Private Sub ClearWorkingAssembly()
+    Dim assembly As SldWorks.AssemblyDoc
+    Dim components As Variant
+    Dim item As Variant
+    Dim component As SldWorks.Component2
+    Set assembly = mWorking
+    SaveLoadedGeneratedDocuments
+    LogLine "Clearing working assembly references"
+    mWorking.ClearSelection2 True
+    components = assembly.GetComponents(True)
+    If IsArray(components) Then
+        For Each item In components
+            Set component = item
+            If component.Select4(True, Nothing, False) = False Then Err.Raise vbObjectError + 2446, , _
+                "Could not select the working assembly contents for release."
+        Next item
+        If mWorking.Extension.DeleteSelection2(0) = False Then Err.Raise vbObjectError + 2446, , _
+            "Could not clear the working assembly after saving its child copy."
+    End If
+    If assembly.GetComponentCount(True) <> 0 Then Err.Raise vbObjectError + 2446, , _
+        "Working assembly still contains components from the previous child."
+    CheckVisibleDocuments
+End Sub
+
+Private Sub SaveLoadedGeneratedDocuments()
+    Dim key As Variant
+    Dim group As Object
+    Dim model As SldWorks.ModelDoc2
+    Dim path As String
+    Dim errors As Long
+    Dim warnings As Long
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        path = group("file")
+        If Len(path) > 0 Then
+            If StrComp(mFS.GetParentFolderName(path), mFolder, vbTextCompare) <> 0 Then _
+                Err.Raise vbObjectError + 2447, , "Refusing to save a document outside this output run: " & path
+            Set model = mApp.GetOpenDocumentByName(path)
+            If Not model Is Nothing Then
+                If Not model Is mWorking Then
+                    If model.GetSaveFlag Then
+                        If model.Save3(1, errors, warnings) = False Or errors <> 0 Then _
+                            Err.Raise vbObjectError + 2447, , "Could not save rebuilt generated child: " & path & _
+                            "; errors=" & errors & "; warnings=" & warnings
+                        If warnings <> 0 Then LogLine "GENERATED CHILD SAVE WARNING " & path & ": " & warnings
+                    End If
+                End If
+            End If
+        End If
+    Next key
+End Sub
 
 Private Sub InsertFixed(ByVal model As SldWorks.ModelDoc2, ByVal assembly As SldWorks.AssemblyDoc, _
     ByVal path As String, ByVal config As String, ByVal data As Variant)
@@ -768,11 +1198,10 @@ Private Sub InsertFixed(ByVal model As SldWorks.ModelDoc2, ByVal assembly As Sld
 End Sub
 
 Private Sub CloseGenerated()
-    Dim i As Long
-    For i = mCreated.Count To 1 Step -1
-        mApp.CloseDoc CStr(mCreated(i))
-    Next i
-    Set mCreated = New Collection
+    If Not mWorking Is Nothing Then
+        mApp.CloseDoc mWorking.GetTitle
+        Set mWorking = Nothing
+    End If
 End Sub
 
 Private Sub PutProperty(ByVal manager As SldWorks.CustomPropertyManager, ByVal name As String, ByVal value As String)
