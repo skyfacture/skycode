@@ -2,7 +2,7 @@
 
 ## Current workflow
 
-Working source: [Skycode - kitify.bas]
+Working source: [Skycode - kitify.bas](<../vba scripts/Skycode - kitify.bas>)
 
 1. Attach to the running SOLIDWORKS session.
 2. **First map the production tree**, recursively, including every exposed
@@ -17,11 +17,22 @@ Working source: [Skycode - kitify.bas]
    Insert original source parts/configurations at installed positions and fix
    them. Save child assemblies as copies, clear the working document, and reuse
    it for the next child and finally the root.
-6. Close and reopen the saved generated assembly. Recursively verify occurrence
-   conservation, configurations, transforms, fixed placement and kit parents.
+6. Close and reopen the construction snapshot. Recursively verify occurrence
+   conservation, configurations, transforms, fixed placement, properties,
+   appearances and kit parents.
+7. Save a copy of the production root, preserving its original production
+   component tree, mates and features. In this **copy only**, retain the source
+   active configuration as `Default`, remove the other copied configurations,
+   and create `kitified`. Insert the generated top-level branches alongside
+   the original production branches; no extra wrapper assembly is introduced.
+8. Reopen the combined output and verify both configurations. Remove the
+   intermediate construction snapshot only after successful verification.
 
-The source and reference are never saved, restructured, assigned properties,
-or used as generated assembly dependencies. Resolving lightweight components,
+The source and reference are never saved in place, restructured or assigned
+properties. The source root is copied, not inserted as a component. `Default`
+retains the original production child-document references; `kitified` uses the
+independently rebuilt assemblies and original source parts. Reference geometry
+is never used as an output dependency. Resolving lightweight components,
 activating documents and reading uncached properties can affect their in-memory
 state. The log records their initial/final dirty flags. Existing user edits are
 not discarded.
@@ -88,6 +99,21 @@ Default output:
     ...reports...
 ```
 
+The final root contains exactly two configurations:
+
+| Configuration | Original production branches | Generated branches |
+|---|---|---|
+| `Default` | Original suppression states, otherwise unchanged | Suppressed |
+| `kitified` | Suppressed | Unsuppressed |
+
+Originally suppressed production components remain suppressed in `Default`;
+they are not forcibly unsuppressed. Hidden/envelope states, original occurrence
+names, referenced configurations, placements and fixed/floating states are
+retained. The final file is saved with `kitified` active. Select `Default` for
+production Composer/Partlink imports and `kitified` for kit views. Other source
+configurations remain untouched in the original file but are not retained in
+this two-configuration output.
+
 Runs use separate folders and do not overwrite existing output. Keep the whole
 run folder together: the root references its generated children. Run-specific
 root, structural and fallback-kit names avoid SOLIDWORKS same-title conflicts
@@ -108,7 +134,9 @@ Reopen validation checks that tree names follow these filenames. Invalid
 Windows filenames fail explicitly instead of being silently sanitized; duplicate
 output filenames are rejected by the existing no-overwrite check.
 Fallback kits have diagnostic provenance rather than a reference kit name and
-keep the provisional `KIT_...` convention. Root and non-kit naming are unchanged.
+keep the provisional `KIT_...` convention. Final root and non-kit filename naming
+are unchanged. Custom properties, rather than these backing filenames, provide
+the downstream item/view identity.
 No SOLIDWORKS-wide component-naming preference is changed.
 
 All individual kit trees are children of one generated, uncoloured collection
@@ -125,8 +153,10 @@ colours total). No blue hues are used; cyan retains equal green/blue channels.
 The palette cycles if there are more than 12 individual kits. These colours are applied
 only to generated kit documents; original part/document appearances are not
 edited. Appearance is cleared on the reused working document before every
-group, so the collection, root and structural assemblies have no assembly
-colour override. The saved/reopened appearance values are checked explicitly.
+group, so the collection, construction snapshot and structural assemblies have
+no assembly colour override. The final cloned root retains its production
+appearance. The saved/reopened generated-child appearance values are checked
+explicitly before combination.
 
 All generated CSV reports use comma delimiters, CRLF records and UTF-8 with a
 BOM, not UTF-16/tab-delimited text. Text fields are double-quoted and embedded
@@ -136,20 +166,54 @@ double-quote text qualifier (UTF-8/65001 when an encoding choice is offered).
 The diagnostic `run.txt` remains a separate Unicode text log.
 
 The downstream identity contract is **properties**, not filenames/tree labels:
-preserve `PartNo`, `Description` and, when present, `Global Part Number` on the
-generated root and every rebuilt non-kit assembly. Read from the production
-assembly and its referenced configuration, never the development reference.
+preserve all source custom properties, including `PartNo`, `Description` and,
+when present, `Global Part Number`, on the generated root and every rebuilt
+non-kit assembly. The four macro-owned `Skycode.Kind`, `Skycode.Category`,
+`Skycode.Provenance` and `Skycode.Generated` fields are reserved, not copied.
+Read from the production assembly and its referenced configuration, never the
+development reference.
 Document-level properties remain document-level; configuration properties are
-mapped to the generated snapshot's active configuration. Property spelling,
-type and resolved value are copied; expressions are frozen to source-resolved
+mapped to each generated snapshot's active configuration and to `kitified` on
+the final root. The cloned `Default` configuration retains its production
+configuration properties. Property spelling, type and resolved value are copied;
+expressions are frozen to source-resolved
 values so they do not re-evaluate against a generated filename.
 
 This preserves the values consumed by Composer's `Meta.PartNo`/`Meta.PartNo_cfg`
 and `Meta.Description`/`Meta.Description_cfg` normalization macros, including
 their uppercase variants. Source part files/configurations are referenced
-directly and their properties are not modified. New kits do not inherit a
-production assembly's part number or description. The reused working document's
-identity fields are cleared between groups to prevent metadata leakage.
+directly and their properties are not modified. The reused working document's
+source custom properties are cleared between groups to prevent metadata leakage.
+
+Reference-backed kits receive document-level `PartNo` and `Description` from the
+last `/`-separated provenance segment. Whitespace is trimmed and normalized to
+single spaces; the final occurrence suffix (`-1`, `-12`, etc.) is removed from
+the property identity, not from the backing filename. The leading three numeric
+groups form `PartNo`; the remaining text forms `Description`. For example:
+
+```text
+7372 1043 01 HLX-FH-SEAL KIT-1
+PartNo      = 7372 1043 01
+Description = HLX-FH-SEAL KIT
+```
+
+Malformed numerical reference kit identities fail explicitly. Text-only
+reference kits (for example `RDX5 PERCUSSION SEAL KIT-1`) retain their provenance
+text as `Description` with blank `PartNo`. Fallback kits also have blank
+`PartNo`, with category-based `Description` (for example `BEARING KIT`). Both
+cases receive an explicit `KIT_NUMBER_MISSING` report/log entry; no service
+number is invented. The collection uses `<source root filename> COMPLETE KIT` as its descriptive
+`PartNo`, with `Complete kit collection` as `Description`, avoiding a duplicate
+of the root's numerical view name.
+
+Composer import must include custom properties and use `PartNo` for actor names
+where configured. The assembly-view pass reads `Meta.PartNo` directly, so the
+example kit view becomes `7372 1043 01`, not a `SubAssy_...` fallback. The root
+view/BOX name still comes from root `Actor.Name`; correct root naming therefore
+depends on the Composer import naming settings. Existing imports must be
+re-imported/updated to receive the new metadata. BOX views additionally require
+the bounding-box macro's proxy and its geometry properties; kit metadata alone
+does not create that proxy.
 
 Missing/blank source `PartNo` or `Description` is reported as `SOURCE_MISSING`
 in `metadata.csv` and in the log; values are not invented from CAD filenames.
@@ -179,7 +243,8 @@ them. Review unfamiliar categories in the reports. Membership is assigned to
 their separate quantities, configurations and positions.
 
 Suppressed components and envelopes, including all their accessible descendants,
-are mapped but excluded from output. Hidden active non-envelope parts are included.
+are mapped but excluded from the generated kit tree. They remain intact in the
+cloned production tree. Hidden active non-envelope parts are included in kits.
 Suppressed assemblies may expose no children through `GetChildren`; this is an
 active-configuration snapshot, not an inventory of every suppressed configuration.
 Unresolved, unsaved/virtual or missing active components fail explicitly.
@@ -219,9 +284,10 @@ Unresolved, unsaved/virtual or missing active components fail explicitly.
   Reference-only items and empty reference kits are reported, not manufactured.
 
 Generic kit/structure identifiers are run-local, not service part numbers.
-No new service part numbers are assigned. Existing production identity
-properties are preserved on rebuilt non-kit assemblies; kits receive no
-production identity. `Skycode.*` properties on new assemblies record kind,
+No new service part numbers are assigned. Existing production custom
+properties are preserved on rebuilt non-kit assemblies; reference kits receive
+their own provenance identity, not a production ancestor's identity.
+`Skycode.*` properties on new assemblies record kind,
 category, provenance and generated status.
 
 ### Positions and assembly independence
@@ -236,15 +302,18 @@ after positioning, then fix it. SOLIDWORKS' VBA `Transform2` setter uses value
 assignment, **without `Set`**; the installed COM implementation rejects
 `Set component.Transform2 = ...`.
 
-These are fixed geometry/configuration snapshots, not copies of production
-mates, assembly features, exploded views, display states or all configurations.
-Every generated component, including individual kits and the collection, is
-fixed. Each generated assembly is checked for mates before saving and after
+The generated kit branches are fixed geometry/configuration snapshots, not
+copies of production mates, assembly features, exploded views, display states
+or all configurations. Every generated kit-tree component, including individual
+kits and the collection, is fixed. Each generated assembly is checked for mates before saving and after
 reopening; a nonempty mates group fails validation rather than being accepted.
+The final cloned root is exempt: it deliberately retains the original production
+mates/features. Original production occurrences keep their fixed/floating state.
 Assembly-level geometry/modifications are not reconstructed. Shared source part
 files retain their own dependencies; part-level in-context references are not
 removed or certified. Production-document references are forbidden as
-**assembly components** in the generated tree.
+**assembly components** in the active generated kit tree, but are required and
+preserved in `Default`.
 
 ## Reports and acceptance criteria
 
@@ -262,28 +331,38 @@ Transform values use the VBA host's locale and semicolon separators.
 | `reference-kit-comparison.csv` | Reference versus planned source descendant quantities per learned kit |
 | `comparison.csv` | Unmatched/ambiguous identities, aliases, NOTE differences and promotions |
 | `generated-tree.csv` | Reopened generated occurrence tree |
+| `snapshot-generated-tree.csv`, `snapshot-validation.csv`, `snapshot-metadata.csv` | Construction-snapshot verification before combining; separate names preserve the no-overwrite report policy |
+| `production-tree.csv` | Reopened `Default` tree, including suppressed generated branches |
+| `production-metadata.csv` | Reopened `Default` root custom properties compared with source-resolved values |
+| `configurations.csv` | Reopened reciprocal top-level suppression checks for both configurations |
 | `validation.csv` | One source-to-generated occurrence match per retained part |
-| `metadata.csv` | Source versus reopened generated identity properties by scope/type; explicit source gaps |
+| `metadata.csv` | Expected versus reopened custom properties by scope/type; source gaps and missing fallback-kit numbers |
 | `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for uncoloured collection/root/structures |
 | `run.txt` | Stages, save/open warnings, dirty flags and explicit PASS/failure |
 
 Success requires:
 
-- Every active non-envelope source part occurs **exactly once**, including
-  non-kit parts; no extra/reference-only parts.
+- In `kitified`, every active non-envelope source part occurs **exactly once**,
+  including non-kit parts; no extra/reference-only parts.
 - Original source file and referenced configuration are preserved.
 - Each occurrence has its planned direct parent and fixed placement.
-- All generated assemblies are mate-free, including the complete-kit collection.
+- All generated child assemblies are mate-free, including the complete-kit
+  collection; the cloned root retains the original production mates/features.
 - Every individual kit retains its assigned non-grey appearance after reopening;
-  the collection, root and residual structures have no assembly colour override.
+  the collection and residual structures have no assembly colour override.
 - Generation stays within the visible-window and separately opened generated
   document budgets above.
-- Root/non-kit assembly identity properties retain their source scope, type and
-  resolved values after save/reopen. Kits contain no leaked production identity.
+- Root/non-kit assembly custom properties retain their source scope, type and
+  resolved values after save/reopen. Kits contain provenance-derived identity,
+  never leaked production identity.
+- `Default` retains every exposed production occurrence, filename, referenced
+  configuration, suppression/envelope status, fixed/floating state and placement.
+  The inactive alternate tree is suppressed in both configurations after reopen.
 - Maximum absolute error in transform elements 0 through 12 is at most
   `1e-8` (translation elements are metres; rotation/scale are dimensionless).
-- Every generated assembly component references the new run folder.
-- All generated assembly parents match the plan and all assembly transforms
+- Every active generated assembly component in `kitified` references the new
+  run folder; the production branches retain their original references.
+- In `kitified`, all generated assembly parents match the plan and all assembly transforms
   are identity. The complete-kit collection is at root; topmost individual kits
   are its children and nested kit parents match the reference.
 - Save, reopen and rebuild succeed. Warnings are logged; failures raise an error
@@ -318,7 +397,19 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 - `GetDocumentVisible`, `DocumentVisible`, `Visible`, `DeleteSelection2(0)`,
   `GetComponentCount(True)`; close inserted children before loading another.
 - `ICustomPropertyManager.GetNames`, `GetType2`, `Get6`, `Delete2`, `Add3`
-  for identity-property snapshot/copy/reopen verification.
+  for custom-property snapshot/copy/reopen verification.
+- `AddConfiguration3`, `DeleteConfiguration2`, `IConfiguration.Name`,
+  `ShowConfiguration2` and `GetComponents(True)`.
+- `IComponent2.SetSuppression2`: suppressed = 0, fully resolved = 2;
+  success (`swSuppressionChangeOk`) = 2. Changes apply to the active configuration.
+  State acceptance uses the reopened configuration checks.
+- Normalize native Boolean flags with `CBool(flag <> False)` before comparing
+  them with VBA Boolean values. SOLIDWORKS can return true as `1`, not VBA's
+  canonical `True` (`-1`); `CBool(flag)` alone does not normalize a typed Boolean.
+- Configuration activation is skipped when the requested configuration is
+  already active, since `ShowConfiguration2` can return False for that no-op.
+  After an actual switch, rebuild the activated configuration before checking
+  its geometry and component tree.
 - `CloseDoc`, `OpenDoc6` (assembly = 2; silent = 1).
 
 ## Validation status
@@ -327,6 +418,46 @@ Live validation uses the actual imported VBA module in a newly created isolated
 Access database with the installed SOLIDWORKS type-library reference. No Access
 security settings are changed. This avoids claiming that a C# approximation
 establishes VBA runtime compatibility.
+
+Run `TestKitifyMetadata` in the imported module to check spaced service numbers,
+provenance-tail extraction, whitespace normalization, occurrence-suffix removal,
+text-only reference kits, unnumbered category fallbacks and rejection of
+malformed numerical provenance. Full generation verifies both saved
+configurations after reopening; `configurations.csv`, `production-tree.csv`,
+`validation.csv` and `metadata.csv` capture the checks. The older live-run
+results below describe the preceding snapshot-only workflow.
+
+### Combined-configuration refinement (2026-11-05)
+
+The actual VBA module compiled and its metadata regression tests passed.
+A complete construction run produced and verified the kit snapshot; targeted
+combination and cold-reopen checks then verified the final saved root:
+
+- Both `Default` and `kitified` passed all 11 top-level suppression checks.
+- All 304 exposed production occurrences retained their source paths,
+  configurations, suppression/envelope states, fixed/floating states and
+  placements in `Default`.
+- All 244 retained parts were conserved in `kitified`; maximum matrix error was
+  `5.69544411632705e-14`, below the required `1e-8` tolerance.
+- All 417 generated custom-property checks passed, including
+  `PartNo = 7372 1043 01` for the example seal kit. The `Default` root also passed
+  all 22 source-property checks.
+- Five unnumbered kits and ten pre-existing source identity gaps remain
+  explicitly reported; no numbers or missing production values were invented.
+- The intermediate construction assembly was removed after verification.
+- The source disk SHA-256 remained unchanged. Resolution/read operations left
+  the source dirty in memory; the macro did not save that source state.
+
+The live Boolean diagnostic confirmed native true was `1`, that
+`CBool(IsSuppressed) = True` was False, and that
+`CBool(IsSuppressed <> False) = True` was True. Configuration verification uses
+the existing normalized-Boolean pattern throughout.
+
+These checks verify SOLIDWORKS output and its metadata, not a new Composer
+import or creation of BOX views. Re-import the intended configuration with the
+custom-property naming settings and supply/regenerate the bounding-box proxy.
+
+### Earlier snapshot-only validation
 
 The initial source mapping found 304 exposed nodes and 23 NOTE/category
 locations. The open reference is not an exact source clone: several kits remain

@@ -4,6 +4,8 @@ Option Explicit
 Private Const ASSEMBLY_DOCUMENT As Long = 2
 Private Const DEFAULT_ASSEMBLY_TEMPLATE As Long = 9
 Private Const MATRIX_TOLERANCE As Double = 0.00000001
+Private Const PRODUCTION_CONFIGURATION As String = "Default"
+Private Const KIT_CONFIGURATION As String = "kitified"
 
 Private mApp As SldWorks.SldWorks
 Private mFS As Object
@@ -19,6 +21,8 @@ Private mSourcePath As String
 Private mChildPath As String
 Private mPeakGeneratedDocuments As Long
 Private mRootMetadata As Collection
+Private mProductionRoots As Object
+Private mKitRoots As Object
 
 Public Sub SkycodeKitify()
     Dim result As String
@@ -35,6 +39,7 @@ Public Function KitifyDrifter( _
     Dim reference As SldWorks.ModelDoc2
     Dim original As SldWorks.ModelDoc2
     Dim result As String
+    Dim snapshotPath As String
     Dim template As String
     Dim n As Object
     Dim key As Variant
@@ -94,6 +99,7 @@ Public Function KitifyDrifter( _
     MatchOccurrences
     AssignDestinations
     CollectKits
+    PrepareKitMetadata
     WritePlan
 
     template = mApp.GetUserPreferenceStringValue(DEFAULT_ASSEMBLY_TEMPLATE)
@@ -116,9 +122,32 @@ Public Function KitifyDrifter( _
     Set mWorking = reopened
     CheckVisibleDocuments
     mStage = "Verifying reopened output against the source and reference"
+    ValidateOutput result, "snapshot-"
+    ValidateMetadata "snapshot-"
+    ValidateAppearances
+    mStage = "Cloning production and combining configuration-specific trees"
+    snapshotPath = result
+    result = CombineConfigurations(source)
+    mStage = "Reopening and verifying both saved configurations"
+    CloseGenerated
+    errors = 0
+    warnings = 0
+    Set reopened = mApp.OpenDoc6(result, ASSEMBLY_DOCUMENT, 1, KIT_CONFIGURATION, errors, warnings)
+    If reopened Is Nothing Or errors <> 0 Then Err.Raise vbObjectError + 2453, , _
+        "Could not reopen combined output; errors=" & errors & "; warnings=" & warnings
+    If warnings <> 0 Then LogLine "COMBINED REOPEN WARNING: " & warnings
+    Set mWorking = reopened
+    CheckVisibleDocuments
+    ValidateConfigurations
+    For Each n In mSource
+        n("validated") = False
+    Next n
     ValidateOutput result
     ValidateMetadata
-    ValidateAppearances
+    If Not mApp.GetOpenDocumentByName(snapshotPath) Is Nothing Then _
+        Err.Raise vbObjectError + 2453, , "Construction snapshot is unexpectedly still loaded: " & snapshotPath
+    mFS.DeleteFile snapshotPath, True
+    LogLine "Removed verified intermediate construction snapshot: " & snapshotPath
     For Each key In mGroups.Keys
         Set n = mGroups(key)
         If key <> "ROOT" And Len(n("file")) > 0 Then mApp.CloseDoc mFS.GetFileName(n("file"))
@@ -169,6 +198,8 @@ Private Sub Initialise()
     mChildPath = ""
     mPeakGeneratedDocuments = 0
     Set mRootMetadata = Nothing
+    Set mProductionRoots = Nothing
+    Set mKitRoots = Nothing
     mFolder = ""
     mRunId = ""
 End Sub
@@ -451,9 +482,12 @@ Private Function ReadNote(ByVal model As SldWorks.ModelDoc2, ByVal config As Str
     ReadNote = Trim$(resolved)
 End Function
 
-Private Function IsIdentityProperty(ByVal name As String) As Boolean
+Private Function IsSourceProperty(ByVal name As String) As Boolean
     Select Case UCase$(name)
-        Case "PARTNO", "DESCRIPTION", "GLOBAL PART NUMBER": IsIdentityProperty = True
+        Case "SKYCODE.KIND", "SKYCODE.CATEGORY", "SKYCODE.PROVENANCE", "SKYCODE.GENERATED"
+            IsSourceProperty = False
+        Case Else
+            IsSourceProperty = True
     End Select
 End Function
 
@@ -474,7 +508,7 @@ Private Function ReadMetadata(ByVal model As SldWorks.ModelDoc2, ByVal config As
         names = manager.GetNames
         If IsArray(names) Then
             For Each name In names
-                If IsIdentityProperty(CStr(name)) Then
+                If IsSourceProperty(CStr(name)) Then
                     status = manager.Get6(CStr(name), False, raw, resolved, wasResolved, linked)
                     If status = 1 Or (linked And wasResolved = False) Then _
                         Err.Raise vbObjectError + 2448, , "Cannot resolve source metadata: " & _
@@ -506,7 +540,7 @@ Private Sub ApplyMetadata(ByVal model As SldWorks.ModelDoc2, ByVal metadata As C
         names = manager.GetNames
         If IsArray(names) Then
             For Each name In names
-                If IsIdentityProperty(CStr(name)) Then
+                If IsSourceProperty(CStr(name)) Then
                     If manager.Delete2(CStr(name)) <> 0 Then Err.Raise vbObjectError + 2449, , _
                         "Could not clear previous working-document metadata: " & name
                 End If
@@ -522,7 +556,7 @@ Private Sub ApplyMetadata(ByVal model As SldWorks.ModelDoc2, ByVal metadata As C
     Next entry
 End Sub
 
-Private Sub ValidateMetadata()
+Private Sub ValidateMetadata(Optional ByVal reportPrefix As String = "", Optional ByVal rootOnly As Boolean = False)
     Dim report As Object
     Dim key As Variant
     Dim group As Object
@@ -536,11 +570,12 @@ Private Sub ValidateMetadata()
     Dim name As Variant
     Dim present As Boolean
     Dim count As Long
+    Dim missingStatus As String
     Set report = NewCsvReport()
     WriteCsvLine report, "Group,GeneratedAssembly,Scope,Property,SourceFile,SourceConfiguration,ExpectedValue,ActualValue,Type,Status"
     For Each key In mGroups.Keys
         Set group = mGroups(key)
-        If group("count") > 0 Then
+        If group("count") > 0 And (rootOnly = False Or key = "ROOT") Then
             Set model = mApp.GetOpenDocumentByName(group("file"))
             If model Is Nothing Then Err.Raise vbObjectError + 2450, , "Generated metadata document is not loaded: " & key
             Set expected = group("metadata")
@@ -563,7 +598,7 @@ Private Sub ValidateMetadata()
                     Csv(entry("value")) & "," & Csv(found("value")) & "," & entry("type") & ",PASS"
                 count = count + 1
             Next entry
-            If group("kind") = "ROOT" Or group("kind") = "STRUCTURE" Then
+            If group("kind") <> "COLLECTION" Then
                 For Each name In Array("PartNo", "Description")
                     present = False
                     For Each entry In expected
@@ -571,17 +606,130 @@ Private Sub ValidateMetadata()
                             Len(Trim$(entry("value"))) > 0 Then present = True
                     Next entry
                     If present = False Then
-                        LogLine "SOURCE METADATA MISSING: " & key & "; " & name & "; " & group("sourcePath")
+                        missingStatus = "SOURCE_MISSING"
+                        If group("kind") = "KIT" Then missingStatus = "KIT_NUMBER_MISSING"
+                        LogLine "IDENTITY METADATA MISSING: " & key & "; " & name & "; " & group("sourcePath")
                         WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("file")) & ",effective," & Csv(CStr(name)) & "," & _
-                            Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & ",,,,SOURCE_MISSING"
+                            Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & ",,,," & missingStatus
                     End If
                 Next name
             End If
         End If
     Next key
-    SaveCsvReport report, "metadata.csv"
+    SaveCsvReport report, reportPrefix & "metadata.csv"
     LogLine "Metadata preservation PASS: " & count & _
-        " source properties retain scope, type and resolved value after reopen; no production identity leaked into kits."
+        " properties retain scope, type and resolved value after reopen; kits use their own provenance identity."
+End Sub
+
+Private Sub AddTextMetadata(ByVal metadata As Collection, ByVal name As String, ByVal value As String)
+    Dim entry As Object
+    Set entry = Dictionary()
+    entry.Add "scope", ""
+    entry.Add "name", name
+    entry.Add "type", 30&
+    entry.Add "value", value
+    metadata.Add entry
+End Sub
+
+Private Function KitMetadata(ByVal provenance As String, ByVal categoryName As String, _
+    ByVal referenceBacked As Boolean) As Collection
+    Dim metadata As New Collection
+    Dim pattern As Object
+    Dim matches As Object
+    Dim tail As String
+    Dim partNo As String
+    Dim description As String
+    tail = Mid$(provenance, InStrRev(provenance, "/") + 1)
+    Set pattern = CreateObject("VBScript.RegExp")
+    pattern.Global = True
+    pattern.Pattern = "\s+"
+    tail = Trim$(pattern.Replace(tail, " "))
+    If referenceBacked Then
+        pattern.Global = False
+        pattern.Pattern = "-[0-9]+$"
+        tail = pattern.Replace(tail, "")
+        pattern.Pattern = "^([0-9]{3,4} [0-9]{3,4} [0-9]{2}) +(.+)$"
+        Set matches = pattern.Execute(tail)
+        If matches.Count = 1 Then
+            partNo = matches(0).SubMatches(0)
+            description = Trim$(matches(0).SubMatches(1))
+        Else
+            pattern.Pattern = "^[0-9]"
+            If Len(tail) = 0 Or pattern.Test(tail) Then Err.Raise vbObjectError + 2454, , _
+                "Cannot split reference kit provenance into PartNo and Description: " & provenance
+            description = tail
+        End If
+    Else
+        description = Trim$(categoryName) & " KIT"
+    End If
+    AddTextMetadata metadata, "PartNo", partNo
+    AddTextMetadata metadata, "Description", description
+    Set KitMetadata = metadata
+End Function
+
+Private Sub PrepareKitMetadata()
+    Dim key As Variant
+    Dim group As Object
+    Dim metadata As Collection
+    Dim entry As Object
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("kind") = "KIT" And group("count") > 0 Then
+            Set group("metadata") = KitMetadata(CStr(group("provenance")), CStr(group("category")), _
+                CBool(Left$(CStr(key), 1) = "K"))
+            Set metadata = group("metadata")
+            Set entry = metadata(1)
+            If Len(entry("value")) = 0 Then LogLine _
+                "KIT PART NUMBER MISSING: " & key & "; text-only Description; no service number invented."
+        ElseIf group("kind") = "COLLECTION" Then
+            Set metadata = New Collection
+            AddTextMetadata metadata, "PartNo", mFS.GetBaseName(mSourcePath) & " COMPLETE KIT"
+            AddTextMetadata metadata, "Description", "Complete kit collection"
+            Set group("metadata") = metadata
+        End If
+    Next key
+End Sub
+
+Public Sub TestKitifyMetadata()
+    Dim metadata As Collection
+    Dim entry As Object
+    Set metadata = KitMetadata("A7393 0800 45 COMPLETE KIT/7372 1043 01 HLX-FH-SEAL KIT-1", "", True)
+    Set entry = metadata(1)
+    If entry("value") <> "7372 1043 01" Then Err.Raise vbObjectError + 2454, , "Kit PartNo regression."
+    Set entry = metadata(2)
+    If entry("value") <> "HLX-FH-SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Kit Description regression."
+    Set metadata = KitMetadata(" 7372" & vbTab & "1045  03 RDX5 IB SEAL KIT-12 ", "", True)
+    Set entry = metadata(1)
+    If entry("value") <> "7372 1045 03" Then Err.Raise vbObjectError + 2454, , "Kit whitespace regression."
+    Set entry = metadata(2)
+    If entry("value") <> "RDX5 IB SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Kit occurrence suffix regression."
+    Set metadata = KitMetadata("7372 1043 01 HLX-FH-SEAL KIT", "", True)
+    Set entry = metadata(2)
+    If entry("value") <> "HLX-FH-SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Unnumbered occurrence suffix regression."
+    Set metadata = KitMetadata("NOTE/category fallback; source top-level occurrence 0", "BEARING", False)
+    Set entry = metadata(1)
+    If entry("value") <> "" Then Err.Raise vbObjectError + 2454, , "Fallback invented a kit number."
+    Set entry = metadata(2)
+    If entry("value") <> "BEARING KIT" Then Err.Raise vbObjectError + 2454, , "Fallback Description regression."
+    Set metadata = KitMetadata("Parent/RDX5 PERCUSSION SEAL KIT-1", "SEAL", True)
+    Set entry = metadata(1)
+    If entry("value") <> "" Then Err.Raise vbObjectError + 2454, , "Unnumbered reference invented a kit number."
+    Set entry = metadata(2)
+    If entry("value") <> "RDX5 PERCUSSION SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Text-only provenance regression."
+    TestInvalidKitMetadata
+    Debug.Print "Kit metadata tests PASS"
+End Sub
+
+Private Sub TestInvalidKitMetadata()
+    Dim metadata As Collection
+    Dim number As Long
+    On Error GoTo ExpectedFailure
+    Set metadata = KitMetadata("7372 1043 INVALID KIT-1", "", True)
+    On Error GoTo 0
+    Err.Raise vbObjectError + 2454, , "Malformed reference kit provenance was accepted."
+ExpectedFailure:
+    number = Err.Number
+    If number <> vbObjectError + 2454 Then Err.Raise number, , Err.Description
 End Sub
 
 Private Function PartKey(ByVal value As String) As String
@@ -1172,7 +1320,7 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
         "Generated assembly rebuild failed: " & key
     AssertNoMates model
     If key = "ROOT" Then
-        fileName = sourceName & " kitified generated " & mRunId & ".SLDASM"
+        fileName = sourceName & " kitified snapshot " & mRunId & ".SLDASM"
     ElseIf group("kind") = "COLLECTION" Then
         fileName = sourceName & " COMPLETE KIT.SLDASM"
     ElseIf group("kind") = "KIT" Then
@@ -1195,6 +1343,232 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     LogLine "Saved " & fileName & " (" & group("count") & " part occurrences)"
     If key <> "ROOT" Then ClearWorkingAssembly
 End Function
+
+Private Function TopLevelComponents(ByVal model As SldWorks.ModelDoc2) As Object
+    Dim root As SldWorks.Component2
+    Dim components As Variant
+    Dim item As Variant
+    Dim component As SldWorks.Component2
+    Dim result As Object
+    Set result = Dictionary()
+    Set root = model.ConfigurationManager.ActiveConfiguration.GetRootComponent3(True)
+    If root Is Nothing Then Err.Raise vbObjectError + 2453, , "Active configuration root is unavailable: " & model.GetPathName
+    components = root.GetChildren
+    If IsArray(components) Then
+        For Each item In components
+            Set component = item
+            result.Add component.Name2, component
+        Next item
+    End If
+    Set TopLevelComponents = result
+End Function
+
+Private Sub ShowConfiguration(ByVal model As SldWorks.ModelDoc2, ByVal name As String)
+    Activate model
+    If StrComp(model.ConfigurationManager.ActiveConfiguration.Name, name, vbTextCompare) = 0 Then Exit Sub
+    If model.ShowConfiguration2(name) = False Then Err.Raise vbObjectError + 2453, , _
+        "Could not activate configuration: " & name & "; " & model.GetPathName
+    If model.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2453, , _
+        "Could not rebuild activated configuration: " & name & "; " & model.GetPathName
+End Sub
+
+Private Sub SetSuppressed(ByVal component As SldWorks.Component2, ByVal suppressed As Boolean)
+    Dim status As Long
+    Dim state As Long
+    state = 2
+    If suppressed Then state = 0
+    status = component.SetSuppression2(state)
+    If status <> 2 Then _
+        Err.Raise vbObjectError + 2453, , "Could not set configuration suppression: " & component.Name2 & _
+            "; suppressed=" & suppressed & "; status=" & status
+End Sub
+
+Private Function CombineConfigurations(ByVal source As SldWorks.ModelDoc2) As String
+    Dim path As String
+    Dim configuration As SldWorks.Configuration
+    Dim configurations As Variant
+    Dim name As Variant
+    Dim components As Object
+    Dim component As SldWorks.Component2
+    Dim assembly As SldWorks.AssemblyDoc
+    Dim childModel As SldWorks.ModelDoc2
+    Dim group As Object
+    Dim key As Variant
+    Dim n As Object
+    Dim manager As SldWorks.CustomPropertyManager
+    Dim sourceConfig As String
+    Dim errors As Long
+    Dim warnings As Long
+    sourceConfig = source.ConfigurationManager.ActiveConfiguration.Name
+    path = mFS.BuildPath(mFolder, mFS.GetBaseName(mSourcePath) & " kitified generated " & mRunId & ".SLDASM")
+    If mFS.FileExists(path) Then Err.Raise vbObjectError + 2419, , "Refusing to overwrite combined assembly: " & path
+    CloseGenerated
+    Activate source
+    source.ClearSelection2 True
+    If source.Extension.SaveAs3(path, 0, 3, Nothing, Nothing, errors, warnings) = False Or errors <> 0 Then _
+        Err.Raise vbObjectError + 2453, , "Could not clone production root; errors=" & errors & "; warnings=" & warnings
+    If warnings <> 0 Then LogLine "PRODUCTION COPY WARNING: " & warnings
+    If StrComp(source.GetPathName, mSourcePath, vbTextCompare) <> 0 Then Err.Raise vbObjectError + 2453, , _
+        "Save As Copy unexpectedly changed the source document identity."
+    errors = 0
+    warnings = 0
+    Set mWorking = mApp.OpenDoc6(path, ASSEMBLY_DOCUMENT, 1, sourceConfig, errors, warnings)
+    If mWorking Is Nothing Or errors <> 0 Then Err.Raise vbObjectError + 2453, , _
+        "Could not open production clone; errors=" & errors & "; warnings=" & warnings
+    If warnings <> 0 Then LogLine "PRODUCTION CLONE OPEN WARNING: " & warnings
+    CheckVisibleDocuments
+    ShowConfiguration mWorking, sourceConfig
+    Set configuration = mWorking.ConfigurationManager.ActiveConfiguration
+    configurations = mWorking.GetConfigurationNames
+    For Each name In configurations
+        If StrComp(CStr(name), sourceConfig, vbTextCompare) <> 0 Then
+            If mWorking.DeleteConfiguration2(CStr(name)) = False Then Err.Raise vbObjectError + 2453, , _
+                "Could not remove unused configuration from production clone: " & name
+        End If
+    Next name
+    configuration.Name = PRODUCTION_CONFIGURATION
+    If StrComp(configuration.Name, PRODUCTION_CONFIGURATION, vbBinaryCompare) <> 0 Then _
+        Err.Raise vbObjectError + 2453, , "Could not name the production configuration Default."
+    ApplyMetadata mWorking, mRootMetadata
+    Set components = TopLevelComponents(mWorking)
+    Set mProductionRoots = Dictionary()
+    For Each name In components.Keys
+        Set component = components(name)
+        mProductionRoots.Add CStr(name), CBool(component.IsSuppressed <> False)
+    Next name
+
+    Set configuration = mWorking.AddConfiguration3(KIT_CONFIGURATION, "Generated kit hierarchy", "", 0)
+    If configuration Is Nothing Then Err.Raise vbObjectError + 2453, , "Could not create kitified configuration."
+    ShowConfiguration mWorking, KIT_CONFIGURATION
+    Set components = TopLevelComponents(mWorking)
+    For Each name In mProductionRoots.Keys
+        Set component = components(name)
+        SetSuppressed component, True
+    Next name
+    Set assembly = mWorking
+    For Each n In mSource
+        If IsLeaf(n) And n("destination") = "ROOT" Then _
+            InsertFixed mWorking, assembly, n("path"), n("config"), n("matrix")
+    Next n
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("parent") = "ROOT" And group("count") > 0 Then
+            Set childModel = OpenGeneratedChild(CStr(group("file")), CStr(group("configuration")))
+            InsertFixed mWorking, assembly, group("file"), CStr(group("configuration")), IdentityMatrix()
+            SaveLoadedGeneratedDocuments
+            Set childModel = Nothing
+            mApp.CloseDoc mChildPath
+            mChildPath = ""
+        End If
+    Next key
+    Set components = TopLevelComponents(mWorking)
+    Set mKitRoots = Dictionary()
+    For Each name In components.Keys
+        If mProductionRoots.Exists(CStr(name)) = False Then mKitRoots.Add CStr(name), True
+    Next name
+    If mKitRoots.Count = 0 Then Err.Raise vbObjectError + 2453, , "No generated branches were added to the clone."
+    ApplyMetadata mWorking, mRootMetadata
+    Set manager = mWorking.Extension.CustomPropertyManager("")
+    PutProperty manager, "Skycode.Kind", "ROOT"
+    PutProperty manager, "Skycode.Generated", "Kitify; Default production / kitified fixed snapshot"
+    ShowConfiguration mWorking, PRODUCTION_CONFIGURATION
+    Set components = TopLevelComponents(mWorking)
+    For Each name In mProductionRoots.Keys
+        Set component = components(name)
+        If CBool(component.IsSuppressed <> False) <> CBool(mProductionRoots(name)) Then _
+            Err.Raise vbObjectError + 2453, , "Production suppression changed in Default: " & name
+    Next name
+    For Each name In mKitRoots.Keys
+        Set component = components(name)
+        SetSuppressed component, True
+    Next name
+    ShowConfiguration mWorking, KIT_CONFIGURATION
+    Set components = TopLevelComponents(mWorking)
+    For Each name In mKitRoots.Keys
+        Set component = components(name)
+        SetSuppressed component, False
+    Next name
+    If mWorking.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2453, , _
+        "Combined kitified configuration rebuild failed."
+    errors = 0
+    warnings = 0
+    If mWorking.Save3(1, errors, warnings) = False Or errors <> 0 Then Err.Raise vbObjectError + 2453, , _
+        "Could not save combined configurations; errors=" & errors & "; warnings=" & warnings
+    If warnings <> 0 Then LogLine "COMBINED SAVE WARNING: " & warnings
+    mGroups("ROOT")("file") = path
+    mGroups("ROOT")("configuration") = KIT_CONFIGURATION
+    LogLine "Combined output: " & path
+    LogLine "Default retains the source active production configuration, mates, features and original component references."
+    CombineConfigurations = path
+End Function
+
+Private Sub ValidateConfigurations()
+    Dim report As Object
+    Dim name As Variant
+    Dim config As Variant
+    Dim components As Object
+    Dim component As SldWorks.Component2
+    Dim expected As Boolean
+    Dim actual As Collection
+    Dim production As Object
+    Dim n As Object
+    Dim s As Object
+    Dim rootName As String
+    Dim count As Long
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Configuration,Branch,Occurrence,Suppressed,Status"
+    For Each config In Array(PRODUCTION_CONFIGURATION, KIT_CONFIGURATION)
+        ShowConfiguration mWorking, CStr(config)
+        Set components = TopLevelComponents(mWorking)
+        If components.Count <> mProductionRoots.Count + mKitRoots.Count Then _
+            Err.Raise vbObjectError + 2453, , "Unexpected combined top-level occurrence count: " & config
+        For Each name In components.Keys
+            Set component = components(name)
+            If mProductionRoots.Exists(CStr(name)) Then
+                expected = True
+                If config = PRODUCTION_CONFIGURATION Then expected = mProductionRoots(name)
+                rootName = "production"
+            ElseIf mKitRoots.Exists(CStr(name)) Then
+                expected = CBool(config = PRODUCTION_CONFIGURATION)
+                rootName = "kits"
+            Else
+                Err.Raise vbObjectError + 2453, , "Unexpected combined occurrence: " & name
+            End If
+            If CBool(component.IsSuppressed <> False) <> expected Then Err.Raise vbObjectError + 2453, , _
+                "Reopened configuration suppression mismatch: " & config & "; " & name
+            WriteCsvLine report, Csv(CStr(config)) & "," & rootName & "," & Csv(CStr(name)) & "," & CStr(expected) & ",PASS"
+        Next name
+        If config = PRODUCTION_CONFIGURATION Then
+            mGroups("ROOT")("configuration") = PRODUCTION_CONFIGURATION
+            ValidateMetadata "production-", True
+            mGroups("ROOT")("configuration") = KIT_CONFIGURATION
+            Set actual = Snapshot(mWorking)
+            WriteTree actual, "production-tree.csv"
+            Set production = Dictionary()
+            For Each n In actual
+                rootName = Split(CStr(n("instance")), "/")(0)
+                If mProductionRoots.Exists(rootName) Then production.Add CStr(n("instance")), n
+            Next n
+            If production.Count <> mSource.Count Then Err.Raise vbObjectError + 2453, , _
+                "Production tree occurrence count changed in the clone."
+            For Each s In mSource
+                If production.Exists(CStr(s("instance"))) = False Then Err.Raise vbObjectError + 2453, , _
+                    "Production occurrence missing from Default: " & s("instance")
+                Set n = production(s("instance"))
+                If StrComp(n("path"), s("path"), vbTextCompare) <> 0 Or n("config") <> s("config") Or _
+                    n("suppressed") <> s("suppressed") Or n("envelope") <> s("envelope") Or n("fixed") <> s("fixed") Then _
+                    Err.Raise vbObjectError + 2453, , "Production occurrence changed in Default: " & s("instance")
+                If s("excluded") = False Then
+                    If MatrixError(n("matrix"), s("matrix")) > MATRIX_TOLERANCE Then _
+                        Err.Raise vbObjectError + 2453, , "Production transform changed in Default: " & s("instance")
+                End If
+                count = count + 1
+            Next s
+        End If
+    Next config
+    SaveCsvReport report, "configurations.csv"
+    LogLine "Configuration PASS: reciprocal production/kit suppression persisted; " & count & " production occurrences unchanged."
+End Sub
 
 Private Sub CheckVisibleDocuments()
     Dim doc As SldWorks.ModelDoc2
@@ -1355,7 +1729,7 @@ Private Function MatrixError(ByVal a As Variant, ByVal b As Variant) As Double
     Next i
 End Function
 
-Private Sub ValidateOutput(ByVal path As String)
+Private Sub ValidateOutput(ByVal path As String, Optional ByVal reportPrefix As String = "")
     Dim model As SldWorks.ModelDoc2
     Dim actual As Collection
     Dim n As Object
@@ -1371,10 +1745,11 @@ Private Sub ValidateOutput(ByVal path As String)
     Set model = mApp.GetOpenDocumentByName(path)
     If model Is Nothing Then Err.Raise vbObjectError + 2428, , "Saved output is not loaded."
     Set actual = Snapshot(model)
-    WriteTree actual, "generated-tree.csv"
+    WriteTree actual, reportPrefix & "generated-tree.csv"
     Set report = NewCsvReport()
     WriteCsvLine report, "SourceOccurrence,GeneratedOccurrence,TransformMaxError,Status"
     For Each n In actual
+        If n("excluded") Then GoTo NextGeneratedOccurrence
         If n("fixed") = False Then Err.Raise vbObjectError + 2435, , _
             "Reopened output contains an unfixed occurrence: " & n("instance")
         If n("assembly") Then
@@ -1415,12 +1790,13 @@ Private Sub ValidateOutput(ByVal path As String)
         Else
             Err.Raise vbObjectError + 2431, , "Unexpected excluded output occurrence: " & n("instance")
         End If
+NextGeneratedOccurrence:
     Next n
     For Each s In mSource
         If IsLeaf(s) And s("validated") = False Then Err.Raise vbObjectError + 2432, , _
             "Missing source occurrence: " & s("instance")
     Next s
-    SaveCsvReport report, "validation.csv"
+    SaveCsvReport report, reportPrefix & "validation.csv"
     LogLine "Source conservation PASS: " & count & " occurrences; max matrix error=" & CStr(maxError)
     ValidateGroupParents actual
 End Sub
@@ -1439,7 +1815,7 @@ Private Sub ValidateGroupParents(ByVal actual As Collection)
         If key <> "ROOT" And group("count") > 0 Then
             found = False
             For Each n In actual
-                If StrComp(n("path"), group("file"), vbTextCompare) = 0 Then
+                If n("excluded") = False And StrComp(n("path"), group("file"), vbTextCompare) = 0 Then
                     If group("kind") = "KIT" And Left$(CStr(key), 1) = "K" Then
                         expectedName = mFS.GetBaseName(KitFileName(CStr(key), group)) & "-"
                         actualName = Mid$(n("instance"), InStrRev(n("instance"), "/") + 1)

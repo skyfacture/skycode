@@ -1,0 +1,23 @@
+﻿Configuration,Branch,Occurrence,Suppressed,Status
+"Default",kits,"7372 1414 01-2",True,PASS
+"Default",production,"BG 009 205 35-1",False,PASS
+"Default",production,"280 678 90-1",False,PASS
+"Default",production,"7372 1414 01-1",False,PASS
+"Default",production,"BG 009 287 40-1-1",False,PASS
+"Default",production,"BG 009 287 40-2-2",False,PASS
+"Default",kits,"BG 009 205 35_20261105_204012_46F721A_A0269-1",True,PASS
+"Default",kits,"280 678 90-2",True,PASS
+"Default",kits,"7393 0800 45 COMPLETE KIT-1",True,PASS
+"Default",kits,"BG 009 287 40-1_20261105_204012_46F721A_A0001-1",True,PASS
+"Default",kits,"BG 009 287 40-2_20261105_204012_46F721A_A0050-1",True,PASS
+"kitified",production,"BG 009 287 40-2-2",True,PASS
+"kitified",production,"BG 009 287 40-1-1",True,PASS
+"kitified",kits,"7372 1414 01-2",False,PASS
+"kitified",production,"280 678 90-1",True,PASS
+"kitified",production,"7372 1414 01-1",True,PASS
+"kitified",kits,"BG 009 287 40-1_20261105_204012_46F721A_A0001-1",False,PASS
+"kitified",kits,"BG 009 287 40-2_20261105_204012_46F721A_A0050-1",False,PASS
+"kitified",kits,"280 678 90-2",False,PASS
+"kitified",kits,"BG 009 205 35_20261105_204012_46F721A_A0269-1",False,PASS
+"kitified",production,"BG 009 205 35-1",True,PASS
+"kitified",kits,"7393 0800 45 COMPLETE KIT-1",False,PASS
