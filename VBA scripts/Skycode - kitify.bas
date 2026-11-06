@@ -1,5 +1,16 @@
 Option Explicit
 
+' ============================================================
+' Skycode - Kitify Production Drifter
+' Usage:
+'   - Run SkycodeKitify with the saved production drifter open in SOLIDWORKS.
+'   - If saved rules do not exist, run LearnKitifyRules with the development reference open,
+'     then close it before normal runs.
+'   - Call KitifyDrifter(sourcePath, referencePath, outputFolder, showMessage) to identify
+'     open source/reference documents, choose an output folder, or suppress the completion message.
+'   - Creates verified kitified output and reports in a new folder beside the source unless outputFolder is specified.
+'   - The source and reference assemblies are not saved or restructured.
+' ============================================================
 ' Requires the installed SOLIDWORKS type library; no constants-library reference.
 Private Const ASSEMBLY_DOCUMENT As Long = 2
 Private Const DEFAULT_ASSEMBLY_TEMPLATE As Long = 9
