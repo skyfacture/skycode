@@ -91,12 +91,49 @@ All arguments are optional. An explicit `sourcePath` must identify an
 already-loaded assembly. An explicit output folder must **not already exist**;
 its parent must exist.
 No permission, overwrite or output-location dialogs are used by the macro.
-`showMessage=False` also disables the final informational message.
+`showMessage` defaults to `False`; pass `True` to show the final informational
+message. `SkycodeKitify` never shows a message box: it prints the result or
+failure to the Immediate window, and every run writes `run.txt`.
+
+### Unattended runs (no dialogs)
+
+For the duration of a run the macro temporarily changes these SOLIDWORKS system
+options and restores the user's values on success or failure:
+
+| Option | During the run |
+|---|---|
+| Don't prompt to save read-only referenced documents | On |
+| Show errors every rebuild | Off |
+| Warn before saving documents with update errors | Off |
+| Warn before saving referenced documents | Off |
+| Auto-dismiss messages while opening assemblies | On |
+| Resolve lightweight components (when set to Prompt) | Always |
+| Rebuild assembly on load (when set to Prompt) | Never |
+| Rebuild on activation (when set to user decision) | Rebuild |
+
+Documents are activated with an explicit rebuild instead of the rebuild prompt.
+When hosted out of process (for example in Access), the host's OLE message
+filter is removed for the run so
+Access does not show its modal "waiting for another application to complete an
+OLE action" dialog during long SOLIDWORKS calls; it is re-registered afterwards.
+Inside SOLIDWORKS' own VBA host the filter is left alone.
+
+The SOLIDWORKS PDM add-in asks "*file* is not checked out. Would you like to
+check it out?" when a rebuild touches a read-only vault file. No SOLIDWORKS
+preference or API call turns this prompt off, so for the duration of the run
+the macro starts a hidden PowerShell helper (script in `%TEMP%`). The helper
+answers **No** only to that PDM dialog in the SOLIDWORKS process. Nothing is
+checked out. Each answered prompt is listed in `declined-checkouts.txt` and
+copied into `run.txt` as `AUTO-DECLINED PDM CHECKOUT`.
+
+The macro stops the helper and deletes its script when the run succeeds or
+fails. The helper also exits by itself if SOLIDWORKS or the host process exits,
+or if `run.txt` has not been written for 120 minutes.
 
 Default output:
 
 ```text
-<source folder>\kitify-generated_<yyyymmdd_hhnnss>\
+<source folder>\kitified-generated_<yyyymmdd_hhnnss>\
     <source base name> kitified generated <run-id>.SLDASM
     <PDM kit identity> kitified <run-id>.SLDASM
     <source non-kit assembly name>_<run-id>_<identifier>.SLDASM
@@ -109,7 +146,7 @@ kit SLDASM:
 | Configuration | Original production branches | Generated branches |
 |---|---|---|
 | `Default` | Original suppression states, otherwise unchanged | All suppressed |
-| `<PDM kit filename without extension>` | All suppressed | Only that PDM kit branch unsuppressed |
+| `<PDM PartNo> <PDM Description>` | All suppressed | Only that PDM kit branch unsuppressed |
 
 Originally suppressed production components remain suppressed in `Default`;
 they are not forcibly unsuppressed. Hidden/envelope states, original occurrence
@@ -127,15 +164,19 @@ root, structural and generated-kit names avoid SOLIDWORKS same-title conflicts
 with earlier open results. Kit and structure names include the run identifier;
 close earlier results using those titles before generating another run.
 Only one output directory is created per invocation, directly beside the source
-CAD. The older timestamp folders under `kitify-generated` are separate
-development attempts, including partial runs; they are not automatically deleted.
+CAD. The older timestamp folders under `kitify-generated_*`,
+`kitify-vault_*` and `kitified-generated_*` are separate development attempts,
+including partial runs; they are not automatically deleted.
 
 Generated backing filenames are run-specific and may differ from PDM filenames;
-root configuration names use the corresponding PDM kit assembly filename
-without its extension. Kit metadata is split from the matched source envelope
-NOTE into `PartNo` and `Description`; when there is no matched envelope, the
-PDM kit assembly's own properties are retained. The final root retains its
-production filename and properties.
+root configuration names use the corresponding PDM kit `PartNo` and
+`Description`, separated by one space. These values come from the PDM kit
+assembly's properties; a matched source-envelope NOTE only identifies the kit
+and is used as a fallback if either PDM property is missing. Each kit
+configuration also carries configuration-specific `PartNo` and `Description`
+properties. Composer imports these as `Meta.PartNo_cfg` and
+`Meta.Description_cfg` on the configuration tree node. The final root retains
+its production filename and file-level properties.
 No SOLIDWORKS-wide component-naming preference is changed.
 
 Each individual PDM kit branch receives an assembly appearance from a
@@ -176,10 +217,12 @@ their uppercase variants. Source part files/configurations are referenced
 directly and their properties are not modified. The reused working document's
 source custom properties are cleared between groups to prevent metadata leakage.
 
-For a kit with a matched source envelope, its NOTE provenance is split into
-`PartNo` and `Description` using the established number/text boundary rule.
-When no envelope matches that PDM kit, its PDM custom properties are copied
-instead. No synthetic complete-kit properties are added.
+For a kit with a matched source envelope, its NOTE identifies the matching PDM
+kit but does not override the PDM kit's `PartNo` or `Description`. A missing
+PDM property may be filled from the NOTE; otherwise the PDM kit's own values
+are used. Each combined-root kit configuration is named
+`<PartNo> <Description>` and stores the same values as configuration-specific
+properties for Composer. No synthetic complete-kit properties are added.
 
 Composer import must include custom properties and use `PartNo` for actor names
 where configured. The root
@@ -201,8 +244,9 @@ Missing kit properties are reported as `PDM_KIT_METADATA_MISSING`.
 The source assembly must be inside a product's `11-ROCK DRILL CADS` folder.
 Kitify resolves only the direct sibling `12-KITS` folder in that same PDM
 product folder. Every SLDASM in that folder is represented by exactly one
-configuration named from the PDM filename without its extension. Duplicate or
-reserved configuration names fail rather than being renamed silently.
+configuration named `<PartNo> <Description>` from the PDM kit assembly's
+properties. Duplicate or reserved configuration names fail rather than being
+renamed silently.
 
 The PDM assembly's active leaf part-occurrence multiset defines kit contents.
 Repeated parts preserve quantity. A part can appear in more than one kit; it is
@@ -211,10 +255,11 @@ activates only its matching branch. A complete-kit configuration is generated
 only when PDM contains that assembly. The macro never infers a union kit,
 collection, subset hierarchy, or additional configuration.
 
-Active envelope NOTE values are used to match the source envelope to a PDM kit
-and to derive that kit's `PartNo` and `Description`. A missing or ambiguous
-envelope match fails explicitly. PDM kits without a matched envelope still get
-their canonical configurations and use their own PDM properties.
+Active envelope NOTE values are used to match the source envelope to a PDM kit.
+A missing or ambiguous envelope match fails explicitly. The PDM kit's own
+`PartNo` and `Description` are authoritative; its NOTE is only a fallback for
+a missing property. PDM kits without a matched envelope still get their
+canonical configurations and use their own PDM properties.
 
 Suppressed components and envelopes, including all their accessible descendants,
 are mapped but excluded from the generated kit tree. They remain intact in the
@@ -287,6 +332,8 @@ Transform values use the VBA host's locale and semicolon separators.
 | `production-tree.csv` | Reopened `Default` tree, including suppressed generated branches |
 | `production-metadata.csv` | Reopened `Default` root custom properties compared with source-resolved values |
 | `configurations.csv` | Exact root configuration inventory, branch suppressions and per-configuration PDM quantities |
+| `kit-configurations.csv` | PDM PartNo/Description, configuration name and configuration-specific property verification |
+| `declined-checkouts.txt` | PDM "check it out?" prompts answered No automatically (only present when one occurred) |
 | `validation.csv` | Source-to-generated occurrence and transform checks, including reused memberships |
 | `metadata.csv` | Expected versus reopened properties by scope/type; source and PDM-kit metadata gaps |
 | `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for root and structures |
@@ -383,21 +430,48 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 
 ## Validation status
 
-The current PDM-per-kit root configuration implementation requires compile and
-live SOLIDWORKS validation. The dated runs below predate these changes and
-document superseded membership workflows; they do not validate the current
-PDM-derived configuration inventory or Composer import.
+The current PDM-per-kit root configuration implementation requires a
+successful full live SOLIDWORKS run before it is considered verified. The dated
+runs below predate these changes and document superseded membership workflows;
+they do not validate the current PDM-derived configuration inventory or
+Composer import.
 
 Live validation uses the actual imported VBA module in a newly created isolated
 Access database with the installed SOLIDWORKS type-library reference. No Access
 security settings are changed. This avoids claiming that a C# approximation
 establishes VBA runtime compatibility.
 
-Run `TestKitifyMetadata` in the imported module to verify the provenance split
-into kit `PartNo` and `Description`. Full generation must verify `Default` and
-every saved PDM kit configuration after reopening. `configurations.csv`,
+Run `TestKitifyMetadata` in the imported module to verify the NOTE parsing
+fallback. Full generation must verify `Default`, every saved PDM kit
+configuration after reopening, and that each configuration's name and
+configuration-specific `PartNo`/`Description` match the PDM kit. The checks
+are captured in `configurations.csv`, `kit-configurations.csv`,
 `pdm-kit-comparison.csv`, `production-tree.csv`, `validation.csv`, and
-`metadata.csv` capture the checks.
+`metadata.csv`.
+
+### PDM-named kit configurations, unattended run (2026-11-07)
+
+The actual VBA module was imported into an isolated Access host and run against
+the local `7397 0320 22.SLDASM` drifter. It ran to completion with no manual
+input. Output: `kitified-generated_20261107_000811`, verified root
+`7397 0320 22 kitified generated 20261107_000811_78087.SLDASM`.
+
+- All 16 PDM kits became root configurations named `<PartNo> <Description>`
+  (for example `550 361 58 RD106 FH SEAL KIT`). Every row in
+  `kit-configurations.csv` passed.
+- 485 occurrences were conserved, and the hierarchy, metadata, appearance, mate
+  and `Default` production-tree checks all passed.
+- During configuration validation, SOLIDWORKS PDM asked to check out
+  `864 095 09.SLDPRT`. The helper answered No automatically and the answer was
+  logged in `declined-checkouts.txt` and `run.txt`.
+- The user's SOLIDWORKS preferences were restored afterwards. The helper process
+  exited and its temporary script was deleted.
+
+A run made after many earlier runs in the same SOLIDWORKS session failed to
+reopen its saved output with `swFileRequiresRepairError` (2097152). In that
+state SOLIDWORKS also refused files that had opened correctly before. After
+SOLIDWORKS was restarted, the run above passed. If a long session reports this
+error, restart SOLIDWORKS before running again.
 
 ### Combined-configuration refinement (2026-11-05)
 

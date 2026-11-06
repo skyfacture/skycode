@@ -7,10 +7,15 @@ Option Explicit
 '   - One root configuration is generated for every kit SLDASM in the source product's PDM 12-KITS folder.
 '   - A sandbox source is matched read-only to the same filename in a vault 11-ROCK DRILL CADS folder.
 '   - That product's sibling 12-KITS folder supplies membership. The vault drifter is not opened or checked out.
-'   - Envelope NOTE values identify matching kits and supply provenance for PartNo/Description.
+'   - Envelope NOTE values identify matching kits; the PDM kit's own PartNo/Description are authoritative.
+'   - Each kit configuration is named "<PartNo> <Description>" from the PDM kit and carries those values
+'     as configuration-specific properties (Composer Meta.PartNo_cfg/Meta.Description_cfg).
 '   - Call KitifyDrifter(sourcePath, outputFolder, showMessage) to identify an open source,
-'     choose an output folder, or suppress the completion message.
-'   - Creates verified kitified output and reports in a new folder beside the source unless outputFolder is specified.
+'     choose an output folder, or show a completion message (off by default).
+'   - Creates verified kitified output and reports in a new kitified-generated_<timestamp> folder beside
+'     the source unless outputFolder is specified.
+'   - SOLIDWORKS prompts and the host's OLE "server busy" dialog are suppressed during the run and
+'     restored afterwards; failures are written to run.txt instead of a message box.
 '   - The source assembly is not saved or restructured.
 ' ============================================================
 ' Requires the installed SOLIDWORKS type library; no constants-library reference.
@@ -26,6 +31,36 @@ Private Const PDM_END_OF_LIST As Long = -2147220984
 Private Const PDM_PATH_NOT_IN_VAULT As Long = -2147220949
 Private Const HKEY_CURRENT_USER As Long = &H80000001
 Private Const HKEY_LOCAL_MACHINE As Long = &H80000002
+Private Const SW_TOGGLE_EXTREF_NO_PROMPT_OR_SAVE As Long = 15
+Private Const SW_TOGGLE_SHOW_ERRORS_EVERY_REBUILD As Long = 77
+Private Const SW_TOGGLE_WARN_SAVE_UPDATE_ERRORS As Long = 329
+Private Const SW_TOGGLE_WARN_SAVING_REFERENCED_DOC As Long = 334
+Private Const SW_TOGGLE_AUTO_DISMISS_OPEN_MESSAGES As Long = 564
+Private Const SW_INT_RESOLVE_LIGHTWEIGHT As Long = 4
+Private Const SW_INT_ASSEMBLY_REBUILD_ON_LOAD As Long = 81
+Private Const SW_INT_REBUILD_ON_ACTIVATION As Long = 230
+Private Const SW_RESPONSE_PROMPT As Long = 0
+Private Const SW_RESPONSE_ALWAYS As Long = 1
+Private Const SW_RESPONSE_NEVER As Long = 2
+Private Const SW_REBUILD_ACTIVE_DOC As Long = 2
+
+#If VBA7 Then
+Private Declare PtrSafe Function CoRegisterMessageFilter Lib "ole32" ( _
+    ByVal lpMessageFilter As LongPtr, ByRef lplpMessageFilter As LongPtr) As Long
+Private Declare PtrSafe Function GetCurrentProcessId Lib "kernel32" () As Long
+Private mPreviousMessageFilter As LongPtr
+#Else
+Private Declare Function CoRegisterMessageFilter Lib "ole32" ( _
+    ByVal lpMessageFilter As Long, ByRef lplpMessageFilter As Long) As Long
+Private Declare Function GetCurrentProcessId Lib "kernel32" () As Long
+Private mPreviousMessageFilter As Long
+#End If
+Private mMessageFilterRemoved As Boolean
+Private mSavedToggles As Object
+Private mSavedIntegers As Object
+Private mDeclinerPid As Double
+Private mDeclinerScript As String
+Private mDeclinerLog As String
 
 Private mApp As SldWorks.SldWorks
 Private mFS As Object
@@ -50,13 +85,18 @@ Private mNextSuppliedId As Long
 
 Public Sub SkycodeKitify()
     Dim result As String
+    On Error GoTo Failed
     result = KitifyDrifter()
+    Debug.Print "Kitified assembly verified: " & result
+    Exit Sub
+Failed:
+    Debug.Print "Kitify FAILED: " & Err.Description
 End Sub
 
 Public Function KitifyDrifter( _
     Optional ByVal sourcePath As String = "", _
     Optional ByVal outputFolder As String = "", _
-    Optional ByVal showMessage As Boolean = True) As String
+    Optional ByVal showMessage As Boolean = False) As String
 
     Dim source As SldWorks.ModelDoc2
     Dim original As SldWorks.ModelDoc2
@@ -74,6 +114,7 @@ Public Function KitifyDrifter( _
 
     mStage = "Connecting to the running SOLIDWORKS session"
     Initialise
+    SuppressPrompts
     Set original = mApp.ActiveDoc
     mStage = "Selecting the saved production assembly"
     Set source = FindSource(sourcePath)
@@ -82,11 +123,12 @@ Public Function KitifyDrifter( _
     mFolder = NewOutputFolder(source.GetPathName, outputFolder)
     mRunId = Format$(Now, "yyyymmdd_hhnnss") & "_" & Hex$(CLng(Timer * 1000#))
     Set mLog = mFS.CreateTextFile(mFS.BuildPath(mFolder, "run.txt"), False, True)
+    StartCheckoutDecliner
     LogLine "Source: " & source.GetPathName
     LogLine "Source configuration: " & source.ConfigurationManager.ActiveConfiguration.Name
     LogLine "Source initially dirty: " & CStr(source.GetSaveFlag)
     LogLine "Root kit configurations and membership: every latest SLDASM in the source product's PDM 12-KITS folder."
-    LogLine "Matched source envelope NOTE values supply kit PartNo/Description provenance."
+    LogLine "PDM kit PartNo/Description name each kit configuration and its configuration-specific properties."
 
     mCombinedPath = mFS.BuildPath(mFolder, mFS.GetBaseName(mSourcePath) & _
         " kitified generated " & mRunId & ".SLDASM")
@@ -175,9 +217,11 @@ Public Function KitifyDrifter( _
     LogLine "Child component geometry remains loaded internally by SOLIDWORKS."
     LogLine "VERIFIED: " & result
     LogLine "Source file was not saved or restructured. See membership.csv and pdm-kit-comparison.csv for PDM kit membership."
+    StopCheckoutDecliner
     mLog.Close
     Set mLog = Nothing
     If Not original Is Nothing Then Activate original
+    RestorePrompts
     KitifyDrifter = result
     If showMessage Then MsgBox "Kitified assembly verified:" & vbCrLf & result & vbCrLf & _
         "Reports: " & mFolder & vbCrLf & _
@@ -194,12 +238,193 @@ Failed:
         mApp.CloseDoc mChildPath
         mChildPath = ""
     End If
+    CloseWorkingAfterFailure
+    StopCheckoutDecliner
     If Not mLog Is Nothing Then
         mLog.WriteLine "FAILED: " & failureDescription
         mLog.Close
         Set mLog = Nothing
     End If
+    RestorePrompts
     Err.Raise failureNumber, "Skycode.KitifyDrifter", failureDescription
+End Function
+
+Private Sub CloseWorkingAfterFailure()
+    On Error Resume Next
+    CloseGenerated
+    Err.Clear
+End Sub
+
+Private Sub SuppressPrompts()
+    Set mSavedToggles = Dictionary()
+    Set mSavedIntegers = Dictionary()
+    On Error Resume Next
+    SetPromptToggle SW_TOGGLE_EXTREF_NO_PROMPT_OR_SAVE, True
+    SetPromptToggle SW_TOGGLE_SHOW_ERRORS_EVERY_REBUILD, False
+    SetPromptToggle SW_TOGGLE_WARN_SAVE_UPDATE_ERRORS, False
+    SetPromptToggle SW_TOGGLE_WARN_SAVING_REFERENCED_DOC, False
+    SetPromptToggle SW_TOGGLE_AUTO_DISMISS_OPEN_MESSAGES, True
+    ReplacePromptInteger SW_INT_RESOLVE_LIGHTWEIGHT, SW_RESPONSE_PROMPT, SW_RESPONSE_ALWAYS
+    ReplacePromptInteger SW_INT_ASSEMBLY_REBUILD_ON_LOAD, SW_RESPONSE_PROMPT, SW_RESPONSE_NEVER
+    ReplacePromptInteger SW_INT_REBUILD_ON_ACTIVATION, 0, SW_REBUILD_ACTIVE_DOC
+    ' An out-of-process host (Access) shows a modal "server busy" dialog during long SOLIDWORKS calls
+    ' unless its OLE message filter is removed; never remove SOLIDWORKS' own filter when hosted in-process.
+    If mMessageFilterRemoved = False And mApp.GetProcessID <> GetCurrentProcessId() Then
+        If CoRegisterMessageFilter(0, mPreviousMessageFilter) = 0 Then mMessageFilterRemoved = True
+    End If
+    Err.Clear
+End Sub
+
+Private Sub SetPromptToggle(ByVal preference As Long, ByVal value As Boolean)
+    Dim current As Boolean
+    current = CBool(mApp.GetUserPreferenceToggle(preference) <> False)
+    If current = value Then Exit Sub
+    mSavedToggles.Add preference, current
+    mApp.SetUserPreferenceToggle preference, value
+End Sub
+
+Private Sub ReplacePromptInteger(ByVal preference As Long, ByVal promptValue As Long, ByVal value As Long)
+    Dim current As Long
+    current = mApp.GetUserPreferenceIntegerValue(preference)
+    If current <> promptValue Then Exit Sub
+    mSavedIntegers.Add preference, current
+    mApp.SetUserPreferenceIntegerValue preference, value
+End Sub
+
+Private Sub RestorePrompts()
+    Dim key As Variant
+#If VBA7 Then
+    Dim ignored As LongPtr
+#Else
+    Dim ignored As Long
+#End If
+    On Error Resume Next
+    If Not mSavedToggles Is Nothing Then
+        For Each key In mSavedToggles.Keys
+            mApp.SetUserPreferenceToggle CLng(key), CBool(mSavedToggles(key))
+        Next key
+        Set mSavedToggles = Nothing
+    End If
+    If Not mSavedIntegers Is Nothing Then
+        For Each key In mSavedIntegers.Keys
+            mApp.SetUserPreferenceIntegerValue CLng(key), CLng(mSavedIntegers(key))
+        Next key
+        Set mSavedIntegers = Nothing
+    End If
+    If mMessageFilterRemoved Then
+        CoRegisterMessageFilter mPreviousMessageFilter, ignored
+        mPreviousMessageFilter = 0
+        mMessageFilterRemoved = False
+    End If
+    StopCheckoutDecliner
+    Err.Clear
+End Sub
+
+' SOLIDWORKS PDM asks "...is not checked out. Would you like to check it out?" when a read-only vault
+' file is touched; no API or preference suppresses it. A hidden helper process answers No for the run.
+Private Sub StartCheckoutDecliner()
+    Dim script As Object
+    Dim command As String
+    On Error GoTo Failed
+    If mDeclinerPid <> 0 Then Exit Sub
+    mDeclinerScript = mFS.BuildPath(mFS.GetSpecialFolder(2), "skycode-kitify-decline-" & mRunId & ".ps1")
+    mDeclinerLog = mFS.BuildPath(mFolder, "declined-checkouts.txt")
+    Set script = mFS.CreateTextFile(mDeclinerScript, True, True)
+    script.Write CheckoutDeclinerScript()
+    script.Close
+    ' Running a string scriptblock avoids depending on the PowerShell script execution policy.
+    command = "powershell.exe -NoProfile -NonInteractive -WindowStyle Hidden -Command ""& ([scriptblock]::Create(" & _
+        "[IO.File]::ReadAllText(" & PsQuote(mDeclinerScript) & "))) " & mApp.GetProcessID & " " & _
+        GetCurrentProcessId() & " " & PsQuote(mDeclinerLog) & " " & _
+        PsQuote(mFS.BuildPath(mFolder, "run.txt")) & """"
+    mDeclinerPid = Shell(command, vbHide)
+    LogLine "PDM checkout prompts are answered No automatically by helper process " & CStr(mDeclinerPid) & _
+        "; see declined-checkouts.txt."
+    Exit Sub
+Failed:
+    LogLine "WARNING: could not start the PDM checkout-prompt decliner: " & Err.Description
+    Err.Clear
+End Sub
+
+Private Sub StopCheckoutDecliner()
+    Dim stream As Object
+    On Error Resume Next
+    If mDeclinerPid <> 0 Then
+        GetObject("winmgmts:\\.\root\cimv2").Get("Win32_Process.Handle='" & CStr(mDeclinerPid) & "'").Terminate
+        mDeclinerPid = 0
+    End If
+    If Len(mDeclinerScript) > 0 Then
+        If mFS.FileExists(mDeclinerScript) Then mFS.DeleteFile mDeclinerScript, True
+        mDeclinerScript = ""
+    End If
+    If Len(mDeclinerLog) > 0 And Not mLog Is Nothing Then
+        If mFS.FileExists(mDeclinerLog) Then
+            Set stream = mFS.OpenTextFile(mDeclinerLog, 1, False, -2)
+            Do While Not stream.AtEndOfStream
+                mLog.WriteLine "AUTO-DECLINED PDM CHECKOUT: " & stream.ReadLine
+            Loop
+            stream.Close
+        End If
+        mDeclinerLog = ""
+    End If
+    Err.Clear
+End Sub
+
+Private Function PsQuote(ByVal value As String) As String
+    PsQuote = "'" & Replace(value, "'", "''") & "'"
+End Function
+
+Private Function CheckoutDeclinerScript() As String
+    Dim s As String
+    s = s & "param([int]$SwPid, [int]$HostPid, [string]$LogPath, [string]$RunLog)" & vbCrLf
+    s = s & "Add-Type -TypeDefinition @'" & vbCrLf
+    s = s & "using System;" & vbCrLf
+    s = s & "using System.Collections.Generic;" & vbCrLf
+    s = s & "using System.Runtime.InteropServices;" & vbCrLf
+    s = s & "using System.Text;" & vbCrLf
+    s = s & "public static class SkycodeCheckoutDecliner {" & vbCrLf
+    s = s & "  delegate bool EnumProc(IntPtr h, IntPtr l);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"")] static extern bool EnumWindows(EnumProc f, IntPtr l);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"")] static extern bool EnumChildWindows(IntPtr p, EnumProc f, IntPtr l);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"")] static extern bool IsWindowVisible(IntPtr h);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"")] static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"")] static extern int GetDlgCtrlID(IntPtr h);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"")] static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"", CharSet = CharSet.Unicode)] static extern int GetClassName(IntPtr h, StringBuilder s, int n);" & vbCrLf
+    s = s & "  [DllImport(""user32.dll"", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr h, StringBuilder s, int n);" & vbCrLf
+    s = s & "  public static List<string> Decline(uint pid) {" & vbCrLf
+    s = s & "    var declined = new List<string>();" & vbCrLf
+    s = s & "    EnumWindows((h, l) => {" & vbCrLf
+    s = s & "      uint p; GetWindowThreadProcessId(h, out p);" & vbCrLf
+    s = s & "      if (p != pid || !IsWindowVisible(h)) return true;" & vbCrLf
+    s = s & "      var c = new StringBuilder(64); GetClassName(h, c, 64);" & vbCrLf
+    s = s & "      if (c.ToString() != ""#32770"") return true;" & vbCrLf
+    s = s & "      var text = new StringBuilder(); IntPtr no = IntPtr.Zero;" & vbCrLf
+    s = s & "      EnumChildWindows(h, (ch, l2) => {" & vbCrLf
+    s = s & "        var t = new StringBuilder(2048); GetWindowText(ch, t, 2048);" & vbCrLf
+    s = s & "        if (t.ToString().Replace(""&"", """").Trim() == ""No"") no = ch;" & vbCrLf
+    s = s & "        text.Append(t.ToString()).Append(' ');" & vbCrLf
+    s = s & "        return true; }, IntPtr.Zero);" & vbCrLf
+    s = s & "      var all = text.ToString();" & vbCrLf
+    s = s & "      if (no != IntPtr.Zero && all.IndexOf(""not checked out"", StringComparison.OrdinalIgnoreCase) >= 0 &&" & vbCrLf
+    s = s & "          all.IndexOf(""check it out"", StringComparison.OrdinalIgnoreCase) >= 0) {" & vbCrLf
+    s = s & "        PostMessage(h, 0x0111, (IntPtr)(GetDlgCtrlID(no) & 0xFFFF), no);" & vbCrLf
+    s = s & "        declined.Add(all.Replace(""\r"", "" "").Replace(""\n"", "" "").Trim());" & vbCrLf
+    s = s & "      }" & vbCrLf
+    s = s & "      return true; }, IntPtr.Zero);" & vbCrLf
+    s = s & "    return declined;" & vbCrLf
+    s = s & "  }" & vbCrLf
+    s = s & "}" & vbCrLf
+    s = s & "'@" & vbCrLf
+    ' Exit with the host or SOLIDWORKS, or if the run log goes stale, so an orphaned helper never
+    ' keeps answering prompts in a later interactive session.
+    s = s & "while ((Get-Process -Id $SwPid -ErrorAction SilentlyContinue) -and (Get-Process -Id $HostPid -ErrorAction SilentlyContinue)) {" & vbCrLf
+    s = s & "  if ((Test-Path -LiteralPath $RunLog) -and ((Get-Date) - (Get-Item -LiteralPath $RunLog).LastWriteTime).TotalMinutes -gt 120) { break }" & vbCrLf
+    s = s & "  $declined = [SkycodeCheckoutDecliner]::Decline([uint32]$SwPid)" & vbCrLf
+    s = s & "  foreach ($d in $declined) { Add-Content -LiteralPath $LogPath -Value ((Get-Date -Format s) + ' ' + $d) }" & vbCrLf
+    s = s & "  if ($declined.Count -gt 0) { Start-Sleep -Milliseconds 1000 } else { Start-Sleep -Milliseconds 250 }" & vbCrLf
+    s = s & "}" & vbCrLf
+    CheckoutDeclinerScript = s
 End Function
 
 Private Sub Initialise()
@@ -669,7 +894,7 @@ Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As 
         End If
     Else
         parent = mFS.GetParentFolderName(sourcePath)
-        folderName = "kitify-generated_" & Format$(Now, "yyyymmdd_hhnnss")
+        folderName = "kitified-generated_" & Format$(Now, "yyyymmdd_hhnnss")
         candidate = mFS.BuildPath(parent, folderName)
         Do While mFS.FolderExists(candidate) Or mFS.FileExists(candidate)
             suffix = suffix + 1
@@ -926,6 +1151,18 @@ Private Sub AddTextMetadata(ByVal metadata As Collection, ByVal name As String, 
     metadata.Add entry
 End Sub
 
+Private Sub SetTextMetadata(ByVal metadata As Collection, ByVal name As String, ByVal value As String)
+    Dim entry As Object
+    Dim found As Boolean
+    For Each entry In metadata
+        If StrComp(CStr(entry("name")), name, vbTextCompare) = 0 Then
+            entry("value") = value
+            found = True
+        End If
+    Next entry
+    If found = False Then AddTextMetadata metadata, name, value
+End Sub
+
 Private Function KitMetadata(ByVal provenance As String) As Collection
     Dim metadata As New Collection
     Dim pattern As Object
@@ -954,18 +1191,77 @@ Private Function KitMetadata(ByVal provenance As String) As Collection
 End Function
 
 Private Sub PrepareKitMetadata()
-    Dim key As Variant
+    Dim kit As Object
     Dim group As Object
-    Dim metadata As Collection
-    For Each key In mGroups.Keys
-        Set group = mGroups(key)
-        If group("kind") = "KIT" Then
-            If Len(CStr(group("sourceEnvelope"))) > 0 Then
-                Set group("metadata") = KitMetadata(CStr(group("provenance")))
+    Dim envelope As Collection
+    Dim partNo As String
+    Dim description As String
+    Dim envelopePartNo As String
+    Dim envelopeDescription As String
+    Dim configName As String
+    Dim usedNames As Object
+    Set usedNames = Dictionary()
+    For Each kit In mPdmKits
+        Set group = mGroups(CStr(kit("group")))
+        partNo = SingleSpaced(MetadataValue(group("metadata"), "PartNo"))
+        description = SingleSpaced(MetadataValue(group("metadata"), "Description"))
+        Set envelope = Nothing
+        If Len(CStr(group("sourceEnvelope"))) > 0 Then Set envelope = TryKitMetadata(CStr(group("provenance")))
+        If Not envelope Is Nothing Then
+            envelopePartNo = MetadataValue(envelope, "PartNo")
+            envelopeDescription = MetadataValue(envelope, "Description")
+            If Len(partNo) = 0 Then
+                partNo = envelopePartNo
+                SetTextMetadata group("metadata"), "PartNo", partNo
+                LogLine "PDM KIT METADATA MISSING: " & kit("name") & "; PartNo taken from envelope NOTE: " & partNo
+            ElseIf NormalizeLabel(partNo) <> NormalizeLabel(envelopePartNo) Then
+                LogLine "ENVELOPE NOTE DIFFERS FROM PDM KIT PartNo (PDM used): " & kit("name") & _
+                    "; PDM=" & partNo & "; NOTE=" & envelopePartNo
+            End If
+            If Len(description) = 0 Then
+                description = envelopeDescription
+                SetTextMetadata group("metadata"), "Description", description
+                LogLine "PDM KIT METADATA MISSING: " & kit("name") & "; Description taken from envelope NOTE: " & description
+            ElseIf NormalizeLabel(description) <> NormalizeLabel(envelopeDescription) Then
+                LogLine "ENVELOPE NOTE DIFFERS FROM PDM KIT Description (PDM used): " & kit("name") & _
+                    "; PDM=" & description & "; NOTE=" & envelopeDescription
             End If
         End If
-    Next key
+        If Len(partNo) = 0 Then
+            partNo = mFS.GetBaseName(CStr(kit("name")))
+            LogLine "PDM KIT METADATA MISSING: " & kit("name") & "; PartNo; configuration uses the PDM filename."
+        End If
+        If Len(description) = 0 Then LogLine "PDM KIT METADATA MISSING: " & kit("name") & "; Description"
+        configName = ConfigurationName(Trim$(partNo & " " & description))
+        If StrComp(configName, PRODUCTION_CONFIGURATION, vbTextCompare) = 0 Or usedNames.Exists(configName) Then _
+            Err.Raise vbObjectError + 2464, , _
+            "PDM kit configuration name is duplicated or reserved: " & configName
+        usedNames.Add configName, True
+        group("rootConfiguration") = configName
+        group("configPartNo") = partNo
+        group("configDescription") = description
+        kit("rootConfiguration") = configName
+        LogLine "Planned PDM kit configuration: " & configName & " -> " & kit("name")
+    Next kit
 End Sub
+
+Private Function TryKitMetadata(ByVal provenance As String) As Collection
+    On Error Resume Next
+    Set TryKitMetadata = KitMetadata(provenance)
+    If Err.Number <> 0 Then
+        LogLine "Envelope NOTE cannot be split into PartNo/Description; PDM kit values used: " & provenance
+        Set TryKitMetadata = Nothing
+    End If
+    Err.Clear
+End Function
+
+Private Function SingleSpaced(ByVal value As String) As String
+    Dim pattern As Object
+    Set pattern = CreateObject("VBScript.RegExp")
+    pattern.Global = True
+    pattern.Pattern = "\s+"
+    SingleSpaced = Trim$(pattern.Replace(value, " "))
+End Function
 
 Public Sub TestKitifyMetadata()
     Dim metadata As Collection
@@ -1099,10 +1395,10 @@ Private Function ConfigurationName(ByVal value As String) As String
     Dim result As String
     Set pattern = CreateObject("VBScript.RegExp")
     pattern.Global = True
-    pattern.Pattern = "[\\/:*?""<>|\[\]]"
-    result = Trim$(pattern.Replace(value, "_"))
+    pattern.Pattern = "[\\/:*?""<>|@\[\]]"
+    result = SingleSpaced(pattern.Replace(value, "_"))
     If Len(result) = 0 Then Err.Raise vbObjectError + 2464, , _
-        "PDM kit filename cannot be represented as a SOLIDWORKS configuration name: " & value
+        "PDM kit name cannot be represented as a SOLIDWORKS configuration name: " & value
     ConfigurationName = result
 End Function
 
@@ -1124,18 +1420,10 @@ Private Sub DiscoverPdmKits()
     Dim kit As Object
     Dim group As Object
     Dim key As String
-    Dim configName As String
-    Dim usedNames As Object
     Dim kitIndex As Long
-    Set usedNames = Dictionary()
     For Each kit In mPdmKits
         kitIndex = kitIndex + 1
         key = "K" & Format$(kitIndex, "0000")
-        configName = ConfigurationName(mFS.GetBaseName(CStr(kit("name"))))
-        If StrComp(configName, PRODUCTION_CONFIGURATION, vbTextCompare) = 0 Or usedNames.Exists(configName) Then _
-            Err.Raise vbObjectError + 2464, , _
-            "PDM kit configuration name is duplicated or reserved: " & configName
-        usedNames.Add configName, True
         kit("group") = key
         AddGroup key, "ROOT", "KIT", Category(CStr(kit("note"))), CStr(kit("note"))
         Set group = mGroups(key)
@@ -1144,10 +1432,7 @@ Private Sub DiscoverPdmKits()
         group("pdmPath") = kit("path")
         group("pdmIdentity") = kit("identity")
         group("totalCount") = kit("memberCount")
-        group("rootConfiguration") = configName
         Set group("metadata") = kit("metadata")
-        kit("rootConfiguration") = configName
-        LogLine "Planned PDM kit configuration: " & configName & " -> " & kit("name")
     Next kit
 
     For Each n In mSource
@@ -1656,6 +1941,10 @@ Private Function CombineConfigurations(ByVal source As SldWorks.ModelDoc2) As St
             SetSuppressed component, False
             If mWorking.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2453, , _
                 "PDM kit configuration rebuild failed: " & kitConfig
+            Set manager = mWorking.Extension.CustomPropertyManager(kitConfig)
+            PutProperty manager, "PartNo", CStr(group("configPartNo"))
+            If Len(CStr(group("configDescription"))) > 0 Then _
+                PutProperty manager, "Description", CStr(group("configDescription"))
             LogLine "Created root kit configuration: " & kitConfig & " -> " & group("pdmIdentity")
         End If
     Next key
@@ -1745,11 +2034,56 @@ Private Sub ValidateConfigurations()
             ValidateKitConfigurationContents CStr(key), config, report
         End If
     Next key
+    ValidateKitConfigurationIdentity
     ShowConfiguration mWorking, FirstKitConfiguration()
     SaveCsvReport report, "configurations.csv"
     LogLine "Configuration PASS: Default production tree preserved; " & _
         CStr(mPdmKits.Count) & " root kit configurations match PDM membership; source occurrences checked=" & count
 End Sub
+
+Private Sub ValidateKitConfigurationIdentity()
+    Dim report As Object
+    Dim key As Variant
+    Dim group As Object
+    Dim config As String
+    Dim kitPartNo As String
+    Dim kitDescription As String
+    Dim actualPartNo As String
+    Dim actualDescription As String
+    Set report = NewCsvReport()
+    WriteCsvLine report, "Configuration,PDMKitAssembly,PDMPartNo,PDMDescription,ConfigPartNo,ConfigDescription,Status"
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("kind") = "KIT" Then
+            config = CStr(group("rootConfiguration"))
+            kitPartNo = CStr(group("configPartNo"))
+            kitDescription = CStr(group("configDescription"))
+            If StrComp(config, ConfigurationName(Trim$(kitPartNo & " " & kitDescription)), vbBinaryCompare) <> 0 Then _
+                Err.Raise vbObjectError + 2453, , "Kit configuration name does not match PDM PartNo/Description: " & config
+            actualPartNo = ConfigProperty(config, "PartNo")
+            actualDescription = ConfigProperty(config, "Description")
+            If actualPartNo <> kitPartNo Or actualDescription <> kitDescription Then _
+                Err.Raise vbObjectError + 2453, , "Kit configuration properties do not match PDM kit: " & config & _
+                "; PartNo=" & actualPartNo & "; Description=" & actualDescription
+            WriteCsvLine report, Csv(config) & "," & Csv(group("pdmIdentity")) & "," & Csv(kitPartNo) & "," & _
+                Csv(kitDescription) & "," & Csv(actualPartNo) & "," & Csv(actualDescription) & ",PASS"
+        End If
+    Next key
+    SaveCsvReport report, "kit-configurations.csv"
+    LogLine "Kit configuration identity PASS: names and configuration-specific PartNo/Description match the PDM kits."
+End Sub
+
+Private Function ConfigProperty(ByVal config As String, ByVal name As String) As String
+    Dim manager As SldWorks.CustomPropertyManager
+    Dim raw As String
+    Dim resolved As String
+    Dim wasResolved As Boolean
+    Dim linked As Boolean
+    Set manager = mWorking.Extension.CustomPropertyManager(config)
+    manager.Get6 name, False, raw, resolved, wasResolved, linked
+    ConfigProperty = resolved
+    If Len(ConfigProperty) = 0 Then ConfigProperty = raw
+End Function
 
 Private Sub ValidateRootConfiguration(ByVal config As String, ByVal selectedGroup As String, _
     ByVal report As Object)
@@ -2006,7 +2340,7 @@ End Sub
 Private Sub Activate(ByVal model As SldWorks.ModelDoc2)
     Dim activated As SldWorks.ModelDoc2
     Dim errors As Long
-    Set activated = mApp.ActivateDoc3(model.GetTitle, False, 0, errors)
+    Set activated = mApp.ActivateDoc3(model.GetTitle, False, SW_REBUILD_ACTIVE_DOC, errors)
     If activated Is Nothing Or errors <> 0 Then Err.Raise vbObjectError + 2427, , _
         "Activation failed: " & model.GetTitle & "; errors=" & errors
 End Sub
