@@ -257,10 +257,12 @@ sets `Actor.Alpha` to `100` (about 39% opacity). For visible matches, it also:
    `(L/2, k�(d�VY), k�(d�VZ))`, where `d` is the snapped offset direction,
    `VX`/`VY` come from Composer's computed `Actor.Location`, and
    `k = OFFSET_DISTANCE` (150 mm).
-5. Copies the `Dims` style's visual properties (minus `Profile.*` and `Link*`)
-   via `SetPropertyMap`, with `Actor.Style` empty to avoid a live style
-   subscription overriding labels. The appearance is retained, including
-   endpoints off (`Text.ShowEndPoints = 0`).
+5. Applies the same explicit `DimStyleProperties()` map as the combined macro:
+   the canonical `7382 5000 80 BOX` appearance, including Montserrat text size
+   `36`, attach/extremity size `7` and endpoints off (`Text.ShowEndPoints = 0`).
+   No style file is loaded. `Actor.Style` is cleared after the properties to
+   avoid a live style subscription overriding labels. Both macros remain
+   standalone and carry identical property maps.
 6. Displays dimensions rounded upward to whole millimetres with zero decimal
    places (`1363.85` becomes `1364`), using the same fixed-label override as the
    combined macro. Anchors and placement retain full precision. The override
@@ -340,10 +342,25 @@ The label override is applied in a separate property-map call after styling and
 positioning, avoiding the style's conflicting automatic-value and empty-text
 properties. Both display properties are read back; failure to retain the override
 is logged as a BOX-phase error rather than capturing a known incorrect label.
-The combined macro copies the visual properties from `Dims.smgStyleSet` directly
-but sets `Actor.Style` to empty, leaving dimensions unsubscribed from the style.
-The copied colours, font, lines and other appearance settings are retained,
-without a live style association reapplying two-decimal values later.
+The combined macro uses a hard-coded `DimStyleProperties()` property map captured
+from all three dimensions in the canonical `7382 5000 80 BOX` view. It no longer
+reads `Dims.smgStyleSet` or requires a local/OneDrive style file. The canonical
+settings are Montserrat, `Text.Height=36` (`Text.Font.Height=-58`), attach/extremity
+size `7`, endpoint-marker size `2`, black text and lines, attachment-line width
+`0.25` and dimension-line width `0.5`. The remaining available appearance
+properties are captured explicitly too; the per-dimension middle string is
+replaced by the calculated whole-millimetre label. `Text.ShowRedline` returned no
+property in the canonical document and is not included.
+`Actor.Style` is cleared after the explicit appearance properties, leaving
+dimensions unsubscribed from a style that could reapply two-decimal values later.
+
+The explicit style was compiled with the complete combined module in an isolated
+Access host. All 42 fixed properties matched all three canonical dimensions.
+A focused live Composer test applied the style and separate label override to
+three temporary dimensions: all 129 property readbacks passed, including labels
+`438`, `1364` and `1` for lengths `438`, `1363.85` and `0.1`. Style associations
+were empty and the temporary actors were removed afterward. This tested styling
+and label overrides, not a full combined view-generation run or placement.
 
 Validation: the full module compiled in an isolated Access database with the
 installed Composer reference. VBA mock tests compared ordered normal-view names

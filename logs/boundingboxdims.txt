@@ -1,6 +1,8 @@
-30/10/2026 1:44:24 PM - BoundingBoxDimensions starting...
-30/10/2026 1:44:25 PM - Set opacity to 100 for actor P7382 5000 80_BoundingBox
-30/10/2026 1:44:25 PM - P7382 5000 80_BoundingBox Length 1363.85 mm -> a4933a9c5d135871
-30/10/2026 1:44:25 PM - P7382 5000 80_BoundingBox Width 437.18 mm -> b4fdaa9799a6cbf7
-30/10/2026 1:44:25 PM - P7382 5000 80_BoundingBox Height 394.08 mm -> 83eb954ac9108ff2
-30/10/2026 1:44:25 PM - Finished. Dimensioned: 1, skipped: 0
+6/11/2026 11:01:06 AM - BoundingBoxDimensions starting...
+6/11/2026 11:01:07 AM - Set opacity to 100 for actor ADefault.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907
+6/11/2026 11:01:07 AM - ADefault.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907 Length 977.98 mm -> b1674a75fa6c1ffd
+6/11/2026 11:01:07 AM - ADefault.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907 Width 389.23 mm -> 80b42826430deef7
+6/11/2026 11:01:07 AM - ADefault.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907 Height 248.91 mm -> 94fb200be18b5369
+6/11/2026 11:01:08 AM - Set opacity to 100 for actor AKits.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907
+6/11/2026 11:01:08 AM - Set opacity; skipped hidden actor AKits.PRDX5 Complete Kit_BestFitEnvelope_20261029_122907
+6/11/2026 11:01:08 AM - Finished. Dimensioned: 1, skipped: 0

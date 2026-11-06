@@ -14,14 +14,13 @@ Option Explicit
 '     matches its world offset direction, so all leaders stay normal to their
 '     edge and the length/width leaders share one corner.
 '   - Of the parallel candidate edges, the one facing the camera is used.
-'   - Dimensions are styled from the "Dims" style file and named
+'   - Dimensions use explicit properties from the canonical 7382 5000 80 BOX view and are named
 '     "SkycodeBBoxDim <role> <proxy id>"; rerunning replaces them.
 '   - Matching actors are set to 100 alpha (opacity).
 ' Requires a VBA reference to composer.exe (DSComposer type library).
 ' ============================================================
 
-Private Const LOG_FILE_PATH As String = "C:\OneDrive - Skyfacture Pty Ltd\Skyfacture\3 - Economics\skycode\logs\boundingboxdims.txt"
-Private Const STYLE_PATH As String = "C:\Users\skyfa\OneDrive\Documents\SOLIDWORKSComposer\User\Profiles\Dims.smgStyleSet"
+Private Const LOG_FILE_PATH As String = "C:\skycode\logs\boundingboxdims.txt"
 Private Const PROXY_NAME_MATCH As String = "BoundingBox"
 Private Const LEGACY_PROXY_NAME_MATCH As String = "BestFitEnvelope"
 Private Const DIM_TAG As String = "SkycodeBBoxDim"
@@ -45,7 +44,7 @@ Public Sub BoundingBoxDimensions()
     Set doc = app.GetActiveDocument
     If doc Is Nothing Then Err.Raise vbObjectError + 3001, , "No active Composer document."
 
-    styleProps = LoadStyleProperties(STYLE_PATH)
+    styleProps = DimStyleProperties()
     oldSelection = doc.Selection
     proxies = SelectionIds(doc.GetAllActors(0))   ' crAtvAllActors
 
@@ -229,23 +228,54 @@ Private Sub RemovePreviousDimensions(ByVal doc As DSComposer.Document, ByVal pro
     Next id
 End Sub
 
-' Style file properties, minus profile bookkeeping, in the explicit-close form SetPropertyMap accepts.
-Private Function LoadStyleProperties(ByVal path As String) As String
-    Dim fs As Object, text As String, re As Object, p As Long, q As Long
-
-    Set fs = CreateObject("Scripting.FileSystemObject")
-    If Not fs.FileExists(path) Then Err.Raise vbObjectError + 3002, , "Style file not found: " & path
-    text = fs.OpenTextFile(path, 1).ReadAll
-    p = InStr(text, "<CLitStyleProperties>"): q = InStr(text, "</CLitStyleProperties>")
-    If p = 0 Or q = 0 Then Err.Raise vbObjectError + 3003, , "Unrecognised style file: " & path
-    text = Mid$(text, p + Len("<CLitStyleProperties>"), q - p - Len("<CLitStyleProperties>"))
-
-    Set re = CreateObject("VBScript.RegExp")
-    re.Global = True
-    re.Pattern = "<(Profile\.[^ /]+|Link[^ /]*)[^>]*/>"
-    text = re.Replace(text, "")
-    re.Pattern = "<([A-Za-z0-9.]+)([^>]*)/>"
-    LoadStyleProperties = re.Replace(text, "<$1$2></$1>")
+Private Function DimStyleProperties() As String
+    Dim props As String
+    props = "<Actor.Alpha Value=""255""></Actor.Alpha>" & _
+        "<Actor.Color R=""255"" G=""128"" B=""0""></Actor.Color>" & _
+        "<Actor.DisplayValue Value=""0""></Actor.DisplayValue>" & _
+        "<Actor.MiddleSymbol Value=""0""></Actor.MiddleSymbol>" & _
+        "<Actor.PostSymbol Value=""0""></Actor.PostSymbol>" & _
+        "<Actor.PreSymbol Value=""0""></Actor.PreSymbol>" & _
+        "<ActorCurve.Extremity.Size Value=""7"" Unit=""1""></ActorCurve.Extremity.Size>" & _
+        "<ActorCurve.Extremity.Leader Value=""14""></ActorCurve.Extremity.Leader>"
+    props = props & "<Text.Attach.Line.Color R=""0"" G=""0"" B=""0""></Text.Attach.Line.Color>" & _
+        "<Text.Attach.Line.Type Value=""0""></Text.Attach.Line.Type>" & _
+        "<Text.Attach.Line.Alpha Value=""250""></Text.Attach.Line.Alpha>" & _
+        "<Text.Attach.Line.Width Value=""0.25"" Unit=""1""></Text.Attach.Line.Width>" & _
+        "<Text.Attach.Line.Show Value=""1""></Text.Attach.Line.Show>" & _
+        "<Text.AutoShow Value=""1""></Text.AutoShow>" & _
+        "<Text.Bk Value=""0""></Text.Bk>" & _
+        "<Text.Bk.Opacity Value=""255""></Text.Bk.Opacity>"
+    props = props & "<Text.Border.Color R=""255"" G=""255"" B=""255""></Text.Border.Color>" & _
+        "<Text.Border.Opacity Value=""128""></Text.Border.Opacity>" & _
+        "<Text.Border.Width Value=""1"" Unit=""1""></Text.Border.Width>" & _
+        "<Text.CalloutAlignment Value=""1001""></Text.CalloutAlignment>" & _
+        "<Text.Font CharSet=""0"" ClipPrecision=""2"" Escapement=""0"" FaceName=""Montserrat"" Height=""-58"" " & _
+        "Italic=""0"" Orientation=""0"" OutPrecision=""3"" PitchAndFamily=""2"" Quality=""1"" " & _
+        "StrikeOut=""0"" Underline=""0"" Weight=""400"" Width=""0""></Text.Font>" & _
+        "<Text.Foreground.Color R=""0"" G=""0"" B=""0""></Text.Foreground.Color>" & _
+        "<Text.Halo Value=""0""></Text.Halo>" & _
+        "<Text.Height Value=""36""></Text.Height>" & _
+        "<Text.LineWidth Value=""0.5"" Unit=""1""></Text.LineWidth>"
+    props = props & "<Text.MiddleString Value=""""></Text.MiddleString>" & _
+        "<Text.PostString Value=""""></Text.PostString>" & _
+        "<Text.PreString Value=""""></Text.PreString>" & _
+        "<Text.ShowConstruction Value=""1""></Text.ShowConstruction>" & _
+        "<Text.StayOnTop Value=""1""></Text.StayOnTop>" & _
+        "<Text.Label.Line.Color R=""0"" G=""0"" B=""0""></Text.Label.Line.Color>" & _
+        "<Text.Label.Line.Opacity Value=""250""></Text.Label.Line.Opacity>" & _
+        "<Text.Label.Line.Show Value=""0""></Text.Label.Line.Show>" & _
+        "<Text.Label.Line.Type Value=""0""></Text.Label.Line.Type>" & _
+        "<Text.ShowEndPoints Value=""0""></Text.ShowEndPoints>" & _
+        "<Text.Attach.EndPoint.Size Value=""2""></Text.Attach.EndPoint.Size>" & _
+        "<Text.Attach.EndPoint.Color R=""255"" G=""255"" B=""0""></Text.Attach.EndPoint.Color>"
+    props = props & "<Quotation.LabelOrientation Value=""1""></Quotation.LabelOrientation>" & _
+        "<Quotation.LabelPosition Value=""0""></Quotation.LabelPosition>" & _
+        "<Quotation.CenterValue Value=""0""></Quotation.CenterValue>" & _
+        "<Actor.LinkedToolTipPropertyName Value=""Actor.Name""></Actor.LinkedToolTipPropertyName>" & _
+        "<Actor.LinkedToolTipProperty Value=""2""></Actor.LinkedToolTipProperty>" & _
+        "<ActorComposite.AspectRatio Value=""1""></ActorComposite.AspectRatio>"
+    DimStyleProperties = props
 End Function
 
 Private Function ReadVector(ByVal doc As DSComposer.Document, ByVal id As String, ByVal prop As String, ByRef result As Variant) As Boolean

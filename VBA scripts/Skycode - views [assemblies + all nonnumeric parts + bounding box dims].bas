@@ -1,4 +1,3 @@
-Attribute VB_Name = "Module1"
 Option Compare Database
 Option Explicit
 ' ============================================================
@@ -7,12 +6,17 @@ Option Explicit
 ' Normal assembly/part passes retain the original naming and eligibility rules.
 ' Proxy parts bypass ordinary part naming. The final BOX view captures the root,
 ' its visible proxy, opacity 100 and dimensions, without updating earlier views.
+' Multi-configuration imports: the ADefault (production) tree is the root/BOX scope; other
+' configuration trees get assembly/part views only, and duplicate view names are skipped.
+' BOX dimensions use explicit properties captured from the canonical 7382 5000 80 BOX view.
 ' ============================================================
-Private Const LOG_FILE_PATH As String = "C:\OneDrive - Skyfacture Pty Ltd\Skyfacture\3 - Economics\skycode\logs\views [assys + all nonnumeric parts + bounding box dims].txt"
-Private Const STYLE_PATH As String = "C:\Users\skyfa\OneDrive\Documents\SOLIDWORKSComposer\User\Profiles\Dims.smgStyleSet"
+Private Const LOG_FILE_PATH As String = "C:\skycode\logs\views [assys + all nonnumeric parts + bounding box dims].txt"
 Private Const DIM_TAG As String = "SkycodeBBoxDim"
 Private Const OFFSET_DISTANCE As Double = 100#
 Private Const CMD_DIMENSIONS As Long = 178
+' Multi-configuration imports (e.g. kitify Default + kitified) add one actor per configuration.
+' When present, the production configuration is the root for the root and BOX views.
+Private Const PRODUCTION_ROOT_ID As String = "ADefault"
 
 Public Sub CreateViewsAllWithBoundingBoxDims()
     Dim swApp As DSComposer.Application
@@ -20,7 +24,8 @@ Public Sub CreateViewsAllWithBoundingBoxDims()
     Dim actors() As String
     Dim i As Long, j As Long
     Dim logFile As Object, fs As Object
-    Dim uniqueAssemblies As Collection
+    Dim uniqueAssemblies As Collection, orderedAssemblies As Collection
+    Dim assemblyViews As New Collection
     Dim rootID As String, actorPath As String, actorSelection As String
     Dim segments() As String, char As String
     Dim rootViewName As String
@@ -51,11 +56,10 @@ Public Sub CreateViewsAllWithBoundingBoxDims()
     previousCameraSmoothTime = swDoc.CameraSmoothTime
     cameraSmoothTimeSaved = True
     swDoc.CameraSmoothTime = 0
+    ' Collect all part actors (hidden configuration trees included) and derive their assemblies.
+    swDoc.AssySelectionMode = 0
+    actorSelection = swDoc.GetAllActors(0)
     swDoc.AssySelectionMode = 1
-    rootID = "-1"
-    rootViewName = ReadRootActorName(swDoc, rootID)
-    LogPrint logFile, Now & " - Document root: " & rootID & "; Actor.Name: " & rootViewName
-    actorSelection = swDoc.GetAllActors(1)
     actors = SelectionIds(actorSelection)
     Set uniqueAssemblies = New Collection
     For i = 0 To UBound(actors)
@@ -74,6 +78,25 @@ Public Sub CreateViewsAllWithBoundingBoxDims()
         End If
     Next i
 
+    rootID = "-1"
+    If HasItem(uniqueAssemblies, PRODUCTION_ROOT_ID) Then
+        rootID = PRODUCTION_ROOT_ID
+        rootViewName = StripMetaPartNo(swDoc.GetPropertyValue(Sel(rootID), "Meta.PartNo"))
+        If Len(rootViewName) = 0 Then rootViewName = ReadRootActorName(swDoc, rootID)
+        LogPrint logFile, Now & " - Configuration root: " & rootID & "; view name: " & rootViewName
+    Else
+        rootViewName = ReadRootActorName(swDoc, rootID)
+        LogPrint logFile, Now & " - Document root: " & rootID & "; Actor.Name: " & rootViewName
+    End If
+    ' Production assemblies claim shared view names before other configuration trees.
+    Set orderedAssemblies = New Collection
+    For Each assemblyID In uniqueAssemblies
+        If InTree(CStr(assemblyID), rootID) Then orderedAssemblies.Add assemblyID
+    Next assemblyID
+    For Each assemblyID In uniqueAssemblies
+        If Not InTree(CStr(assemblyID), rootID) Then orderedAssemblies.Add assemblyID
+    Next assemblyID
+
     If Len(rootID) > 0 And Len(rootViewName) > 0 Then
         If swDoc.SelectOnFilter(Sel(rootID), False) Then
             swDoc.SetVisibility "", 0, 2
@@ -82,6 +105,7 @@ Public Sub CreateViewsAllWithBoundingBoxDims()
             swDoc.ZoomFitAll
             rootViewCreated = swDoc.CreateView(rootViewName, -1)
             If rootViewCreated Then
+                AddUniquePart assemblyViews, rootViewName
                 LogPrint logFile, Now & " - Created view: " & rootViewName & " for " & rootID
             Else
                 LogPrint logFile, Now & " - ERROR: Failed to create root view: " & rootViewName
@@ -93,20 +117,22 @@ Public Sub CreateViewsAllWithBoundingBoxDims()
         LogPrint logFile, Now & " - ERROR: Root ID or Actor.Name is missing; root and BOX views will not be created."
     End If
 
-    For Each assemblyID In uniqueAssemblies
+    For Each assemblyID In orderedAssemblies
         If assemblyID <> rootID Then
-            If swDoc.SelectOnFilter(Sel(CStr(assemblyID)), False) Then
+            subPartNo = swDoc.GetPropertyValue(Sel(CStr(assemblyID)), "Meta.PartNo")
+            cleanSubPartNo = StripMetaPartNo(subPartNo)
+            If Len(cleanSubPartNo) > 0 Then
+                subViewName = cleanSubPartNo
+            Else
+                subViewName = "SubAssy_" & Replace(assemblyID, ".", "_")
+            End If
+            If Not AddUniquePart(assemblyViews, subViewName) Then
+                LogPrint logFile, Now & " - Skipped duplicate assembly: '" & assemblyID & "' (View name: '" & subViewName & "')"
+            ElseIf swDoc.SelectOnFilter(Sel(CStr(assemblyID)), False) Then
                 swDoc.SetVisibility "", 0, 2
                 swDoc.SetVisibility Sel(CStr(assemblyID)), 1, 2
                 HideCollaborations swDoc
                 swDoc.ZoomFitAll
-                subPartNo = swDoc.GetPropertyValue(Sel(CStr(assemblyID)), "Meta.PartNo")
-                cleanSubPartNo = StripMetaPartNo(subPartNo)
-                If Len(cleanSubPartNo) > 0 Then
-                    subViewName = cleanSubPartNo
-                Else
-                    subViewName = "SubAssy_" & Replace(assemblyID, ".", "_")
-                End If
                 If swDoc.CreateView(subViewName, -1) Then
                     LogPrint logFile, Now & " - Created view: " & subViewName & " for " & assemblyID
                 Else
@@ -252,6 +278,17 @@ Failed:
     If Err.Number <> 457 Then Err.Raise Err.Number, "AddUniquePart", Err.description
 End Function
 
+Private Function HasItem(ByVal items As Collection, ByVal key As String) As Boolean
+    On Error GoTo Missing
+    IsObject items(key)
+    HasItem = True
+Missing:
+End Function
+
+Private Function InTree(ByVal id As String, ByVal rootID As String) As Boolean
+    InTree = (rootID = "-1" Or id = rootID Or Left$(id, Len(rootID) + 1) = rootID & ".")
+End Function
+
 Private Function IsBoxProxy(ByVal actorName As String) As Boolean
     IsBoxProxy = (InStr(1, actorName, "BoundingBox", vbTextCompare) > 0 Or _
         InStr(1, actorName, "BestFitEnvelope", vbTextCompare) > 0) And _
@@ -322,7 +359,7 @@ Private Sub CreateBoxView(ByVal app As DSComposer.Application, ByVal doc As DSCo
             If Norm(edge) <= 0 Then Err.Raise vbObjectError + 3102, , "Invalid zero-length box edge for " & candidate
         Next i
     Next candidate
-    styleProps = LoadStyleProperties(STYLE_PATH)
+    styleProps = DimStyleProperties()
     For Each candidate In candidates
         ApplyBoundingBoxOpacity doc, CStr(candidate), logFile
     Next candidate
@@ -479,20 +516,54 @@ Private Sub RemovePreviousDimensions(ByVal doc As DSComposer.Document, ByVal pro
     Next id
 End Sub
 
-Private Function LoadStyleProperties(ByVal path As String) As String
-    Dim fs As Object, text As String, re As Object, p As Long, q As Long
-    Set fs = CreateObject("Scripting.FileSystemObject")
-    If Not fs.FileExists(path) Then Err.Raise vbObjectError + 3002, , "Style file not found: " & path
-    text = fs.OpenTextFile(path, 1).ReadAll
-    p = InStr(text, "<CLitStyleProperties>"): q = InStr(text, "</CLitStyleProperties>")
-    If p = 0 Or q = 0 Then Err.Raise vbObjectError + 3003, , "Unrecognised style file: " & path
-    text = Mid$(text, p + Len("<CLitStyleProperties>"), q - p - Len("<CLitStyleProperties>"))
-    Set re = CreateObject("VBScript.RegExp")
-    re.Global = True
-    re.pattern = "<(Profile\.[^ /]+|Link[^ /]*)[^>]*/>"
-    text = re.Replace(text, "")
-    re.pattern = "<([A-Za-z0-9.]+)([^>]*)/>"
-    LoadStyleProperties = re.Replace(text, "<$1$2></$1>")
+Private Function DimStyleProperties() As String
+    Dim props As String
+    props = "<Actor.Alpha Value=""255""></Actor.Alpha>" & _
+        "<Actor.Color R=""255"" G=""128"" B=""0""></Actor.Color>" & _
+        "<Actor.DisplayValue Value=""0""></Actor.DisplayValue>" & _
+        "<Actor.MiddleSymbol Value=""0""></Actor.MiddleSymbol>" & _
+        "<Actor.PostSymbol Value=""0""></Actor.PostSymbol>" & _
+        "<Actor.PreSymbol Value=""0""></Actor.PreSymbol>" & _
+        "<ActorCurve.Extremity.Size Value=""7"" Unit=""1""></ActorCurve.Extremity.Size>" & _
+        "<ActorCurve.Extremity.Leader Value=""14""></ActorCurve.Extremity.Leader>"
+    props = props & "<Text.Attach.Line.Color R=""0"" G=""0"" B=""0""></Text.Attach.Line.Color>" & _
+        "<Text.Attach.Line.Type Value=""0""></Text.Attach.Line.Type>" & _
+        "<Text.Attach.Line.Alpha Value=""250""></Text.Attach.Line.Alpha>" & _
+        "<Text.Attach.Line.Width Value=""0.25"" Unit=""1""></Text.Attach.Line.Width>" & _
+        "<Text.Attach.Line.Show Value=""1""></Text.Attach.Line.Show>" & _
+        "<Text.AutoShow Value=""1""></Text.AutoShow>" & _
+        "<Text.Bk Value=""0""></Text.Bk>" & _
+        "<Text.Bk.Opacity Value=""255""></Text.Bk.Opacity>"
+    props = props & "<Text.Border.Color R=""255"" G=""255"" B=""255""></Text.Border.Color>" & _
+        "<Text.Border.Opacity Value=""128""></Text.Border.Opacity>" & _
+        "<Text.Border.Width Value=""1"" Unit=""1""></Text.Border.Width>" & _
+        "<Text.CalloutAlignment Value=""1001""></Text.CalloutAlignment>" & _
+        "<Text.Font CharSet=""0"" ClipPrecision=""2"" Escapement=""0"" FaceName=""Montserrat"" Height=""-58"" " & _
+        "Italic=""0"" Orientation=""0"" OutPrecision=""3"" PitchAndFamily=""2"" Quality=""1"" " & _
+        "StrikeOut=""0"" Underline=""0"" Weight=""400"" Width=""0""></Text.Font>" & _
+        "<Text.Foreground.Color R=""0"" G=""0"" B=""0""></Text.Foreground.Color>" & _
+        "<Text.Halo Value=""0""></Text.Halo>" & _
+        "<Text.Height Value=""36""></Text.Height>" & _
+        "<Text.LineWidth Value=""0.5"" Unit=""1""></Text.LineWidth>"
+    props = props & "<Text.MiddleString Value=""""></Text.MiddleString>" & _
+        "<Text.PostString Value=""""></Text.PostString>" & _
+        "<Text.PreString Value=""""></Text.PreString>" & _
+        "<Text.ShowConstruction Value=""1""></Text.ShowConstruction>" & _
+        "<Text.StayOnTop Value=""1""></Text.StayOnTop>" & _
+        "<Text.Label.Line.Color R=""0"" G=""0"" B=""0""></Text.Label.Line.Color>" & _
+        "<Text.Label.Line.Opacity Value=""250""></Text.Label.Line.Opacity>" & _
+        "<Text.Label.Line.Show Value=""0""></Text.Label.Line.Show>" & _
+        "<Text.Label.Line.Type Value=""0""></Text.Label.Line.Type>" & _
+        "<Text.ShowEndPoints Value=""0""></Text.ShowEndPoints>" & _
+        "<Text.Attach.EndPoint.Size Value=""2""></Text.Attach.EndPoint.Size>" & _
+        "<Text.Attach.EndPoint.Color R=""255"" G=""255"" B=""0""></Text.Attach.EndPoint.Color>"
+    props = props & "<Quotation.LabelOrientation Value=""1""></Quotation.LabelOrientation>" & _
+        "<Quotation.LabelPosition Value=""0""></Quotation.LabelPosition>" & _
+        "<Quotation.CenterValue Value=""0""></Quotation.CenterValue>" & _
+        "<Actor.LinkedToolTipPropertyName Value=""Actor.Name""></Actor.LinkedToolTipPropertyName>" & _
+        "<Actor.LinkedToolTipProperty Value=""2""></Actor.LinkedToolTipProperty>" & _
+        "<ActorComposite.AspectRatio Value=""1""></ActorComposite.AspectRatio>"
+    DimStyleProperties = props
 End Function
 
 Private Function ReadVector(ByVal doc As DSComposer.Document, ByVal id As String, ByVal prop As String, ByRef result As Variant) As Boolean
