@@ -3,15 +3,15 @@ Option Explicit
 ' ============================================================
 ' Skycode - Kitify Production Drifter
 ' Usage:
-'   - Run SkycodeKitify with the saved production drifter open in SOLIDWORKS.
-'   - If saved rules do not exist, run LearnKitifyRules with the development reference open,
-'     then close it before normal runs.
-'   - Call KitifyDrifter(sourcePath, referencePath, outputFolder, showMessage) to identify
-'     open source/reference documents, choose an output folder, or suppress the completion message.
+'   - Run SkycodeKitify with the saved production drifter active in SOLIDWORKS.
+'   - Kit membership is derived from source NOTE categories and source assembly scope.
+'   - Call KitifyDrifter(sourcePath, outputFolder, showMessage) to identify an open source,
+'     choose an output folder, or suppress the completion message.
 '   - Creates verified kitified output and reports in a new folder beside the source unless outputFolder is specified.
-'   - The source and reference assemblies are not saved or restructured.
+'   - The source assembly is not saved or restructured.
 ' ============================================================
 ' Requires the installed SOLIDWORKS type library; no constants-library reference.
+
 Private Const ASSEMBLY_DOCUMENT As Long = 2
 Private Const DEFAULT_ASSEMBLY_TEMPLATE As Long = 9
 Private Const MATRIX_TOLERANCE As Double = 0.00000001
@@ -21,7 +21,6 @@ Private Const KIT_CONFIGURATION As String = "kitified"
 Private mApp As SldWorks.SldWorks
 Private mFS As Object
 Private mSource As Collection
-Private mReference As Collection
 Private mGroups As Object
 Private mFolder As String
 Private mRunId As String
@@ -29,6 +28,7 @@ Private mStage As String
 Private mLog As Object
 Private mWorking As SldWorks.ModelDoc2
 Private mSourcePath As String
+Private mCombinedPath As String
 Private mChildPath As String
 Private mPeakGeneratedDocuments As Long
 Private mRootMetadata As Collection
@@ -42,12 +42,10 @@ End Sub
 
 Public Function KitifyDrifter( _
     Optional ByVal sourcePath As String = "", _
-    Optional ByVal referencePath As String = "", _
     Optional ByVal outputFolder As String = "", _
     Optional ByVal showMessage As Boolean = True) As String
 
     Dim source As SldWorks.ModelDoc2
-    Dim reference As SldWorks.ModelDoc2
     Dim original As SldWorks.ModelDoc2
     Dim result As String
     Dim snapshotPath As String
@@ -64,50 +62,41 @@ Public Function KitifyDrifter( _
     mStage = "Connecting to the running SOLIDWORKS session"
     Initialise
     Set original = mApp.ActiveDoc
-    mStage = "Finding the saved production drifter"
+    mStage = "Selecting the saved production assembly"
     Set source = FindSource(sourcePath)
-    Set mRootMetadata = ReadMetadata(source, source.ConfigurationManager.ActiveConfiguration.Name)
     mSourcePath = source.GetPathName
     CheckVisibleDocuments
-    If Len(referencePath) = 0 Then Set mReference = LoadKitifyRules(source)
     mFolder = NewOutputFolder(source.GetPathName, outputFolder)
     mRunId = Format$(Now, "yyyymmdd_hhnnss") & "_" & Hex$(CLng(Timer * 1000#))
     Set mLog = mFS.CreateTextFile(mFS.BuildPath(mFolder, "run.txt"), False, True)
     LogLine "Source: " & source.GetPathName
     LogLine "Source configuration: " & source.ConfigurationManager.ActiveConfiguration.Name
     LogLine "Source initially dirty: " & CStr(source.GetSaveFlag)
+    LogLine "Grouping: normalized source NOTE/category and source top-level occurrence; bearings pooled across the drifter."
 
+    mCombinedPath = mFS.BuildPath(mFolder, mFS.GetBaseName(mSourcePath) & _
+        " kitified generated " & mRunId & ".SLDASM")
+    mStage = "Creating the production-root copy before source inspection"
+    If source.Extension.SaveAs3(mCombinedPath, 0, 3, Nothing, Nothing, errors, warnings) = False Or errors <> 0 Then _
+        Err.Raise vbObjectError + 2453, , "Could not create production-root copy; errors=" & errors & _
+        "; warnings=" & warnings
+    If StrComp(source.GetPathName, mSourcePath, vbTextCompare) <> 0 Then Err.Raise vbObjectError + 2453, , _
+        "Save As Copy unexpectedly changed the source document identity."
+    If warnings <> 0 Then LogLine "PRODUCTION COPY WARNING: " & warnings
+    LogLine "Created production-root copy before resolving or inspecting source components: " & mCombinedPath
+
+    Set mRootMetadata = ReadMetadata(source, source.ConfigurationManager.ActiveConfiguration.Name)
     mStage = "Mapping every production occurrence before planning kits"
     Set mSource = Snapshot(source)
     WriteTree mSource, "source-tree.csv"
     WriteLocations
 
-    mStage = "Reading saved reference rules"
-    If Len(referencePath) > 0 Then
-        Set reference = FindReference(source, referencePath)
-        If StrComp(source.GetPathName, reference.GetPathName, vbTextCompare) = 0 Then
-            Err.Raise vbObjectError + 2400, , "Source and reference must be different documents."
-        End If
-        If reference.Visible Then Err.Raise vbObjectError + 2440, , _
-            "Close the development reference and use saved rules to keep only two visible documents."
-        LogLine "Reference: " & reference.GetPathName
-        LogLine "Reference configuration: " & reference.ConfigurationManager.ActiveConfiguration.Name
-        LogLine "Reference initially dirty: " & CStr(reference.GetSaveFlag)
-        Set mReference = Snapshot(reference)
-    Else
-        LogLine "Saved reference membership rules: " & KitifyRulesPath(source.GetPathName)
-        LogLine "Reference geometry was not opened. Rule-tree transforms are placeholders, not reference geometry."
-    End If
-    WriteTree mReference, "reference-tree.csv"
-
-    mStage = "Learning kit hierarchy and matching source occurrences"
+    mStage = "Planning source NOTE-category kits and retained production structures"
     Set mGroups = Dictionary()
     AddGroup "ROOT", "", "ROOT", "", ""
     Set mGroups("ROOT")("metadata") = mRootMetadata
     mGroups("ROOT")("sourcePath") = source.GetPathName
     mGroups("ROOT")("sourceConfig") = source.ConfigurationManager.ActiveConfiguration.Name
-    DiscoverKits
-    MatchOccurrences
     AssignDestinations
     CollectKits
     PrepareKitMetadata
@@ -132,7 +121,7 @@ Public Function KitifyDrifter( _
     If warnings <> 0 Then LogLine "REOPEN WARNING: " & warnings
     Set mWorking = reopened
     CheckVisibleDocuments
-    mStage = "Verifying reopened output against the source and reference"
+    mStage = "Verifying reopened output against the source assembly"
     ValidateOutput result, "snapshot-"
     ValidateMetadata "snapshot-"
     ValidateAppearances
@@ -164,26 +153,25 @@ Public Function KitifyDrifter( _
         If key <> "ROOT" And Len(n("file")) > 0 Then mApp.CloseDoc mFS.GetFileName(n("file"))
     Next key
     LogLine "Source finally dirty: " & CStr(source.GetSaveFlag)
-    If Not reference Is Nothing Then LogLine "Reference finally dirty: " & CStr(reference.GetSaveFlag)
     LogLine "Document budget PASS: maximum 2 visible documents; peak separately opened generated documents=" & _
         CStr(mPeakGeneratedDocuments) & "; saved children closed after each insertion."
-    LogLine "Referenced child geometry remains loaded internally by SOLIDWORKS."
+    LogLine "Child component geometry remains loaded internally by SOLIDWORKS."
     LogLine "VERIFIED: " & result
-    LogLine "Source/reference files were not saved or restructured. See comparison.csv for reference differences."
+    LogLine "Source file was not saved or restructured. See membership.csv for source NOTE/category grouping."
     mLog.Close
     Set mLog = Nothing
     If Not original Is Nothing Then Activate original
     KitifyDrifter = result
     If showMessage Then MsgBox "Kitified assembly verified:" & vbCrLf & result & vbCrLf & _
         "Reports: " & mFolder & vbCrLf & _
-        "Reference differences are recorded in comparison.csv.", vbInformation, "Skycode kitify"
+        "Review membership.csv for source NOTE/category grouping.", vbInformation, "Skycode kitify"
     Exit Function
 
 Failed:
     failureNumber = Err.Number
     failureDescription = mStage & ": " & Err.Description & vbCrLf & _
         "Partial outputs may remain in: " & mFolder & vbCrLf & _
-        "Source/reference files have not been saved by this macro."
+        "The source assembly has not been saved by this macro."
     Debug.Print failureDescription
     If Len(mChildPath) > 0 Then
         mApp.CloseDoc mChildPath
@@ -201,11 +189,11 @@ Private Sub Initialise()
     Set mApp = GetObject(, "SldWorks.Application")
     Set mFS = CreateObject("Scripting.FileSystemObject")
     Set mSource = Nothing
-    Set mReference = Nothing
     Set mGroups = Nothing
     Set mLog = Nothing
     Set mWorking = Nothing
     mSourcePath = ""
+    mCombinedPath = ""
     mChildPath = ""
     mPeakGeneratedDocuments = 0
     Set mRootMetadata = Nothing
@@ -223,158 +211,42 @@ End Function
 Private Function FindSource(ByVal path As String) As SldWorks.ModelDoc2
     Dim doc As SldWorks.ModelDoc2
     Dim found As SldWorks.ModelDoc2
-    Dim pattern As Object
-    Dim assemblies As New Collection
-    Dim names As Object
-    Dim item As Variant
-    Set pattern = CreateObject("VBScript.RegExp")
-    Set names = Dictionary()
-    pattern.Pattern = "^[0-9]{3,4} [0-9]{3,4} [0-9]{2}$"
-    Set doc = mApp.GetFirstDocument
-    Do While Not doc Is Nothing
-        If doc.GetType = ASSEMBLY_DOCUMENT And Len(doc.GetPathName) > 0 Then
-            assemblies.Add doc
-            names(mFS.GetBaseName(doc.GetPathName)) = True
-        End If
-        Set doc = doc.GetNext
-    Loop
-    For Each item In assemblies
-        Set doc = item
-        If (Len(path) > 0 And StrComp(doc.GetPathName, path, vbTextCompare) = 0) Or _
-            (Len(path) = 0 And pattern.Test(mFS.GetBaseName(doc.GetPathName)) And _
-                (names.Exists(mFS.GetBaseName(doc.GetPathName) & " kitified") Or _
-                    mFS.FileExists(KitifyRulesPath(doc.GetPathName)))) Then
-            If Not found Is Nothing Then Err.Raise vbObjectError + 2402, , _
-                "Multiple production drifters are open; pass the intended sourcePath."
-            Set found = doc
-        End If
-    Next item
-    If found Is Nothing Then Err.Raise vbObjectError + 2403, , _
-        "Open the saved [part number].sldasm production drifter first."
-    Set FindSource = found
-End Function
-
-Private Function KitifyRulesPath(ByVal sourcePath As String) As String
-    KitifyRulesPath = mFS.BuildPath(mFS.GetParentFolderName(sourcePath), _
-        mFS.GetBaseName(sourcePath) & " kitify-rules.xml")
-End Function
-
-Private Function KitifyRuleFields() As Variant
-    KitifyRuleFields = Array("id", "parent", "instance", "path", "config", "note", _
-        "assembly", "suppressed", "envelope", "excluded")
-End Function
-
-Public Sub LearnKitifyRules()
-    Dim source As SldWorks.ModelDoc2
-    Dim reference As SldWorks.ModelDoc2
-    Dim xml As Object
-    Dim root As Object
-    Dim element As Object
-    Dim field As Variant
-    Dim n As Object
-    Dim path As String
-    Initialise
-    Set source = FindSource("")
-    Set reference = FindReference(source, "")
-    Set mReference = Snapshot(reference)
-    Set mGroups = Dictionary()
-    AddGroup "ROOT", "", "ROOT", "", ""
-    DiscoverKits
-    path = KitifyRulesPath(source.GetPathName)
-    If mFS.FileExists(path) Then Err.Raise vbObjectError + 2441, , _
-        "Rules already exist; move them aside explicitly before relearning: " & path
-    Set xml = CreateObject("MSXML2.DOMDocument.6.0")
-    Set root = xml.createElement("KitifyRules")
-    root.setAttribute "version", "1"
-    root.setAttribute "source", Identity(source.GetPathName)
-    root.setAttribute "configuration", source.ConfigurationManager.ActiveConfiguration.Name
-    xml.appendChild root
-    For Each n In mReference
-        Set element = xml.createElement("Occurrence")
-        For Each field In KitifyRuleFields()
-            element.setAttribute CStr(field), CStr(n(field))
-        Next field
-        root.appendChild element
-    Next n
-    xml.Save path
-    Activate source
-    MsgBox "Saved kit rules. Close the development reference before normal runs:" & vbCrLf & path, _
-        vbInformation, "Skycode kitify"
-End Sub
-
-Private Function LoadKitifyRules(ByVal source As SldWorks.ModelDoc2) As Collection
-    Dim xml As Object
-    Dim root As Object
-    Dim element As Object
-    Dim field As Variant
-    Dim n As Object
-    Dim nodes As New Collection
-    Dim path As String
-    path = KitifyRulesPath(source.GetPathName)
-    If Not mFS.FileExists(path) Then Err.Raise vbObjectError + 2442, , _
-        "Missing saved kit rules: " & path & vbCrLf & _
-        "Run LearnKitifyRules once with the development reference open, then close it."
-    Set xml = CreateObject("MSXML2.DOMDocument.6.0")
-    xml.async = False
-    xml.resolveExternals = False
-    xml.setProperty "ProhibitDTD", True
-    If xml.Load(path) = False Then Err.Raise vbObjectError + 2443, , _
-        "Cannot load kit rules: " & xml.parseError.reason
-    Set root = xml.documentElement
-    If root Is Nothing Then Err.Raise vbObjectError + 2443, , "Empty kit rules: " & path
-    If root.nodeName <> "KitifyRules" Or root.getAttribute("version") <> "1" Or _
-        root.getAttribute("source") <> Identity(source.GetPathName) Or _
-        root.getAttribute("configuration") <> source.ConfigurationManager.ActiveConfiguration.Name Then _
-        Err.Raise vbObjectError + 2443, , "Kit rules do not match this source/configuration: " & path
-    For Each element In root.childNodes
-        If element.nodeType = 1 Then
-            If element.nodeName <> "Occurrence" Then Err.Raise vbObjectError + 2443, , "Unexpected kit rule element."
-            Set n = Dictionary()
-            For Each field In KitifyRuleFields()
-                If element.getAttributeNode(CStr(field)) Is Nothing Then Err.Raise vbObjectError + 2443, , _
-                    "Missing kit rule field: " & field
-                n.Add CStr(field), CStr(element.getAttribute(CStr(field)))
-            Next field
-            n("id") = CLng(n("id"))
-            n("parent") = CLng(n("parent"))
-            If n("id") <> nodes.Count + 1 Or n("parent") < 0 Or n("parent") >= n("id") Then _
-                Err.Raise vbObjectError + 2443, , "Invalid kit rule ancestry."
-            For Each field In Array("assembly", "suppressed", "envelope", "excluded")
-                n(field) = CBool(n(field))
-            Next field
-            n.Add "identity", Identity(CStr(n("path")))
-            n.Add "partKey", PartKey(CStr(n("identity")))
-            n.Add "category", Category(CStr(n("note")))
-            n.Add "match", 0&
-            n.Add "kit", ""
-            n.Add "fixed", False
-            n.Add "matrix", IdentityMatrix()
-            nodes.Add n
-        End If
-    Next element
-    If nodes.Count = 0 Then Err.Raise vbObjectError + 2443, , "No saved reference occurrences."
-    Set LoadKitifyRules = nodes
-End Function
-
-Private Function FindReference(ByVal source As SldWorks.ModelDoc2, ByVal path As String) As SldWorks.ModelDoc2
-    Dim doc As SldWorks.ModelDoc2
-    Dim found As SldWorks.ModelDoc2
-    Dim expected As String
-    expected = mFS.GetBaseName(source.GetPathName) & " kitified"
-    Set doc = mApp.GetFirstDocument
-    Do While Not doc Is Nothing
-        If doc.GetType = ASSEMBLY_DOCUMENT And Len(doc.GetPathName) > 0 Then
-            If (Len(path) > 0 And StrComp(doc.GetPathName, path, vbTextCompare) = 0) Or _
-                (Len(path) = 0 And StrComp(mFS.GetBaseName(doc.GetPathName), expected, vbTextCompare) = 0) Then
-                If Not found Is Nothing Then Err.Raise vbObjectError + 2404, , "Reference selection is ambiguous."
-                Set found = doc
+    Dim active As SldWorks.ModelDoc2
+    If Len(path) > 0 Then
+        Set doc = mApp.GetFirstDocument
+        Do While Not doc Is Nothing
+            If doc.GetType = ASSEMBLY_DOCUMENT And Len(doc.GetPathName) > 0 Then
+                If StrComp(doc.GetPathName, path, vbTextCompare) = 0 Then
+                    Set found = doc
+                    Exit Do
+                End If
+            End If
+            Set doc = doc.GetNext
+        Loop
+    Else
+        Set active = mApp.ActiveDoc
+        If Not active Is Nothing Then
+            If active.GetType = ASSEMBLY_DOCUMENT Then
+                If Len(active.GetPathName) = 0 Then Err.Raise vbObjectError + 2403, , _
+                    "Save the active production assembly before running Kitify."
+                Set found = active
             End If
         End If
-        Set doc = doc.GetNext
-    Loop
-    If found Is Nothing Then Err.Raise vbObjectError + 2405, , _
-        "Open " & expected & ".sldasm first, or pass referencePath."
-    Set FindReference = found
+        If found Is Nothing Then
+            Set doc = mApp.GetFirstDocument
+            Do While Not doc Is Nothing
+                If doc.GetType = ASSEMBLY_DOCUMENT And Len(doc.GetPathName) > 0 Then
+                    If Not found Is Nothing Then Err.Raise vbObjectError + 2402, , _
+                        "Activate the intended production assembly or pass its sourcePath."
+                    Set found = doc
+                End If
+                Set doc = doc.GetNext
+            Loop
+        End If
+    End If
+    If found Is Nothing Then Err.Raise vbObjectError + 2403, , _
+        "Open and activate the saved production assembly, or pass its sourcePath."
+    Set FindSource = found
 End Function
 
 Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As String) As String
@@ -435,8 +307,6 @@ Private Sub WalkChildren(ByVal parent As SldWorks.Component2, ByVal parentId As 
         n.Add "parent", parentId
         n.Add "instance", component.Name2
         n.Add "path", component.GetPathName
-        n.Add "identity", Identity(CStr(n("path")))
-        n.Add "partKey", PartKey(CStr(n("identity")))
         n.Add "config", component.ReferencedConfiguration
         n.Add "suppressed", CBool(component.IsSuppressed <> False)
         n.Add "envelope", CBool(component.IsEnvelope <> False)
@@ -444,8 +314,6 @@ Private Sub WalkChildren(ByVal parent As SldWorks.Component2, ByVal parentId As 
         n.Add "assembly", CBool(LCase$(mFS.GetExtensionName(n("path"))) = "sldasm")
         n.Add "note", ""
         n.Add "category", ""
-        n.Add "match", 0&
-        n.Add "kit", ""
         n.Add "destination", ""
         n.Add "validated", False
         n.Add "fixed", CBool(component.IsFixed <> False)
@@ -618,8 +486,12 @@ Private Sub ValidateMetadata(Optional ByVal reportPrefix As String = "", Optiona
                     Next entry
                     If present = False Then
                         missingStatus = "SOURCE_MISSING"
-                        If group("kind") = "KIT" Then missingStatus = "KIT_NUMBER_MISSING"
-                        LogLine "IDENTITY METADATA MISSING: " & key & "; " & name & "; " & group("sourcePath")
+                        If group("kind") = "KIT" Then
+                            missingStatus = "CATEGORY_KIT_NO_PART_NUMBER"
+                            LogLine "CATEGORY KIT HAS NO SERVICE PART NUMBER: " & key
+                        Else
+                            LogLine "IDENTITY METADATA MISSING: " & key & "; " & name & "; " & group("sourcePath")
+                        End If
                         WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("file")) & ",effective," & Csv(CStr(name)) & "," & _
                             Csv(group("sourcePath")) & "," & Csv(group("sourceConfig")) & ",,,," & missingStatus
                     End If
@@ -629,7 +501,7 @@ Private Sub ValidateMetadata(Optional ByVal reportPrefix As String = "", Optiona
     Next key
     SaveCsvReport report, reportPrefix & "metadata.csv"
     LogLine "Metadata preservation PASS: " & count & _
-        " properties retain scope, type and resolved value after reopen; kits use their own provenance identity."
+        " properties retain scope, type and resolved value after reopen; category kits have no invented service number."
 End Sub
 
 Private Sub AddTextMetadata(ByVal metadata As Collection, ByVal name As String, ByVal value As String)
@@ -642,39 +514,10 @@ Private Sub AddTextMetadata(ByVal metadata As Collection, ByVal name As String, 
     metadata.Add entry
 End Sub
 
-Private Function KitMetadata(ByVal provenance As String, ByVal categoryName As String, _
-    ByVal referenceBacked As Boolean) As Collection
+Private Function KitMetadata(ByVal categoryName As String) As Collection
     Dim metadata As New Collection
-    Dim pattern As Object
-    Dim matches As Object
-    Dim tail As String
-    Dim partNo As String
-    Dim description As String
-    tail = Mid$(provenance, InStrRev(provenance, "/") + 1)
-    Set pattern = CreateObject("VBScript.RegExp")
-    pattern.Global = True
-    pattern.Pattern = "\s+"
-    tail = Trim$(pattern.Replace(tail, " "))
-    If referenceBacked Then
-        pattern.Global = False
-        pattern.Pattern = "-[0-9]+$"
-        tail = pattern.Replace(tail, "")
-        pattern.Pattern = "^([0-9]{3,4} [0-9]{3,4} [0-9]{2}) +(.+)$"
-        Set matches = pattern.Execute(tail)
-        If matches.Count = 1 Then
-            partNo = matches(0).SubMatches(0)
-            description = Trim$(matches(0).SubMatches(1))
-        Else
-            pattern.Pattern = "^[0-9]"
-            If Len(tail) = 0 Or pattern.Test(tail) Then Err.Raise vbObjectError + 2454, , _
-                "Cannot split reference kit provenance into PartNo and Description: " & provenance
-            description = tail
-        End If
-    Else
-        description = Trim$(categoryName) & " KIT"
-    End If
-    AddTextMetadata metadata, "PartNo", partNo
-    AddTextMetadata metadata, "Description", description
+    AddTextMetadata metadata, "PartNo", ""
+    AddTextMetadata metadata, "Description", Trim$(categoryName) & " KIT"
     Set KitMetadata = metadata
 End Function
 
@@ -682,16 +525,10 @@ Private Sub PrepareKitMetadata()
     Dim key As Variant
     Dim group As Object
     Dim metadata As Collection
-    Dim entry As Object
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If group("kind") = "KIT" And group("count") > 0 Then
-            Set group("metadata") = KitMetadata(CStr(group("provenance")), CStr(group("category")), _
-                CBool(Left$(CStr(key), 1) = "K"))
-            Set metadata = group("metadata")
-            Set entry = metadata(1)
-            If Len(entry("value")) = 0 Then LogLine _
-                "KIT PART NUMBER MISSING: " & key & "; text-only Description; no service number invented."
+            Set group("metadata") = KitMetadata(CStr(group("category")))
         ElseIf group("kind") = "COLLECTION" Then
             Set metadata = New Collection
             AddTextMetadata metadata, "PartNo", mFS.GetBaseName(mSourcePath) & " COMPLETE KIT"
@@ -704,61 +541,17 @@ End Sub
 Public Sub TestKitifyMetadata()
     Dim metadata As Collection
     Dim entry As Object
-    Set metadata = KitMetadata("A7393 0800 45 COMPLETE KIT/7372 1043 01 HLX-FH-SEAL KIT-1", "", True)
+    Set metadata = KitMetadata("SEAL")
     Set entry = metadata(1)
-    If entry("value") <> "7372 1043 01" Then Err.Raise vbObjectError + 2454, , "Kit PartNo regression."
+    If entry("value") <> "" Then Err.Raise vbObjectError + 2454, , "Kitify invented a service part number."
+    If entry("name") <> "PartNo" Then Err.Raise vbObjectError + 2454, , "Kit PartNo property regression."
     Set entry = metadata(2)
-    If entry("value") <> "HLX-FH-SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Kit Description regression."
-    Set metadata = KitMetadata(" 7372" & vbTab & "1045  03 RDX5 IB SEAL KIT-12 ", "", True)
-    Set entry = metadata(1)
-    If entry("value") <> "7372 1045 03" Then Err.Raise vbObjectError + 2454, , "Kit whitespace regression."
+    If entry("value") <> "SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Category kit Description regression."
+    Set metadata = KitMetadata("BEARING")
     Set entry = metadata(2)
-    If entry("value") <> "RDX5 IB SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Kit occurrence suffix regression."
-    Set metadata = KitMetadata("7372 1043 01 HLX-FH-SEAL KIT", "", True)
-    Set entry = metadata(2)
-    If entry("value") <> "HLX-FH-SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Unnumbered occurrence suffix regression."
-    Set metadata = KitMetadata("NOTE/category fallback; source top-level occurrence 0", "BEARING", False)
-    Set entry = metadata(1)
-    If entry("value") <> "" Then Err.Raise vbObjectError + 2454, , "Fallback invented a kit number."
-    Set entry = metadata(2)
-    If entry("value") <> "BEARING KIT" Then Err.Raise vbObjectError + 2454, , "Fallback Description regression."
-    Set metadata = KitMetadata("Parent/RDX5 PERCUSSION SEAL KIT-1", "SEAL", True)
-    Set entry = metadata(1)
-    If entry("value") <> "" Then Err.Raise vbObjectError + 2454, , "Unnumbered reference invented a kit number."
-    Set entry = metadata(2)
-    If entry("value") <> "RDX5 PERCUSSION SEAL KIT" Then Err.Raise vbObjectError + 2454, , "Text-only provenance regression."
-    TestInvalidKitMetadata
+    If entry("value") <> "BEARING KIT" Then Err.Raise vbObjectError + 2454, , "Bearing Description regression."
     Debug.Print "Kit metadata tests PASS"
 End Sub
-
-Private Sub TestInvalidKitMetadata()
-    Dim metadata As Collection
-    Dim number As Long
-    On Error GoTo ExpectedFailure
-    Set metadata = KitMetadata("7372 1043 INVALID KIT-1", "", True)
-    On Error GoTo 0
-    Err.Raise vbObjectError + 2454, , "Malformed reference kit provenance was accepted."
-ExpectedFailure:
-    number = Err.Number
-    If number <> vbObjectError + 2454 Then Err.Raise number, , Err.Description
-End Sub
-
-Private Function PartKey(ByVal value As String) As String
-    Dim pattern As Object
-    Dim matches As Object
-    Dim match As Object
-    Set pattern = CreateObject("VBScript.RegExp")
-    pattern.Pattern = "(^|[^A-Z0-9])(BG[ ]*)?([0-9]{3})[ -]?([0-9]{3})[ -]?([0-9]{2})([^0-9]|$)"
-    Set matches = pattern.Execute(UCase$(value))
-    If matches.Count = 0 Then Exit Function
-    Set match = matches(0)
-    If Len(match.SubMatches(1)) > 0 Then PartKey = "BG"
-    PartKey = PartKey & match.SubMatches(2) & match.SubMatches(3) & match.SubMatches(4)
-End Function
-
-Private Function Identity(ByVal path As String) As String
-    Identity = UCase$(Replace(mFS.GetBaseName(path), "-kitified", "", 1, -1, vbTextCompare))
-End Function
 
 Private Function Category(ByVal note As String) As String
     Dim text As String
@@ -777,16 +570,6 @@ Private Function Category(ByVal note As String) As String
             "HYDRAULIC FITTING", "HYDRAULIC FITTINGS": text = "HYDR FITTING"
     End Select
     Category = Trim$(text)
-End Function
-
-Private Function KitCategory(ByVal title As String) As String
-    Select Case True
-        Case InStr(title, "SEAL") > 0: KitCategory = "SEAL"
-        Case InStr(title, "FASTENER") > 0: KitCategory = "FASTENER"
-        Case InStr(title, "HYDR") > 0: KitCategory = "HYDR FITTING"
-        Case InStr(title, "BEARING") > 0: KitCategory = "BEARING"
-        Case Else: KitCategory = "EXPLICIT"
-    End Select
 End Function
 
 Private Sub AddGroup(ByVal key As String, ByVal parent As String, ByVal kind As String, _
@@ -811,189 +594,8 @@ Private Sub AddGroup(ByVal key As String, ByVal parent As String, ByVal kind As 
     mGroups.Add key, group
 End Sub
 
-Private Sub DiscoverKits()
-    Dim n As Object
-    Dim parent As Object
-    Dim pattern As Object
-    Dim key As String
-    Dim parentKit As String
-    Dim p As Long
-    Set pattern = CreateObject("VBScript.RegExp")
-    pattern.Pattern = "(^|[ _-])KITS?($|[ _-])"
-    For Each n In mReference
-        If n("excluded") = False Then
-            If n("assembly") And pattern.Test(n("identity")) Then
-                key = "K" & Format$(n("id"), "0000")
-                parentKit = "ROOT"
-                p = n("parent")
-                Do While p > 0
-                    Set parent = mReference(p)
-                    If Len(parent("kit")) > 0 Then
-                        parentKit = parent("kit")
-                        Exit Do
-                    End If
-                    p = parent("parent")
-                Loop
-                AddGroup key, parentKit, "KIT", KitCategory(n("identity")), n("instance")
-                n("kit") = key
-            ElseIf n("parent") > 0 Then
-                Set parent = mReference(n("parent"))
-                n("kit") = parent("kit")
-            End If
-        End If
-    Next n
-    If mGroups.Count = 1 Then Err.Raise vbObjectError + 2413, , "No kit assemblies found in the reference."
-End Sub
-
 Private Function IsLeaf(ByVal n As Object) As Boolean
     IsLeaf = CBool(n("excluded") = False And n("assembly") = False)
-End Function
-
-Private Function AncestorScore(ByVal source As Object, ByVal reference As Object) As Long
-    Dim a As Object
-    Dim b As Object
-    Dim p As Long
-    Dim q As Long
-    Dim score As Long
-    p = source("parent")
-    Do While p > 0
-        Set a = mSource(p)
-        q = reference("parent")
-        Do While q > 0
-            Set b = mReference(q)
-            If a("identity") = b("identity") Then
-                score = score + 100
-                If p = source("parent") And q = reference("parent") Then score = score + 10
-                Exit Do
-            End If
-            q = b("parent")
-        Loop
-        p = a("parent")
-    Loop
-    If source("category") = reference("category") Then score = score + 1
-    If Len(reference("kit")) > 0 Then
-        Set a = mGroups(reference("kit"))
-        If a("category") = source("category") Then score = score + 2
-    End If
-    AncestorScore = score
-End Function
-
-Private Sub MatchOccurrences()
-    Dim s As Object
-    Dim r As Object
-    Dim best As Object
-    Dim score As Long
-    Dim bestScore As Long
-    Dim ambiguous As Boolean
-    Dim pass As Long
-    Dim other As Object
-    Dim peer As Object
-    Dim depth As Long
-    Dim bestDepth As Long
-    For pass = 1 To 2
-    For Each s In mSource
-        If IsLeaf(s) And s("match") = 0 Then
-            Set best = Nothing
-            bestScore = -1
-            ambiguous = False
-            For Each r In mReference
-                If IsLeaf(r) And r("match") = 0 Then
-                    If (s("identity") = r("identity") Or _
-                        (Len(s("partKey")) > 0 And s("partKey") = r("partKey"))) And _
-                        (s("config") = r("config") Or _
-                            (Len(s("partKey")) > 0 And s("partKey") = r("partKey"))) Then
-                        score = AncestorScore(s, r)
-                        If s("config") = r("config") Then score = score + 10000
-                        If s("identity") = r("identity") Then score = score + 1000
-                        If pass = 2 And Len(r("kit")) > 0 Then
-                            bestDepth = 0
-                            For Each other In mSource
-                                If other("match") > 0 Then
-                                    Set peer = mReference(other("match"))
-                                    If peer("kit") = r("kit") Then
-                                        depth = CommonDepth(s, other)
-                                        If depth > bestDepth Then bestDepth = depth
-                                    End If
-                                End If
-                            Next other
-                            score = score + bestDepth * 10
-                        End If
-                        If score > bestScore Then
-                            Set best = r
-                            bestScore = score
-                            ambiguous = False
-                        ElseIf score = bestScore Then
-                            If r("kit") <> best("kit") Then ambiguous = True
-                        End If
-                    End If
-                End If
-            Next r
-            If Not best Is Nothing And ambiguous = False Then
-                s("match") = best("id")
-                best("match") = s("id")
-                s("reason") = "Reference identity/configuration and ancestry"
-                If s("identity") <> best("identity") Then _
-                    s("reason") = "Reference embedded part-number alias/configuration and ancestry; source geometry retained"
-                If s("config") <> best("config") Then _
-                    s("reason") = s("reason") & "; reference configuration differs; source configuration retained"
-            ElseIf ambiguous Then
-                s("reason") = "Ambiguous reference ownership; category/scope fallback"
-            Else
-                s("reason") = "No matching reference identity/configuration"
-            End If
-        End If
-    Next s
-    Next pass
-End Sub
-
-Private Function ReferenceDestination(ByVal id As Long) As String
-    Dim n As Object
-    Dim source As Object
-    Dim key As String
-    Dim parentKey As String
-    Set n = mReference(id)
-    If Len(n("kit")) = 0 Then Exit Function
-    key = "K" & Format$(id, "0000")
-    If mGroups.Exists(key) Then
-        ReferenceDestination = key
-        Exit Function
-    End If
-    key = "R" & Format$(id, "0000")
-    parentKey = ReferenceDestination(n("parent"))
-    If Len(parentKey) = 0 Then Err.Raise vbObjectError + 2414, , "Missing reference kit parent."
-    AddGroup key, parentKey, "STRUCTURE", "", n("instance")
-    Set source = SourceStructure(n)
-    mGroups(key)("nodeName") = mFS.GetBaseName(source("path"))
-    Set mGroups(key)("metadata") = source("metadata")
-    mGroups(key)("sourcePath") = source("path")
-    mGroups(key)("sourceConfig") = source("config")
-    ReferenceDestination = key
-End Function
-
-Private Function SourceStructure(ByVal reference As Object) As Object
-    Dim source As Object
-    Dim candidate As Object
-    Dim pass As Long
-    For pass = 1 To 2
-        For Each source In mSource
-            If source("assembly") And source("excluded") = False Then
-                If (pass = 1 And source("identity") = reference("identity")) Or _
-                    (pass = 2 And Len(reference("partKey")) > 0 And source("partKey") = reference("partKey")) Then
-                    If Not candidate Is Nothing Then
-                        If candidate("path") <> source("path") Or candidate("config") <> source("config") Then _
-                            Err.Raise vbObjectError + 2439, , _
-                            "Ambiguous production metadata owner for reference structure: " & reference("instance")
-                    End If
-                    Set candidate = source
-                End If
-            End If
-        Next source
-        If Not candidate Is Nothing Then
-            Set SourceStructure = candidate
-            Exit Function
-        End If
-    Next pass
-    Err.Raise vbObjectError + 2439, , "No production metadata owner for reference structure: " & reference("instance")
 End Function
 
 Private Function SourceDestination(ByVal id As Long) As String
@@ -1015,108 +617,36 @@ Private Function SourceDestination(ByVal id As Long) As String
     SourceDestination = key
 End Function
 
-Private Function CommonDepth(ByVal a As Object, ByVal b As Object) As Long
-    Dim p As Long
-    Dim q As Long
-    Dim depth As Long
-    Dim n As Object
-    p = a("parent")
-    Do While p > 0
-        q = b("parent")
-        Do While q > 0
-            If p = q Then
-                depth = 1
-                Set n = mSource(p)
-                Do While n("parent") > 0
-                    depth = depth + 1
-                    Set n = mSource(n("parent"))
-                Loop
-                CommonDepth = depth
-                Exit Function
-            End If
-            Set n = mSource(q)
-            q = n("parent")
-        Loop
-        Set n = mSource(p)
-        p = n("parent")
-    Loop
-End Function
-
-Private Function FallbackKit(ByVal source As Object) As String
+Private Function CategoryKit(ByVal source As Object) As String
     Dim other As Object
-    Dim r As Object
-    Dim group As Object
     Dim key As String
-    Dim best As String
-    Dim score As Long
-    Dim bestScore As Long
-    Dim ambiguous As Boolean
     Dim p As Long
     Dim rootId As Long
-    For Each other In mSource
-        If IsLeaf(other) And other("match") > 0 And other("category") = source("category") Then
-            Set r = mReference(other("match"))
-            If Len(r("kit")) > 0 Then
-                Set group = mGroups(r("kit"))
-                If group("category") = source("category") Then
-                    score = CommonDepth(source, other)
-                    If score > bestScore Then
-                        best = r("kit")
-                        bestScore = score
-                        ambiguous = False
-                    ElseIf score = bestScore And score > 0 And best <> r("kit") Then
-                        ambiguous = True
-                    End If
-                End If
-            End If
-        End If
-    Next other
-    If bestScore > 0 And ambiguous = False Then
-        FallbackKit = best
-        Exit Function
-    End If
     p = source("parent")
     Do While p > 0
         rootId = p
         Set other = mSource(p)
         p = other("parent")
     Loop
-    ' Bearings are a whole-drifter pool, including parts spread across branches.
     If source("category") = "BEARING" Then rootId = 0
     key = "G" & CStr(rootId) & "_" & source("category")
     AddGroup key, "ROOT", "KIT", source("category"), _
-        "NOTE/category fallback; source top-level occurrence " & CStr(rootId)
-    FallbackKit = key
+        "Source NOTE/category; top-level occurrence " & CStr(rootId)
+    CategoryKit = key
 End Function
 
 Private Sub AssignDestinations()
     Dim s As Object
-    Dim r As Object
     Dim group As Object
     Dim destination As String
-    Dim referenceKit As String
     For Each s In mSource
         If IsLeaf(s) Then
-            destination = ""
-            If s("match") > 0 Then
-                Set r = mReference(s("match"))
-                referenceKit = r("kit")
-                If Len(referenceKit) > 0 Then
-                    Set group = mGroups(referenceKit)
-                    If Len(s("category")) = 0 Or group("category") = s("category") Or _
-                        group("category") = "EXPLICIT" Then
-                        destination = ReferenceDestination(r("parent"))
-                    End If
-                End If
-            End If
-            If Len(destination) = 0 Then
-                If Len(s("category")) > 0 Then
-                    destination = FallbackKit(s)
-                    s("reason") = s("reason") & "; pooled by normalized NOTE and source scope"
-                Else
-                    destination = SourceDestination(s("parent"))
-                    s("reason") = s("reason") & "; retained in independent production structure"
-                End If
+            If Len(s("category")) > 0 Then
+                destination = CategoryKit(s)
+                s("reason") = "Grouped by normalized source NOTE/category and source scope"
+            Else
+                destination = SourceDestination(s("parent"))
+                s("reason") = "Retained in independent production structure"
             End If
             s("destination") = destination
             Do While Len(destination) > 0
@@ -1237,20 +767,7 @@ Private Sub ValidateAppearances()
 End Sub
 
 Private Function KitFileName(ByVal key As String, ByVal group As Object) As String
-    Dim name As String
-    Dim pattern As Object
-    If Left$(key, 1) <> "K" Then
-        KitFileName = "KIT_" & mRunId & "_" & SafeName(key) & "_" & SafeName(group("category")) & ".SLDASM"
-        Exit Function
-    End If
-    name = CStr(group("provenance"))
-    name = Mid$(name, InStrRev(name, "/") + 1)
-    Set pattern = CreateObject("VBScript.RegExp")
-    pattern.IgnoreCase = True
-    pattern.Pattern = "[<>:""/\\|?*\x00-\x1F]|[ .]$|^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\.|$)"
-    If Len(name) = 0 Or pattern.Test(name) Then Err.Raise vbObjectError + 2447, , _
-        "Kit provenance does not provide a valid assembly filename: " & key & "; " & group("provenance")
-    KitFileName = name & ".SLDASM"
+    KitFileName = "KIT_" & mRunId & "_" & SafeName(key) & "_" & SafeName(group("category")) & ".SLDASM"
 End Function
 
 Private Function IdentityMatrix() As Variant
@@ -1411,16 +928,10 @@ Private Function CombineConfigurations(ByVal source As SldWorks.ModelDoc2) As St
     Dim errors As Long
     Dim warnings As Long
     sourceConfig = source.ConfigurationManager.ActiveConfiguration.Name
-    path = mFS.BuildPath(mFolder, mFS.GetBaseName(mSourcePath) & " kitified generated " & mRunId & ".SLDASM")
-    If mFS.FileExists(path) Then Err.Raise vbObjectError + 2419, , "Refusing to overwrite combined assembly: " & path
+    path = mCombinedPath
+    If Len(path) = 0 Or mFS.FileExists(path) = False Then Err.Raise vbObjectError + 2419, , _
+        "Production-root copy is missing: " & path
     CloseGenerated
-    Activate source
-    source.ClearSelection2 True
-    If source.Extension.SaveAs3(path, 0, 3, Nothing, Nothing, errors, warnings) = False Or errors <> 0 Then _
-        Err.Raise vbObjectError + 2453, , "Could not clone production root; errors=" & errors & "; warnings=" & warnings
-    If warnings <> 0 Then LogLine "PRODUCTION COPY WARNING: " & warnings
-    If StrComp(source.GetPathName, mSourcePath, vbTextCompare) <> 0 Then Err.Raise vbObjectError + 2453, , _
-        "Save As Copy unexpectedly changed the source document identity."
     errors = 0
     warnings = 0
     Set mWorking = mApp.OpenDoc6(path, ASSEMBLY_DOCUMENT, 1, sourceConfig, errors, warnings)
@@ -1788,7 +1299,6 @@ Private Sub ValidateOutput(ByVal path As String, Optional ByVal reportPrefix As 
                             WriteCsvLine report, Csv(s("instance")) & "," & Csv(n("instance")) & "," & _
                                 Csv(CStr(difference)) & ",PASS"
                             If difference > maxError Then maxError = difference
-                            n("match") = s("id")
                             s("validated") = True
                             count = count + 1
                             Exit For
@@ -1818,23 +1328,12 @@ Private Sub ValidateGroupParents(ByVal actual As Collection)
     Dim n As Object
     Dim parent As Object
     Dim found As Boolean
-    Dim expectedName As String
-    Dim actualName As String
-    Dim occurrenceNumber As String
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If key <> "ROOT" And group("count") > 0 Then
             found = False
             For Each n In actual
                 If n("excluded") = False And StrComp(n("path"), group("file"), vbTextCompare) = 0 Then
-                    If group("kind") = "KIT" And Left$(CStr(key), 1) = "K" Then
-                        expectedName = mFS.GetBaseName(KitFileName(CStr(key), group)) & "-"
-                        actualName = Mid$(n("instance"), InStrRev(n("instance"), "/") + 1)
-                        occurrenceNumber = Mid$(actualName, Len(expectedName) + 1)
-                        If StrComp(Left$(actualName, Len(expectedName)), expectedName, vbTextCompare) <> 0 Or _
-                            Len(occurrenceNumber) = 0 Or occurrenceNumber Like "*[!0-9]*" Then _
-                            Err.Raise vbObjectError + 2448, , "Generated kit tree name differs from provenance: " & n("instance")
-                    End If
                     If group("parent") = "ROOT" Then
                         found = CBool(n("parent") = 0)
                     ElseIf n("parent") > 0 Then
@@ -1847,8 +1346,8 @@ Private Sub ValidateGroupParents(ByVal actual As Collection)
             If found = False Then Err.Raise vbObjectError + 2433, , "Generated group has the wrong parent: " & key
         End If
     Next key
-    LogLine "Kit hierarchy PASS: complete-kit collection at root; nested kit relationships preserved."
-    LogLine "Kit naming PASS: reference kit filenames and reopened tree names retain the provenance tail."
+    LogLine "Kit hierarchy PASS: category kits and retained source structures match the plan."
+    LogLine "Kit naming PASS: generated kit filenames use run-local names and source categories."
     LogLine "Structure hierarchy PASS: all planned assembly parents and identity frames verified."
 End Sub
 
@@ -1899,44 +1398,26 @@ Private Sub WritePlan()
     Dim report As Object
     Dim comparison As Object
     Dim n As Object
-    Dim r As Object
     Dim group As Object
     Dim key As Variant
     Set report = NewCsvReport()
-    WriteCsvLine report, "SourceId,SourceOccurrence,File,Configuration,NOTE,Category,Destination,ReferenceId,Reason"
+    WriteCsvLine report, "SourceId,SourceOccurrence,File,Configuration,NOTE,Category,Destination,Reason"
     Set comparison = NewCsvReport()
-    WriteCsvLine comparison, "Difference,SourceOccurrence,ReferenceOccurrence,Detail"
+    WriteCsvLine comparison, "Classification,SourceOccurrence,Destination,Detail"
     For Each n In mSource
         If IsLeaf(n) Then
             WriteCsvLine report, n("id") & "," & Csv(n("instance")) & "," & Csv(n("path")) & "," & _
                 Csv(n("config")) & "," & Csv(n("note")) & "," & Csv(n("category")) & "," & _
-                Csv(n("destination")) & "," & n("match") & "," & Csv(n("reason"))
-            If n("match") = 0 Then
-                WriteCsvLine comparison, "SOURCE_UNMATCHED," & Csv(n("instance")) & ",," & Csv(n("reason"))
+                Csv(n("destination")) & "," & Csv(n("reason"))
+            If Len(n("category")) > 0 Then
+                WriteCsvLine comparison, "NOTE_CATEGORY_KIT," & Csv(n("instance")) & "," & _
+                    Csv(n("destination")) & "," & Csv(n("reason"))
             Else
-                Set r = mReference(n("match"))
-                If n("config") <> r("config") Then WriteCsvLine comparison, _
-                    "CONFIGURATION_DIFFERENCE," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
-                    Csv(n("config") & " -> " & r("config") & "; grouping by explicit part-number key only; source configuration retained")
-                If n("identity") <> r("identity") Then WriteCsvLine comparison, _
-                    "IDENTITY_ALIAS," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
-                    Csv("Same embedded part-number key; source file/geometry/configuration retained")
-                If n("category") <> r("category") Then WriteCsvLine comparison, _
-                    "NOTE_DIFFERENCE," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
-                    Csv(n("note") & " -> " & r("note") & "; source NOTE retained")
-                If Len(n("category")) > 0 And Len(r("kit")) = 0 Then WriteCsvLine comparison, _
-                    "PROMOTED_NOTE_PART," & Csv(n("instance")) & "," & Csv(r("instance")) & "," & _
-                    Csv("Reference leaves NOTE-tagged part outside a kit; generated output pools it")
-                If Len(r("kit")) > 0 And DestinationKit(CStr(n("destination"))) <> r("kit") Then _
-                    WriteCsvLine comparison, "KIT_RULE_OVERRIDE," & Csv(n("instance")) & "," & _
-                    Csv(r("instance")) & "," & Csv("Source NOTE category takes precedence over reference category kit")
+                WriteCsvLine comparison, "PRODUCTION_STRUCTURE," & Csv(n("instance")) & "," & _
+                    Csv(n("destination")) & "," & Csv(n("reason"))
             End If
         End If
     Next n
-    For Each r In mReference
-        If IsLeaf(r) And r("match") = 0 Then WriteCsvLine comparison, _
-            "REFERENCE_UNMATCHED,," & Csv(r("instance")) & "," & Csv("Not copied: no matched source occurrence")
-    Next r
     SaveCsvReport report, "membership.csv"
     SaveCsvReport comparison, "comparison.csv"
     Set report = NewCsvReport()
@@ -1947,56 +1428,6 @@ Private Sub WritePlan()
             Csv(group("category")) & "," & group("count") & "," & Csv(group("provenance"))
     Next key
     SaveCsvReport report, "groups.csv"
-    WriteReferenceKitComparison
-End Sub
-
-Private Function DestinationKit(ByVal destination As String) As String
-    Dim group As Object
-    Do While Len(destination) > 0
-        Set group = mGroups(destination)
-        If group("kind") = "KIT" Then
-            DestinationKit = destination
-            Exit Function
-        End If
-        destination = group("parent")
-    Loop
-End Function
-
-Private Sub WriteReferenceKitComparison()
-    Dim report As Object
-    Dim key As Variant
-    Dim group As Object
-    Dim n As Object
-    Dim parent As Object
-    Dim expected As Long
-    Dim p As Long
-    Dim referenceId As Long
-    Set report = NewCsvReport()
-    WriteCsvLine report, "Group,ReferenceKit,ReferenceDescendantParts,PlannedSourceDescendantParts,CountDifference,GeneratedParent"
-    For Each key In mGroups.Keys
-        Set group = mGroups(key)
-        If group("kind") = "KIT" And Left$(key, 1) = "K" Then
-            referenceId = CLng(Mid$(key, 2))
-            expected = 0
-            For Each n In mReference
-                If IsLeaf(n) Then
-                    p = n("parent")
-                    Do While p > 0
-                        If p = referenceId Then
-                            expected = expected + 1
-                            Exit Do
-                        End If
-                        Set parent = mReference(p)
-                        p = parent("parent")
-                    Loop
-                End If
-            Next n
-            WriteCsvLine report, Csv(CStr(key)) & "," & Csv(group("provenance")) & "," & _
-                CStr(expected) & "," & CStr(group("count")) & "," & _
-                CStr(group("count") - expected) & "," & Csv(group("parent"))
-        End If
-    Next key
-    SaveCsvReport report, "reference-kit-comparison.csv"
 End Sub
 
 Private Function NewCsvReport() As Object

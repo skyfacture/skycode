@@ -5,37 +5,40 @@
 Working source: [Skycode - kitify.bas](<../vba scripts/Skycode - kitify.bas>)
 
 1. Attach to the running SOLIDWORKS session.
-2. **First map the production tree**, recursively, including every exposed
-   component occurrence and its full ancestry, referenced configuration,
-   suppression/envelope status, NOTE and installed transform. Write the tree
-   and a category/location inventory before learning or generating kits.
-3. Read saved reference membership/hierarchy rules; the development reference
-   does not need to be open for normal runs.
-4. Match source occurrences, learn category/scope ownership and plan independent
-   kit and residual production assemblies.
-5. Reuse **one working assembly document** to build assemblies inside-out.
+2. **Create the production-root copy before inspection**, then map the source
+   tree recursively, including every exposed component occurrence and its full
+   ancestry, referenced configuration, suppression/envelope status, NOTE and
+   installed transform. Write the tree and a category/location inventory
+   before planning kits.
+3. Group NOTE-tagged parts by normalized category and top-level source
+   occurrence; pool bearings across the drifter. Preserve parts with a blank
+   NOTE in independently rebuilt production structures.
+4. Reuse **one working assembly document** to build assemblies inside-out.
    Insert original source parts/configurations at installed positions and fix
    them. Save child assemblies as copies, clear the working document, and reuse
    it for the next child and finally the root.
-6. Close and reopen the construction snapshot. Recursively verify occurrence
+5. Close and reopen the construction snapshot. Recursively verify occurrence
    conservation, configurations, transforms, fixed placement, properties,
    appearances and kit parents.
-7. Save a copy of the production root, preserving its original production
-   component tree, mates and features. In this **copy only**, retain the source
-   active configuration as `Default`, remove the other copied configurations,
-   and create `kitified`. Insert the generated top-level branches alongside
-   the original production branches; no extra wrapper assembly is introduced.
-8. Reopen the combined output and verify both configurations. Remove the
+6. In the production-root copy, preserve its original production component
+   tree, mates and features. In this **copy only**, retain the source active
+   configuration as `Default`, remove the other copied configurations, and
+   create `kitified`. Insert the generated top-level branches alongside the
+   original production branches; no extra wrapper assembly is introduced.
+7. Reopen the combined output and verify both configurations. Remove the
    intermediate construction snapshot only after successful verification.
 
-The source and reference are never saved in place, restructured or assigned
+The source assembly is never saved in place, restructured or assigned
 properties. The source root is copied, not inserted as a component. `Default`
 retains the original production child-document references; `kitified` uses the
-independently rebuilt assemblies and original source parts. Reference geometry
-is never used as an output dependency. Resolving lightweight components,
-activating documents and reading uncached properties can affect their in-memory
-state. The log records their initial/final dirty flags. Existing user edits are
-not discarded.
+independently rebuilt assemblies and original source parts. No reference
+assembly, learned rules file or source-specific membership file is read.
+The production-root copy is created before resolving components or reading
+uncached source properties, rather than late in the run after those operations
+may have marked referenced documents modified in memory.
+Resolving lightweight components, activating documents and reading uncached
+properties can affect their in-memory state. The log records the source's
+initial/final dirty flags. Existing user edits are not discarded.
 
 ## Running
 
@@ -44,21 +47,13 @@ Enable the installed **SOLIDWORKS type library** reference:
 `C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\sldworks.tlb`.
 No separate constants-library reference is required.
 
-For one-time learning, open both saved assemblies in their intended configurations:
-
-- Production: `[part number].sldasm`, for example `7393 0800 45.sldasm`.
-- Reference: `[part number] kitified.sldasm`.
-
-Run `LearnKitifyRules` once. It writes `<part number> kitify-rules.xml` beside the
-source. Existing rules are not overwritten: move them aside explicitly before
-relearning. The current drifter's rules were recovered from the previously
-verified development run's reference snapshot.
-
-For normal runs, close the development reference and leave only the source CAD
-window open, then run `SkycodeKitify`. Keep the rules XML beside the source.
-Automatic source selection accepts a unique production assembly with saved
-rules (or a loaded development-reference partner); multiple candidates are
-rejected instead of guessed. Missing/mismatched rules fail before generation.
+Open and activate the saved production assembly in SOLIDWORKS, then run
+`SkycodeKitify`. The source may have any filename or reside in any folder.
+No development reference assembly or adjacent rules file is needed. When no
+source path is supplied programmatically, the active saved assembly is used; if
+the active document is not an assembly, exactly one saved assembly must be open.
+If several assemblies are open, activate the intended source or pass its full
+path as `sourcePath`.
 
 Only the source and one working/final kitified assembly window are visible.
 The same working document is reused for every child; no new SOLIDWORKS instance
@@ -78,12 +73,12 @@ For automation, call:
 
 ```vb
 Dim result As String
-result = KitifyDrifter(sourceFullPath, referenceFullPath, newOutputFolder, False)
+result = KitifyDrifter(sourceFullPath, newOutputFolder, False)
 ```
 
-All arguments are optional. Explicit CAD paths must identify already-loaded
-assemblies. Leave `referenceFullPath` empty for normal saved-rule runs.
-An explicit output folder must **not already exist**; its parent must exist.
+All arguments are optional. An explicit `sourcePath` must identify an
+already-loaded assembly. An explicit output folder must **not already exist**;
+its parent must exist.
 No permission, overwrite or output-location dialogs are used by the macro.
 `showMessage=False` also disables the final informational message.
 
@@ -91,9 +86,8 @@ Default output:
 
 ```text
 <source folder>\kitify-generated_<yyyymmdd_hhnnss>\
-    <part number> kitified generated <run-id>.SLDASM
-    <part number> COMPLETE KIT.SLDASM
-    <reference kit provenance tail>.SLDASM
+    <source base name> kitified generated <run-id>.SLDASM
+    <source base name> COMPLETE KIT.SLDASM
     KIT_<run-id>_<generic identifier>_<category>.SLDASM
     <source non-kit assembly name>_<run-id>_<identifier>.SLDASM
     ...reports...
@@ -116,37 +110,29 @@ this two-configuration output.
 
 Runs use separate folders and do not overwrite existing output. Keep the whole
 run folder together: the root references its generated children. Run-specific
-root, structural and fallback-kit names avoid SOLIDWORKS same-title conflicts
-with earlier open results. Reference-backed kits retain their provenance names;
-close earlier results using those same kit titles before generating another run.
+root, structural and category-kit names avoid SOLIDWORKS same-title conflicts
+with earlier open results. Kit and structure names include the run identifier;
+close earlier results using those titles before generating another run.
 Only one output directory is created per invocation, directly beside the source
 CAD. The older timestamp folders under `kitify-generated` are separate
 development attempts, including partial runs; they are not automatically deleted.
 
 Generated filenames and tree labels may differ from production. Non-kit backing
 filenames start with the source assembly filename and include a unique run/group
-identifier. Reference-backed kits use the segment after the final `/` in their
-`groups.csv` provenance, or the whole value when there is no `/`, unchanged:
-`7372 1045 03 RDX5 IB SEAL KIT-1.SLDASM`, for example. The provenance's final
-occurrence suffix is retained deliberately; SOLIDWORKS adds its own instance
-suffix in the tree (for example `7372 1045 03 RDX5 IB SEAL KIT-1-1`).
-Reopen validation checks that tree names follow these filenames. Invalid
-Windows filenames fail explicitly instead of being silently sanitized; duplicate
-output filenames are rejected by the existing no-overwrite check.
-Fallback kits have diagnostic provenance rather than a reference kit name and
-keep the provisional `KIT_...` convention. Final root and non-kit filename naming
-are unchanged. Custom properties, rather than these backing filenames, provide
-the downstream item/view identity.
+identifier. Kit backing filenames use a run-local identifier and normalized
+NOTE category; they do not carry a production service part number. Final root
+and non-kit filename naming are unchanged. Custom properties, rather than these
+backing filenames, provide the downstream item/view identity.
 No SOLIDWORKS-wide component-naming preference is changed.
 
 All individual kit trees are children of one generated, uncoloured collection
 at root level, named `<source root filename> COMPLETE KIT.SLDASM` (for example
 `7393 0800 45 COMPLETE KIT.SLDASM`). Its `Skycode.Kind` is `COLLECTION`, not
-`KIT`; it is a container, not another service kit. Existing nested kit
-relationships are retained and parts are not duplicated. Residual production
+`KIT`; it is a container, not another service kit. Parts are not duplicated.
+Residual production
 assemblies stay outside the collection.
 
-Each individual kit, including nested and fallback kits, receives an assembly
+Each individual category kit receives an assembly
 appearance from a deterministic non-grey palette: magenta, pink, green and cyan,
 followed by darker and lighter shades of those four colours (12 distinct
 colours total). No blue hues are used; cyan retains equal green/blue channels.
@@ -170,8 +156,7 @@ preserve all source custom properties, including `PartNo`, `Description` and,
 when present, `Global Part Number`, on the generated root and every rebuilt
 non-kit assembly. The four macro-owned `Skycode.Kind`, `Skycode.Category`,
 `Skycode.Provenance` and `Skycode.Generated` fields are reserved, not copied.
-Read from the production assembly and its referenced configuration, never the
-development reference.
+Read from the production assembly and its referenced configuration.
 Document-level properties remain document-level; configuration properties are
 mapped to each generated snapshot's active configuration and to `kitified` on
 the final root. The cloned `Default` configuration retains its production
@@ -185,30 +170,16 @@ their uppercase variants. Source part files/configurations are referenced
 directly and their properties are not modified. The reused working document's
 source custom properties are cleared between groups to prevent metadata leakage.
 
-Reference-backed kits receive document-level `PartNo` and `Description` from the
-last `/`-separated provenance segment. Whitespace is trimmed and normalized to
-single spaces; the final occurrence suffix (`-1`, `-12`, etc.) is removed from
-the property identity, not from the backing filename. The leading three numeric
-groups form `PartNo`; the remaining text forms `Description`. For example:
-
-```text
-7372 1043 01 HLX-FH-SEAL KIT-1
-PartNo      = 7372 1043 01
-Description = HLX-FH-SEAL KIT
-```
-
-Malformed numerical reference kit identities fail explicitly. Text-only
-reference kits (for example `RDX5 PERCUSSION SEAL KIT-1`) retain their provenance
-text as `Description` with blank `PartNo`. Fallback kits also have blank
-`PartNo`, with category-based `Description` (for example `BEARING KIT`). Both
-cases receive an explicit `KIT_NUMBER_MISSING` report/log entry; no service
-number is invented. The collection uses `<source root filename> COMPLETE KIT` as its descriptive
-`PartNo`, with `Complete kit collection` as `Description`, avoiding a duplicate
-of the root's numerical view name.
+Generated category kits receive a blank document-level `PartNo` and a
+category-based `Description` (for example, `SEAL KIT`). Kitify does not invent a
+service part number. The complete-kit collection uses `<source root filename>
+COMPLETE KIT` as its descriptive `PartNo`, with `Complete kit collection` as
+`Description`, avoiding a duplicate of the root's numerical view name.
 
 Composer import must include custom properties and use `PartNo` for actor names
-where configured. The assembly-view pass reads `Meta.PartNo` directly, so the
-example kit view becomes `7372 1043 01`, not a `SubAssy_...` fallback. The root
+where configured. Since category kits intentionally have a blank `PartNo`, a
+Composer kit view will not receive a service-number identity from Kitify; use
+the generated `Description` or a suitable actor-name fallback. The root
 view/BOX name still comes from root `Actor.Name`; correct root naming therefore
 depends on the Composer import naming settings. Existing imports must be
 re-imported/updated to receive the new metadata. BOX views additionally require
@@ -218,8 +189,8 @@ does not create that proxy.
 Missing/blank source `PartNo` or `Description` is reported as `SOURCE_MISSING`
 in `metadata.csv` and in the log; values are not invented from CAD filenames.
 Such pre-existing gaps must be addressed before downstream publication.
-Unmatched/ambiguous production owners for reference-learned physical
-subassemblies fail explicitly rather than copying the reference's metadata.
+Category kits intentionally have blank `PartNo`; `metadata.csv` marks these as
+`CATEGORY_KIT_NO_PART_NUMBER`.
 
 ## Membership and hierarchy rules
 
@@ -237,8 +208,9 @@ trailing KIT/KITS:
 | BEARING, BEARINGS, BEARING KIT | BEARING |
 | HYDR, HYDR KIT, HYDR FITTING(S), HYDRAULIC FITTING(S) | HYDR FITTING |
 
-Other nonblank NOTE values remain distinct categories; do not silently discard
-them. Review unfamiliar categories in the reports. Membership is assigned to
+Other nonblank NOTE values remain distinct categories and are grouped into
+category kits; do not silently discard them. Review unfamiliar categories in
+the reports. Membership is assigned to
 **part occurrences**, not unique files: repeated hardware instances retain
 their separate quantities, configurations and positions.
 
@@ -249,46 +221,28 @@ Suppressed assemblies may expose no children through `GetChildren`; this is an
 active-configuration snapshot, not an inventory of every suppressed configuration.
 Unresolved, unsaved/virtual or missing active components fail explicitly.
 
-### Reference learning
+### NOTE/category kit planning
 
-- Detect kit assemblies by a separate KIT/KITS word in the filename, after
-  removing `-kitified`. The word `kitified` alone is **not** a kit marker.
-- Match part identity and referenced configuration, ignoring the reference's
-  `-kitified` suffix. Embedded eight-digit or BG part-number aliases also permit
-  differently named vendor CAD files to supply the reference grouping; alias
-  matches are explicitly reported and do not certify geometric equivalence.
-- Prefer matching configurations. An explicit part-number key may establish
-  grouping despite a different reference configuration; log that difference and
-  always retain the source configuration. Generic library files such as
-  VORING/VWSHLOCK still require the same configuration, since it identifies the
-  hardware variant.
-- Prefer exact filenames and shared physical assembly ancestry. A second pass
-  uses unambiguous matched peers to distinguish repeated hardware in different
-  kit scopes. Ties across different kits remain explicit ambiguities rather
-  than being resolved by first-match guessing.
-- For matched members, reproduce the reference's internal kit hierarchy and
-  physical subassemblies inside explicit kits. Examples include percussion
-  and rotation kits, whose non-NOTE membership comes from the reference.
-- Promote each **topmost kit tree** out of its production ancestors into the
-  generated complete-kit collection at the new root. Preserve nested kit-to-kit
-  relationships.
-- Pool NOTE-tagged parts that the reference has not kitified using normalized
-  category and the nearest unambiguous source-scope evidence. If ambiguous,
-  create a generic category pool per top-level source occurrence. Unmapped
-  bearings form one whole-drifter pool.
-- A reference category kit cannot override a conflicting source NOTE category.
-  An explicit mixed-content kit can contain different categories.
-- Preserve remaining non-kit source parts in independently rebuilt production
-  branches; prune branches with no retained active parts.
-- Do not insert reference geometry to compensate for missing source hardware.
-  Reference-only items and empty reference kits are reported, not manufactured.
+- Normalize each active source part's `NOTE` property. Recognized values such as
+  `SEAL`, `FASTENER`, `BEARING` and `HYDR FITTING` determine its generated kit
+  category; aliases and plural forms are normalized.
+- Create separate category kits for each top-level production occurrence, so
+  otherwise identical categories in different branches remain in their source
+  scope. Bearings are pooled across the whole drifter.
+- Preserve active parts with no recognized category in independently rebuilt
+  production structures that follow their source ancestry. Empty structures
+  are pruned.
+- Do not infer hidden, non-NOTE kit membership or nested kit relationships.
+  Update source NOTE values or the production tree if a different grouping is
+  required; there is no per-drifter rules file.
+- Use only source parts and their configurations. No reference geometry is
+  inserted, and no service part numbers are invented.
 
-Generic kit/structure identifiers are run-local, not service part numbers.
-No new service part numbers are assigned. Existing production custom
-properties are preserved on rebuilt non-kit assemblies; reference kits receive
-their own provenance identity, not a production ancestor's identity.
-`Skycode.*` properties on new assemblies record kind,
-category, provenance and generated status.
+Generated kit and structure identifiers are run-local. Existing production
+custom properties are preserved on rebuilt non-kit assemblies; category kits
+receive a blank `PartNo` and category-derived `Description`.
+`Skycode.*` properties on new assemblies record kind, category, provenance and
+generated status.
 
 ### Positions and assembly independence
 
@@ -325,25 +279,23 @@ Transform values use the VBA host's locale and semicolon separators.
 |---|---|
 | `source-tree.csv` | Full exposed production occurrence tree, before planning |
 | `source-kit-locations.csv` | Category counts by full immediate-parent occurrence |
-| `reference-tree.csv` | Learned reference membership snapshot; saved-rule runs use placeholder transforms, not reference geometry |
-| `membership.csv` | Source-instance destination, reference match and reasoning |
+| `membership.csv` | Source-instance destination and NOTE/category grouping decision |
 | `groups.csv` | Generated hierarchy, categories, provenance and descendant counts |
-| `reference-kit-comparison.csv` | Reference versus planned source descendant quantities per learned kit |
-| `comparison.csv` | Unmatched/ambiguous identities, aliases, NOTE differences and promotions |
+| `comparison.csv` | Source part classification as a NOTE/category kit or retained production structure |
 | `generated-tree.csv` | Reopened generated occurrence tree |
 | `snapshot-generated-tree.csv`, `snapshot-validation.csv`, `snapshot-metadata.csv` | Construction-snapshot verification before combining; separate names preserve the no-overwrite report policy |
 | `production-tree.csv` | Reopened `Default` tree, including suppressed generated branches |
 | `production-metadata.csv` | Reopened `Default` root custom properties compared with source-resolved values |
 | `configurations.csv` | Reopened reciprocal top-level suppression checks for both configurations |
 | `validation.csv` | One source-to-generated occurrence match per retained part |
-| `metadata.csv` | Expected versus reopened custom properties by scope/type; source gaps and missing fallback-kit numbers |
+| `metadata.csv` | Expected versus reopened properties by scope/type; source gaps and intentional blank category-kit PartNo |
 | `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for uncoloured collection/root/structures |
 | `run.txt` | Stages, save/open warnings, dirty flags and explicit PASS/failure |
 
 Success requires:
 
 - In `kitified`, every active non-envelope source part occurs **exactly once**,
-  including non-kit parts; no extra/reference-only parts.
+  including non-kit parts.
 - Original source file and referenced configuration are preserved.
 - Each occurrence has its planned direct parent and fixed placement.
 - All generated child assemblies are mate-free, including the complete-kit
@@ -364,14 +316,14 @@ Success requires:
   run folder; the production branches retain their original references.
 - In `kitified`, all generated assembly parents match the plan and all assembly transforms
   are identity. The complete-kit collection is at root; topmost individual kits
-  are its children and nested kit parents match the reference.
+  are its children; category membership follows the source NOTE and scope rules.
 - Save, reopen and rebuild succeed. Warnings are logged; failures raise an error
   identifying the stage and partial-output folder.
 
-Source conservation PASS does **not** mean the production and hand-edited
-reference contain identical hardware or geometry. Read the comparison report.
-Partial outputs/unsaved generated documents can remain after an error; they are
-not presented as a verified result.
+Source conservation PASS verifies that the generated tree matches the source
+plan; it does not certify that NOTE values are semantically correct. Review
+`membership.csv` and `comparison.csv`. Partial outputs/unsaved generated
+documents can remain after an error; they are not presented as a verified result.
 
 ## API basis
 
@@ -414,18 +366,21 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 
 ## Validation status
 
+The current source-only grouping and source selection changes require live
+SOLIDWORKS validation. The dated runs below predate these changes and document
+the superseded reference-based membership workflow; they are not validation of
+the current NOTE/category-only grouping.
+
 Live validation uses the actual imported VBA module in a newly created isolated
 Access database with the installed SOLIDWORKS type-library reference. No Access
 security settings are changed. This avoids claiming that a C# approximation
 establishes VBA runtime compatibility.
 
-Run `TestKitifyMetadata` in the imported module to check spaced service numbers,
-provenance-tail extraction, whitespace normalization, occurrence-suffix removal,
-text-only reference kits, unnumbered category fallbacks and rejection of
-malformed numerical provenance. Full generation verifies both saved
-configurations after reopening; `configurations.csv`, `production-tree.csv`,
-`validation.csv` and `metadata.csv` capture the checks. The older live-run
-results below describe the preceding snapshot-only workflow.
+Run `TestKitifyMetadata` in the imported module to verify that category kits
+receive category-based descriptions and no invented service part numbers. Full
+generation verifies both saved configurations after reopening;
+`configurations.csv`, `production-tree.csv`, `validation.csv`, and `metadata.csv`
+capture the checks.
 
 ### Combined-configuration refinement (2026-11-05)
 
@@ -494,13 +449,13 @@ Verified output run folder: `kitify-generated\20261104_215023`.
 Its root is
 `7393 0800 45 kitified generated 20261104_215023_4AFB48B.SLDASM`.
 
-This is a full-snapshot generator with persisted membership rules. Incremental
-regeneration, PDM integration and assigning service part numbers remain outside
-this implementation. Saved rules preserve development-reference membership,
-not its geometry; unknown source occurrences still use the documented
-NOTE/scope fallback and are reported for review.
+That earlier version was a full-snapshot generator with persisted membership
+rules. The current version no longer reads those rules or a development
+reference; it classifies from source NOTE/category and source scope only.
+Incremental regeneration, PDM integration and assigning service part numbers
+remain outside this implementation.
 
-### Current property-preservation validation, 5 November 2026
+### Historical property-preservation validation, 5 November 2026
 
 The actual VBA compiles. A four-part/four-child fixture passes save/reopen,
 document-level `PartNo`, `Description` and `Global Part Number` preservation,
@@ -532,7 +487,7 @@ The earlier partial `kitify-generated_20261105_114632` run remains unaccepted:
 Windows could not read its generated child or rules XML while the cloud file
 provider was unavailable. That error alone did not establish CAD corruption.
 
-### Provenance naming and comma-delimited reports, 5 November 2026
+### Historical provenance naming and comma-delimited reports, 5 November 2026
 
 The updated VBA compiled in an isolated Access host and completed a full run
 against the open `C:\skycode\partlink cad sandbox\7393 0800 45.SLDASM`.
@@ -552,7 +507,7 @@ Verified output: `kitify-generated_20261105_135039`, root
 - All 47 preserved identity properties passed; the same 10 pre-existing source
   metadata gaps remain explicitly reported. No new SOLIDWORKS process was started.
 
-### Complete-kit collection and individual-kit colours, 5 November 2026
+### Historical complete-kit collection and individual-kit colours, 5 November 2026
 
 Verified full output: `kitify-generated_20261105_142531`, root
 `7393 0800 45 kitified generated 20261105_142531_3186A28.SLDASM`.
@@ -576,7 +531,7 @@ appearance validation exposed 8-bit RGB rounding on mixed-channel colours.
 The palette was corrected and the full run above passed without relaxing the
 appearance comparison tolerance.
 
-### Magenta/pink/green/cyan palette retest, 5 November 2026
+### Historical magenta/pink/green/cyan palette retest, 5 November 2026
 
 Verified full output: `kitify-generated_20261105_150838`, root
 `7393 0800 45 kitified generated 20261105_150838_33FE31B.SLDASM`.
