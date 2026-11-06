@@ -6,32 +6,40 @@ Working source: [Skycode - kitify.bas](<../vba scripts/Skycode - kitify.bas>)
 
 1. Attach to the running SOLIDWORKS session.
 2. **Create the production-root copy before inspection**, then map the source
-   tree recursively, including every exposed component occurrence and its full
-   ancestry, referenced configuration, suppression/envelope status, NOTE and
-   installed transform. Write the tree and a category/location inventory
-   before planning kits.
-3. Group NOTE-tagged parts by normalized category and top-level source
-   occurrence; pool bearings across the drifter. Preserve parts with a blank
-   NOTE in independently rebuilt production structures.
-4. Reuse **one working assembly document** to build assemblies inside-out.
-   Insert original source parts/configurations at installed positions and fix
-   them. Save child assemblies as copies, clear the working document, and reuse
-   it for the next child and finally the root.
-5. Close and reopen the construction snapshot. Recursively verify occurrence
-   conservation, configurations, transforms, fixed placement, properties,
-   appearances and kit parents.
-6. In the production-root copy, preserve its original production component
-   tree, mates and features. In this **copy only**, retain the source active
-   configuration as `Default`, remove the other copied configurations, and
-   create `kitified`. Insert the generated top-level branches alongside the
-   original production branches; no extra wrapper assembly is introduced.
-7. Reopen the combined output and verify both configurations. Remove the
-   intermediate construction snapshot only after successful verification.
+   tree recursively, including every exposed occurrence, ancestry, referenced
+   configuration, suppression/envelope status, NOTE and installed transform.
+3. Resolve the source product's own PDM `12-KITS` folder. A sandbox source is
+   not a vault path: search auto-login vault views for the same filename
+   directly in `11-ROCK DRILL CADS`, then use that product's sibling `12-KITS`
+   folder. The canonical vault drifter is not opened, saved, or checked out.
+   Read every SLDASM kit in that folder read-only, including its referenced
+   files, and use each PDM assembly's part-occurrence multiset as the membership
+   source. A kit already cached at its latest PDM version is read in place;
+   it is not recopied while the source session has those files open. Match active source envelope NOTE values to PDM kits; do not use
+   another drifter's model, reference tree or saved rules.
+4. Reuse **one working assembly document** to build one generated branch for
+   each PDM kit and the remaining non-kit production structures. A source
+   occurrence may be reused in multiple kit branches when PDM lists it in
+   multiple kits. Preserve its source configuration and transform in each
+   membership branch.
+5. Close and reopen the construction snapshot. Verify each generated kit
+   branch's part multiset against its PDM assembly, including shared members,
+   transforms, fixed placement, metadata and appearance.
+6. In the production-root copy, preserve the original production tree, mates
+   and features in `Default`. Add exactly one root configuration per SLDASM in
+   the source product's PDM `12-KITS` folder. Each kit configuration activates
+   only its corresponding generated kit branch; all other generated and
+   original production branches are suppressed. A complete-kit configuration
+   exists only when a complete-kit SLDASM exists in PDM. No synthetic
+   complete-kit collection or configuration is created.
+7. Reopen the combined output and verify the exact configuration inventory and
+   each configuration's membership against PDM. Remove the intermediate
+   construction snapshot only after successful verification.
 
 The source assembly is never saved in place, restructured or assigned
 properties. The source root is copied, not inserted as a component. `Default`
-retains the original production child-document references; `kitified` uses the
-independently rebuilt assemblies and original source parts. No reference
+retains the original production child-document references. Every other
+configuration corresponds to exactly one PDM kit assembly. No reference
 assembly, learned rules file or source-specific membership file is read.
 The production-root copy is created before resolving components or reading
 uncached source properties, rather than late in the run after those operations
@@ -49,6 +57,9 @@ No separate constants-library reference is required.
 
 Open and activate the saved production assembly in SOLIDWORKS, then run
 `SkycodeKitify`. The source may have any filename or reside in any folder.
+A source outside PDM is matched to the same filename in an auto-login vault
+view's `11-ROCK DRILL CADS` folder. Kits are read from the sibling `12-KITS`
+folder. The production drifter itself is not opened or checked out.
 No development reference assembly or adjacent rules file is needed. When no
 source path is supplied programmatically, the active saved assembly is used; if
 the active document is not an assembly, exactly one saved assembly must be open.
@@ -87,62 +98,57 @@ Default output:
 ```text
 <source folder>\kitify-generated_<yyyymmdd_hhnnss>\
     <source base name> kitified generated <run-id>.SLDASM
-    <source base name> COMPLETE KIT.SLDASM
-    KIT_<run-id>_<generic identifier>_<category>.SLDASM
+    <PDM kit identity> kitified <run-id>.SLDASM
     <source non-kit assembly name>_<run-id>_<identifier>.SLDASM
     ...reports...
 ```
 
-The final root contains exactly two configurations:
+The final root contains `Default` plus exactly one configuration for each PDM
+kit SLDASM:
 
 | Configuration | Original production branches | Generated branches |
 |---|---|---|
-| `Default` | Original suppression states, otherwise unchanged | Suppressed |
-| `kitified` | Suppressed | Unsuppressed |
+| `Default` | Original suppression states, otherwise unchanged | All suppressed |
+| `<PDM kit filename without extension>` | All suppressed | Only that PDM kit branch unsuppressed |
 
 Originally suppressed production components remain suppressed in `Default`;
 they are not forcibly unsuppressed. Hidden/envelope states, original occurrence
 names, referenced configurations, placements and fixed/floating states are
-retained. The final file is saved with `kitified` active. Select `Default` for
-production Composer/Partlink imports and `kitified` for kit views. Other source
+retained. The final file is saved with the first PDM kit configuration active.
+Import the **single combined root SLDASM** into Composer and select all
+configurations to import `Default` and every PDM kit configuration. Do not
+import individual generated kit SLDASMs as separate masters. Other source
 configurations remain untouched in the original file but are not retained in
-this two-configuration output.
+the output.
 
 Runs use separate folders and do not overwrite existing output. Keep the whole
 run folder together: the root references its generated children. Run-specific
-root, structural and category-kit names avoid SOLIDWORKS same-title conflicts
+root, structural and generated-kit names avoid SOLIDWORKS same-title conflicts
 with earlier open results. Kit and structure names include the run identifier;
 close earlier results using those titles before generating another run.
 Only one output directory is created per invocation, directly beside the source
 CAD. The older timestamp folders under `kitify-generated` are separate
 development attempts, including partial runs; they are not automatically deleted.
 
-Generated filenames and tree labels may differ from production. Non-kit backing
-filenames start with the source assembly filename and include a unique run/group
-identifier. Kit backing filenames use a run-local identifier and normalized
-NOTE category; they do not carry a production service part number. Final root
-and non-kit filename naming are unchanged. Custom properties, rather than these
-backing filenames, provide the downstream item/view identity.
+Generated backing filenames are run-specific and may differ from PDM filenames;
+root configuration names use the corresponding PDM kit assembly filename
+without its extension. Kit metadata is split from the matched source envelope
+NOTE into `PartNo` and `Description`; when there is no matched envelope, the
+PDM kit assembly's own properties are retained. The final root retains its
+production filename and properties.
 No SOLIDWORKS-wide component-naming preference is changed.
 
-All individual kit trees are children of one generated, uncoloured collection
-at root level, named `<source root filename> COMPLETE KIT.SLDASM` (for example
-`7393 0800 45 COMPLETE KIT.SLDASM`). Its `Skycode.Kind` is `COLLECTION`, not
-`KIT`; it is a container, not another service kit. Parts are not duplicated.
-Residual production
-assemblies stay outside the collection.
-
-Each individual category kit receives an assembly
-appearance from a deterministic non-grey palette: magenta, pink, green and cyan,
+Each individual PDM kit branch receives an assembly appearance from a
+deterministic non-grey palette: magenta, pink, green and cyan,
 followed by darker and lighter shades of those four colours (12 distinct
 colours total). No blue hues are used; cyan retains equal green/blue channels.
 The palette cycles if there are more than 12 individual kits. These colours are applied
 only to generated kit documents; original part/document appearances are not
 edited. Appearance is cleared on the reused working document before every
-group, so the collection, construction snapshot and structural assemblies have
-no assembly colour override. The final cloned root retains its production
-appearance. The saved/reopened generated-child appearance values are checked
-explicitly before combination.
+group, so the construction snapshot and structural assemblies have no assembly
+colour override. The final cloned root retains its production appearance. The
+saved/reopened generated-child appearance values are checked explicitly before
+combination.
 
 All generated CSV reports use comma delimiters, CRLF records and UTF-8 with a
 BOM, not UTF-16/tab-delimited text. Text fields are double-quoted and embedded
@@ -158,8 +164,8 @@ non-kit assembly. The four macro-owned `Skycode.Kind`, `Skycode.Category`,
 `Skycode.Provenance` and `Skycode.Generated` fields are reserved, not copied.
 Read from the production assembly and its referenced configuration.
 Document-level properties remain document-level; configuration properties are
-mapped to each generated snapshot's active configuration and to `kitified` on
-the final root. The cloned `Default` configuration retains its production
+mapped to each generated snapshot's active configuration and to every root
+configuration. The cloned `Default` configuration retains its production
 configuration properties. Property spelling, type and resolved value are copied;
 expressions are frozen to source-resolved
 values so they do not re-evaluate against a generated filename.
@@ -170,16 +176,13 @@ their uppercase variants. Source part files/configurations are referenced
 directly and their properties are not modified. The reused working document's
 source custom properties are cleared between groups to prevent metadata leakage.
 
-Generated category kits receive a blank document-level `PartNo` and a
-category-based `Description` (for example, `SEAL KIT`). Kitify does not invent a
-service part number. The complete-kit collection uses `<source root filename>
-COMPLETE KIT` as its descriptive `PartNo`, with `Complete kit collection` as
-`Description`, avoiding a duplicate of the root's numerical view name.
+For a kit with a matched source envelope, its NOTE provenance is split into
+`PartNo` and `Description` using the established number/text boundary rule.
+When no envelope matches that PDM kit, its PDM custom properties are copied
+instead. No synthetic complete-kit properties are added.
 
 Composer import must include custom properties and use `PartNo` for actor names
-where configured. Since category kits intentionally have a blank `PartNo`, a
-Composer kit view will not receive a service-number identity from Kitify; use
-the generated `Description` or a suitable actor-name fallback. The root
+where configured. The root
 view/BOX name still comes from root `Actor.Name`; correct root naming therefore
 depends on the Composer import naming settings. Existing imports must be
 re-imported/updated to receive the new metadata. BOX views additionally require
@@ -189,30 +192,29 @@ does not create that proxy.
 Missing/blank source `PartNo` or `Description` is reported as `SOURCE_MISSING`
 in `metadata.csv` and in the log; values are not invented from CAD filenames.
 Such pre-existing gaps must be addressed before downstream publication.
-Category kits intentionally have blank `PartNo`; `metadata.csv` marks these as
-`CATEGORY_KIT_NO_PART_NUMBER`.
+Missing kit properties are reported as `PDM_KIT_METADATA_MISSING`.
 
-## Membership and hierarchy rules
+## PDM kit and configuration rules
 
-### NOTE reading
+### PDM source of truth
 
-Read configuration-specific `NOTE` using `Get6` with uncached resolution; fall
-back to document-level NOTE when blank. Match property names case-insensitively
-through SOLIDWORKS. Normalize whitespace, case, hyphens, underscores and a
-trailing KIT/KITS:
+The source assembly must be inside a product's `11-ROCK DRILL CADS` folder.
+Kitify resolves only the direct sibling `12-KITS` folder in that same PDM
+product folder. Every SLDASM in that folder is represented by exactly one
+configuration named from the PDM filename without its extension. Duplicate or
+reserved configuration names fail rather than being renamed silently.
 
-| Input examples | Category |
-|---|---|
-| SEAL, SEALS, SEAL KIT, SEALS KIT | SEAL |
-| FASTENER, FASTENERS, FASTENER KIT | FASTENER |
-| BEARING, BEARINGS, BEARING KIT | BEARING |
-| HYDR, HYDR KIT, HYDR FITTING(S), HYDRAULIC FITTING(S) | HYDR FITTING |
+The PDM assembly's active leaf part-occurrence multiset defines kit contents.
+Repeated parts preserve quantity. A part can appear in more than one kit; it is
+rebuilt in each corresponding generated branch, and each root configuration
+activates only its matching branch. A complete-kit configuration is generated
+only when PDM contains that assembly. The macro never infers a union kit,
+collection, subset hierarchy, or additional configuration.
 
-Other nonblank NOTE values remain distinct categories and are grouped into
-category kits; do not silently discard them. Review unfamiliar categories in
-the reports. Membership is assigned to
-**part occurrences**, not unique files: repeated hardware instances retain
-their separate quantities, configurations and positions.
+Active envelope NOTE values are used to match the source envelope to a PDM kit
+and to derive that kit's `PartNo` and `Description`. A missing or ambiguous
+envelope match fails explicitly. PDM kits without a matched envelope still get
+their canonical configurations and use their own PDM properties.
 
 Suppressed components and envelopes, including all their accessible descendants,
 are mapped but excluded from the generated kit tree. They remain intact in the
@@ -221,26 +223,24 @@ Suppressed assemblies may expose no children through `GetChildren`; this is an
 active-configuration snapshot, not an inventory of every suppressed configuration.
 Unresolved, unsaved/virtual or missing active components fail explicitly.
 
-### NOTE/category kit planning
+### Production preservation and unmatched parts
 
-- Normalize each active source part's `NOTE` property. Recognized values such as
-  `SEAL`, `FASTENER`, `BEARING` and `HYDR FITTING` determine its generated kit
-  category; aliases and plural forms are normalized.
-- Create separate category kits for each top-level production occurrence, so
-  otherwise identical categories in different branches remain in their source
-  scope. Bearings are pooled across the whole drifter.
-- Preserve active parts with no recognized category in independently rebuilt
-  production structures that follow their source ancestry. Empty structures
-  are pruned.
-- Do not infer hidden, non-NOTE kit membership or nested kit relationships.
-  Update source NOTE values or the production tree if a different grouping is
-  required; there is no per-drifter rules file.
-- Use only source parts and their configurations. No reference geometry is
-  inserted, and no service part numbers are invented.
+- Suppressed components and envelopes, including accessible descendants, are
+  mapped but excluded from generated kit membership; they remain intact in
+  `Default`. Hidden active non-envelope parts are included when the PDM kit
+  assembly requires them.
+- Active source parts that occur in no PDM kit are retained in independently
+  rebuilt production structures, following their source ancestry.
+- If a PDM kit requires more occurrences of a part than the active source tree
+  provides, the missing occurrences are placed from that PDM kit assembly and
+  logged as `KIT_SUPPLIED`. A kit file that is not already loaded is opened
+  read-only and hidden, then inserted. It is not saved or checked out. Generation
+  still fails if the PDM kit snapshot itself cannot supply the required identity.
+  It does not silently drop parts.
 
-Generated kit and structure identifiers are run-local. Existing production
-custom properties are preserved on rebuilt non-kit assemblies; category kits
-receive a blank `PartNo` and category-derived `Description`.
+Generated kit and structure filenames are run-local. Existing production
+custom properties are preserved on rebuilt non-kit assemblies; matched kits
+receive provenance-derived identity, and unmatched kits preserve PDM identity.
 `Skycode.*` properties on new assemblies record kind, category, provenance and
 generated status.
 
@@ -258,8 +258,8 @@ assignment, **without `Set`**; the installed COM implementation rejects
 
 The generated kit branches are fixed geometry/configuration snapshots, not
 copies of production mates, assembly features, exploded views, display states
-or all configurations. Every generated kit-tree component, including individual
-kits and the collection, is fixed. Each generated assembly is checked for mates before saving and after
+or all configurations. Every generated kit-tree component is fixed. Each
+generated assembly is checked for mates before saving and after
 reopening; a nonempty mates group fails validation rather than being accepted.
 The final cloned root is exempt: it deliberately retains the original production
 mates/features. Original production occurrences keep their fixed/floating state.
@@ -279,29 +279,34 @@ Transform values use the VBA host's locale and semicolon separators.
 |---|---|
 | `source-tree.csv` | Full exposed production occurrence tree, before planning |
 | `source-kit-locations.csv` | Category counts by full immediate-parent occurrence |
-| `membership.csv` | Source-instance destination and NOTE/category grouping decision |
-| `groups.csv` | Generated hierarchy, categories, provenance and descendant counts |
-| `comparison.csv` | Source part classification as a NOTE/category kit or retained production structure |
+| `membership.csv` | Source occurrence destination and all PDM kit configurations containing it |
+| `groups.csv` | Generated PDM kit/structure branches, configuration names and counts |
+| `pdm-kit-comparison.csv` | PDM part-identity quantities compared with generated source assignments |
 | `generated-tree.csv` | Reopened generated occurrence tree |
 | `snapshot-generated-tree.csv`, `snapshot-validation.csv`, `snapshot-metadata.csv` | Construction-snapshot verification before combining; separate names preserve the no-overwrite report policy |
 | `production-tree.csv` | Reopened `Default` tree, including suppressed generated branches |
 | `production-metadata.csv` | Reopened `Default` root custom properties compared with source-resolved values |
-| `configurations.csv` | Reopened reciprocal top-level suppression checks for both configurations |
-| `validation.csv` | One source-to-generated occurrence match per retained part |
-| `metadata.csv` | Expected versus reopened properties by scope/type; source gaps and intentional blank category-kit PartNo |
-| `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for uncoloured collection/root/structures |
+| `configurations.csv` | Exact root configuration inventory, branch suppressions and per-configuration PDM quantities |
+| `validation.csv` | Source-to-generated occurrence and transform checks, including reused memberships |
+| `metadata.csv` | Expected versus reopened properties by scope/type; source and PDM-kit metadata gaps |
+| `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for root and structures |
 | `run.txt` | Stages, save/open warnings, dirty flags and explicit PASS/failure |
 
 Success requires:
 
-- In `kitified`, every active non-envelope source part occurs **exactly once**,
-  including non-kit parts.
+- The final root contains `Default` and exactly one configuration per SLDASM in
+  the source product's PDM `12-KITS` folder; no extra kit configurations exist.
+- Each PDM kit configuration contains exactly the part identities and
+  quantities in its PDM assembly. Shared members can recur across
+  configurations, never as an inferred or synthesized membership.
+- A complete-kit configuration exists only when that complete-kit SLDASM is
+  present in PDM.
 - Original source file and referenced configuration are preserved.
 - Each occurrence has its planned direct parent and fixed placement.
-- All generated child assemblies are mate-free, including the complete-kit
-  collection; the cloned root retains the original production mates/features.
+- All generated child assemblies are mate-free; the cloned root retains the
+  original production mates/features.
 - Every individual kit retains its assigned non-grey appearance after reopening;
-  the collection and residual structures have no assembly colour override.
+  residual structures have no assembly colour override.
 - Generation stays within the visible-window and separately opened generated
   document budgets above.
 - Root/non-kit assembly custom properties retain their source scope, type and
@@ -309,20 +314,21 @@ Success requires:
   never leaked production identity.
 - `Default` retains every exposed production occurrence, filename, referenced
   configuration, suppression/envelope status, fixed/floating state and placement.
-  The inactive alternate tree is suppressed in both configurations after reopen.
+  In a PDM kit configuration, only its selected kit branch is active; production
+  and other generated branches are suppressed.
 - Maximum absolute error in transform elements 0 through 12 is at most
   `1e-8` (translation elements are metres; rotation/scale are dimensionless).
-- Every active generated assembly component in `kitified` references the new
+- Every active generated assembly component in a PDM kit configuration references the new
   run folder; the production branches retain their original references.
-- In `kitified`, all generated assembly parents match the plan and all assembly transforms
-  are identity. The complete-kit collection is at root; topmost individual kits
-  are its children; category membership follows the source NOTE and scope rules.
+- Generated assembly parents match the plan and all generated assembly
+  transforms are identity. Each PDM kit branch is a root child; membership and
+  kit configuration names come from the source-relative PDM folder.
 - Save, reopen and rebuild succeed. Warnings are logged; failures raise an error
   identifying the stage and partial-output folder.
 
 Source conservation PASS verifies that the generated tree matches the source
 plan; it does not certify that NOTE values are semantically correct. Review
-`membership.csv` and `comparison.csv`. Partial outputs/unsaved generated
+`membership.csv` and `pdm-kit-comparison.csv`. Partial outputs/unsaved generated
 documents can remain after an error; they are not presented as a verified result.
 
 ## API basis
@@ -355,6 +361,17 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 - `IComponent2.SetSuppression2`: suppressed = 0, fully resolved = 2;
   success (`swSuppressionChangeOk`) = 2. Changes apply to the active configuration.
   State acceptance uses the reopened configuration checks.
+- PDM vault resolution uses `GetVaultNameFromPath` when the source is already
+  inside a vault view. A non-vault path returns `0x8004022B` (`-2147220949`,
+  "The key you specified was not found in the collection") and is not itself a
+  missing-collection bug. Sandbox sources then search each auto-login local
+  vault view for the same filename directly under `11-ROCK DRILL CADS`, with
+  sibling `12-KITS` confirmed through `GetFolderFromPath`. Exactly one match is
+  required. `IEdmFolder5.GetFirstFilePosition` / `GetNextFile` enumerate only
+  that product's direct `12-KITS` folder. `IEdmFile5.GetFileCopy` receives
+  the latest file version, folder ID, `EdmGet_MakeReadOnly Or EdmGet_Refs`
+  (flags 1 and 4), and no rename; reference files are fetched at their PDM
+  assembly references. The assembly's local version is checked before use.
 - Normalize native Boolean flags with `CBool(flag <> False)` before comparing
   them with VBA Boolean values. SOLIDWORKS can return true as `1`, not VBA's
   canonical `True` (`-1`); `CBool(flag)` alone does not normalize a typed Boolean.
@@ -366,21 +383,21 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 
 ## Validation status
 
-The current source-only grouping and source selection changes require live
-SOLIDWORKS validation. The dated runs below predate these changes and document
-the superseded reference-based membership workflow; they are not validation of
-the current NOTE/category-only grouping.
+The current PDM-per-kit root configuration implementation requires compile and
+live SOLIDWORKS validation. The dated runs below predate these changes and
+document superseded membership workflows; they do not validate the current
+PDM-derived configuration inventory or Composer import.
 
 Live validation uses the actual imported VBA module in a newly created isolated
 Access database with the installed SOLIDWORKS type-library reference. No Access
 security settings are changed. This avoids claiming that a C# approximation
 establishes VBA runtime compatibility.
 
-Run `TestKitifyMetadata` in the imported module to verify that category kits
-receive category-based descriptions and no invented service part numbers. Full
-generation verifies both saved configurations after reopening;
-`configurations.csv`, `production-tree.csv`, `validation.csv`, and `metadata.csv`
-capture the checks.
+Run `TestKitifyMetadata` in the imported module to verify the provenance split
+into kit `PartNo` and `Description`. Full generation must verify `Default` and
+every saved PDM kit configuration after reopening. `configurations.csv`,
+`pdm-kit-comparison.csv`, `production-tree.csv`, `validation.csv`, and
+`metadata.csv` capture the checks.
 
 ### Combined-configuration refinement (2026-11-05)
 
