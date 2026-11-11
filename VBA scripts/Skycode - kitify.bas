@@ -114,6 +114,7 @@ Public Function KitifyDrifter( _
 
     mStage = "Connecting to the running SOLIDWORKS session"
     Initialise
+    mStage = "Suppressing SOLIDWORKS prompts"
     SuppressPrompts
     Set original = mApp.ActiveDoc
     mStage = "Selecting the saved production assembly"
@@ -232,9 +233,10 @@ Public Function KitifyDrifter( _
 
 Failed:
     failureNumber = Err.Number
-    failureDescription = mStage & ": " & Err.Description & vbCrLf & _
-        "Partial outputs may remain in: " & mFolder & vbCrLf & _
-        "The source assembly has not been saved by this macro."
+    failureDescription = mStage & ": " & Err.Description
+    If Len(mFolder) > 0 Then failureDescription = failureDescription & vbCrLf & _
+        "Partial outputs may remain in: " & mFolder
+    failureDescription = failureDescription & vbCrLf & "The source assembly has not been saved by this macro."
     Debug.Print failureDescription
     If Len(mChildPath) > 0 Then
         mApp.CloseDoc mChildPath
@@ -430,8 +432,8 @@ Private Function CheckoutDeclinerScript() As String
 End Function
 
 Private Sub Initialise()
-    Set mApp = GetObject(, "SldWorks.Application")
-    Set mFS = CreateObject("Scripting.FileSystemObject")
+    Set mApp = Nothing
+    Set mFS = Nothing
     Set mSource = Nothing
     Set mPdmKits = Nothing
     Set mPdmVault = Nothing
@@ -449,7 +451,61 @@ Private Sub Initialise()
     mFolder = ""
     mRunId = ""
     mNextSuppliedId = -1
+    Set mFS = CreateObject("Scripting.FileSystemObject")
+    Set mApp = ConnectSolidWorks()
 End Sub
+
+Private Function ConnectSolidWorks() As SldWorks.SldWorks
+    Dim app As SldWorks.SldWorks
+    Dim processes As Object
+    Dim process As Object
+    Dim wmi As Object
+    Dim sessionId As Long
+    Dim processId As Long
+    Dim count As Long
+    Dim version As String
+    Dim progId As String
+    Dim genericError As String
+    Dim detail As String
+
+    On Error Resume Next
+    Set app = GetObject(, "SldWorks.Application")
+    If Err.Number = 0 And Not app Is Nothing Then
+        Set ConnectSolidWorks = app
+        Exit Function
+    End If
+    genericError = Err.Number & " " & Err.Description
+    Err.Clear
+    On Error GoTo Failed
+
+    Set wmi = GetObject("winmgmts:\\.\root\cimv2")
+    sessionId = wmi.Get("Win32_Process.Handle='" & CStr(GetCurrentProcessId()) & "'").SessionId
+    Set processes = wmi.ExecQuery("SELECT ProcessId, ExecutablePath FROM Win32_Process " & _
+        "WHERE Name='SLDWORKS.exe' AND SessionId=" & CStr(sessionId))
+    For Each process In processes
+        count = count + 1
+        processId = CLng(process.ProcessId)
+        If Not IsNull(process.ExecutablePath) Then version = mFS.GetFileVersion(CStr(process.ExecutablePath))
+    Next process
+    If count <> 1 Then Err.Raise vbObjectError + 2456, , _
+        "Expected exactly one running SOLIDWORKS process in this Windows session; found " & count & _
+        ". Close extra instances or start SOLIDWORKS, then retry."
+    If Len(version) = 0 Or InStr(version, ".") = 0 Then Err.Raise vbObjectError + 2456, , _
+        "Could not determine the running SOLIDWORKS executable's version."
+    progId = "SldWorks.Application." & Split(version, ".")(0)
+    Set app = GetObject(, progId)
+    If app Is Nothing Then Err.Raise vbObjectError + 2456, , progId & " returned no application."
+    If app.GetProcessID <> processId Then Err.Raise vbObjectError + 2456, , _
+        progId & " did not attach to the expected SOLIDWORKS process."
+    Set ConnectSolidWorks = app
+    Exit Function
+
+Failed:
+    detail = Err.Description
+    Err.Raise vbObjectError + 2456, "Skycode.ConnectSolidWorks", _
+        "Could not attach to the running SOLIDWORKS session. Generic connection: " & genericError & _
+        ". Version-specific connection: " & detail
+End Function
 
 Private Function Dictionary() As Object
     Set Dictionary = CreateObject("Scripting.Dictionary")

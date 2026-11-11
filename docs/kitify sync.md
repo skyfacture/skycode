@@ -55,6 +55,13 @@ Enable the installed **SOLIDWORKS type library** reference:
 `C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\sldworks.tlb`.
 No separate constants-library reference is required.
 
+The macro first attaches using `SldWorks.Application`. If that registration
+points to a different installed version, it detects the executable version of
+the sole SOLIDWORKS process in the current Windows session and tries the
+matching version-specific registration. It verifies the process ID and never
+starts a new instance. If the fallback finds zero or multiple processes, it
+stops rather than selecting one ambiguously.
+
 Open and activate the saved production assembly in SOLIDWORKS, then run
 `SkycodeKitify`. The source may have any filename or reside in any folder.
 A source outside PDM is matched to the same filename in an auto-login vault
