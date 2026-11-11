@@ -173,10 +173,16 @@ root configuration names use the corresponding PDM kit `PartNo` and
 `Description`, separated by one space. These values come from the PDM kit
 assembly's properties; a matched source-envelope NOTE only identifies the kit
 and is used as a fallback if either PDM property is missing. Each kit
-configuration also carries configuration-specific `PartNo` and `Description`
-properties. Composer imports these as `Meta.PartNo_cfg` and
-`Meta.Description_cfg` on the configuration tree node. The final root retains
-its production filename and file-level properties.
+configuration does not carry configuration-specific `PartNo` or `Description`.
+The generated kit child carries the effective kit identity as file-level
+`PartNo` and `Description`, even when the PDM kit provides them at configuration
+scope. The final root retains its production filename and file-level properties.
+Its file-level `PartNo` and `Description` are expressions referring to the
+configuration-specific `KitPartNo` and `KitDescription` helper properties.
+Each kit helper contains the actual effective kit identity; `Default` helpers
+contain the source's file-level production values. Composer imports the
+resolved values into the ordinary `PartNo` and `Description` fields on each
+configuration node. The helper fields may also appear separately.
 No SOLIDWORKS-wide component-naming preference is changed.
 
 Each individual PDM kit branch receives an assembly appearance from a
@@ -205,11 +211,19 @@ non-kit assembly. The four macro-owned `Skycode.Kind`, `Skycode.Category`,
 `Skycode.Provenance` and `Skycode.Generated` fields are reserved, not copied.
 Read from the production assembly and its referenced configuration.
 Document-level properties remain document-level; configuration properties are
-mapped to each generated snapshot's active configuration and to every root
-configuration. The cloned `Default` configuration retains its production
+mapped to each generated snapshot's active configuration. Kit `PartNo` and
+`Description` are the exception: their effective values are written at file
+scope on the generated kit child. Root kit configurations must not contain
+configuration-specific `PartNo` or `Description`. The cloned `Default`
+configuration retains its production
 configuration properties. Property spelling, type and resolved value are copied;
-expressions are frozen to source-resolved
-values so they do not re-evaluate against a generated filename.
+source expressions are frozen to source-resolved values so they do not re-evaluate
+against a generated filename. The combined root's two identity expressions are
+the intentional exception and resolve against the active configuration's helpers.
+The source root's file-level `PartNo` and `Description` must be nonempty text
+properties. The run stops if either kit identity is missing after the NOTE
+fallback, or if source root metadata already uses either reserved helper name;
+it never invents Composer identity from a filename.
 
 This preserves the values consumed by Composer's `Meta.PartNo`/`Meta.PartNo_cfg`
 and `Meta.Description`/`Meta.Description_cfg` normalization macros, including
@@ -221,8 +235,9 @@ For a kit with a matched source envelope, its NOTE identifies the matching PDM
 kit but does not override the PDM kit's `PartNo` or `Description`. A missing
 PDM property may be filled from the NOTE; otherwise the PDM kit's own values
 are used. Each combined-root kit configuration is named
-`<PartNo> <Description>` and stores the same values as configuration-specific
-properties for Composer. No synthetic complete-kit properties are added.
+`<PartNo> <Description>`. Its generated kit child stores the effective identity
+at file scope; the root kit configuration does not store these properties at
+configuration scope. No synthetic complete-kit properties are added.
 
 Composer import must include custom properties and use `PartNo` for actor names
 where configured. The root
@@ -232,10 +247,11 @@ re-imported/updated to receive the new metadata. BOX views additionally require
 the bounding-box macro's proxy and its geometry properties; kit metadata alone
 does not create that proxy.
 
-Missing/blank source `PartNo` or `Description` is reported as `SOURCE_MISSING`
-in `metadata.csv` and in the log; values are not invented from CAD filenames.
-Such pre-existing gaps must be addressed before downstream publication.
-Missing kit properties are reported as `PDM_KIT_METADATA_MISSING`.
+Missing/blank `PartNo` or `Description` on other source assemblies is reported
+as `SOURCE_MISSING` in `metadata.csv` and in the log; values are not invented
+from CAD filenames. Such pre-existing gaps must be addressed before downstream
+publication. Missing required root or kit identity stops the run, with details
+in the log.
 
 ## PDM kit and configuration rules
 
@@ -332,7 +348,7 @@ Transform values use the VBA host's locale and semicolon separators.
 | `production-tree.csv` | Reopened `Default` tree, including suppressed generated branches |
 | `production-metadata.csv` | Reopened `Default` root custom properties compared with source-resolved values |
 | `configurations.csv` | Exact root configuration inventory, branch suppressions and per-configuration PDM quantities |
-| `kit-configurations.csv` | PDM PartNo/Description, configuration name and configuration-specific property verification |
+| `kit-configurations.csv` | PDM PartNo/Description, configuration name, resolved ordinary identity and verification that configuration-specific identity properties are absent |
 | `declined-checkouts.txt` | PDM "check it out?" prompts answered No automatically (only present when one occurred) |
 | `validation.csv` | Source-to-generated occurrence and transform checks, including reused memberships |
 | `metadata.csv` | Expected versus reopened properties by scope/type; source and PDM-kit metadata gaps |
@@ -357,8 +373,10 @@ Success requires:
 - Generation stays within the visible-window and separately opened generated
   document budgets above.
 - Root/non-kit assembly custom properties retain their source scope, type and
-  resolved values after save/reopen. Kits contain provenance-derived identity,
-  never leaked production identity.
+  resolved values after save/reopen in `Default`. The root's file-level identity
+  expressions resolve to each kit's actual identity in that kit's configuration.
+- Root kit configurations contain no configuration-specific `PartNo` or
+  `Description`; kit child identities are file-level properties.
 - `Default` retains every exposed production occurrence, filename, referenced
   configuration, suppression/envelope status, fixed/floating state and placement.
   In a PDM kit configuration, only its selected kit branch is active; production
@@ -430,11 +448,10 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 
 ## Validation status
 
-The current PDM-per-kit root configuration implementation requires a
-successful full live SOLIDWORKS run before it is considered verified. The dated
-runs below predate these changes and document superseded membership workflows;
-they do not validate the current PDM-derived configuration inventory or
-Composer import.
+The user confirmed that an expression fixture with actual kit values imported
+into Composer with correct ordinary `PartNo` and `Description`. A newly
+generated output should also be imported and its views and exploded BOMs
+checked before publication.
 
 Live validation uses the actual imported VBA module in a newly created isolated
 Access database with the installed SOLIDWORKS type-library reference. No Access
@@ -444,10 +461,41 @@ establishes VBA runtime compatibility.
 Run `TestKitifyMetadata` in the imported module to verify the NOTE parsing
 fallback. Full generation must verify `Default`, every saved PDM kit
 configuration after reopening, and that each configuration's name and
-configuration-specific `PartNo`/`Description` match the PDM kit. The checks
+configuration-specific `PartNo`/`Description` are absent, the root expressions
+resolve to the expected values, and the generated kit child retains its
+effective file-level identity. The checks
 are captured in `configurations.csv`, `kit-configurations.csv`,
 `pdm-kit-comparison.csv`, `production-tree.csv`, `validation.csv`, and
 `metadata.csv`.
+
+### Expression identity, live run (2026-11-11)
+
+The actual VBA module compiled and passed its metadata and identity-plan guard
+tests in an isolated Access host. A full generation from the open
+`7397 0320 22.SLDASM` completed in `kitified-generated_20261111_155750`.
+After reopening, all 16 kit identities and the production `Default` identity
+resolved correctly; kit configuration `PartNo`/`Description` were absent.
+The production tree and PDM membership checks also passed. The source was not
+saved, but remained dirty in memory. Composer import of this generated run and
+its view/BOM workflow remain to be verified.
+
+### Kit configuration identity scope, live run (2026-11-11)
+
+The actual VBA module passed `TestKitifyMetadata` in an isolated Access host.
+A full retry against the open `7397 0320 22.SLDASM` completed and reopened its
+output in `kitified-generated_20261111_110210`. All 16 rows in
+`kit-configurations.csv` passed with configuration-specific identity properties
+absent. The generated children for `7372 3010 01` and `7372 3011 01` retained
+their kit `PartNo` and `Description` at file scope, as reported in
+`snapshot-metadata.csv`. `Default` and PDM membership validation also passed.
+
+The standard `GetObject(, "SldWorks.Application")` connection failed in that
+session. The isolated test host supplied the existing SOLIDWORKS process via
+its process-specific running-object registration, substituting only the
+connection statement in its imported in-memory module; the repository module's
+connection code was not changed. The source was not saved, although it was
+dirty in memory after the run. Composer identity and BOM behaviour have not
+been verified by this run.
 
 ### PDM-named kit configurations, unattended run (2026-11-07)
 

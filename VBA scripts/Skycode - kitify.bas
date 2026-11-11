@@ -8,8 +8,8 @@ Option Explicit
 '   - A sandbox source is matched read-only to the same filename in a vault 11-ROCK DRILL CADS folder.
 '   - That product's sibling 12-KITS folder supplies membership. The vault drifter is not opened or checked out.
 '   - Envelope NOTE values identify matching kits; the PDM kit's own PartNo/Description are authoritative.
-'   - Each kit configuration is named "<PartNo> <Description>" from the PDM kit and carries those values
-'     as configuration-specific properties (Composer Meta.PartNo_cfg/Meta.Description_cfg).
+'   - Each kit configuration is named "<PartNo> <Description>" from the PDM kit, without
+'     configuration-specific PartNo/Description; file-level expressions resolve each kit identity.
 '   - Call KitifyDrifter(sourcePath, outputFolder, showMessage) to identify an open source,
 '     choose an output folder, or show a completion message (off by default).
 '   - Creates verified kitified output and reports in a new kitified-generated_<timestamp> folder beside
@@ -128,7 +128,7 @@ Public Function KitifyDrifter( _
     LogLine "Source configuration: " & source.ConfigurationManager.ActiveConfiguration.Name
     LogLine "Source initially dirty: " & CStr(source.GetSaveFlag)
     LogLine "Root kit configurations and membership: every latest SLDASM in the source product's PDM 12-KITS folder."
-    LogLine "PDM kit PartNo/Description name each kit configuration and its configuration-specific properties."
+    LogLine "PDM kit PartNo/Description name each kit configuration and are stored on its generated kit child."
 
     mCombinedPath = mFS.BuildPath(mFolder, mFS.GetBaseName(mSourcePath) & _
         " kitified generated " & mRunId & ".SLDASM")
@@ -160,6 +160,7 @@ Public Function KitifyDrifter( _
     AssignDestinations
     CollectKits
     PrepareKitMetadata
+    ValidateIdentityPlan
     WritePlan
 
     template = mApp.GetUserPreferenceStringValue(DEFAULT_ASSEMBLY_TEMPLATE)
@@ -202,6 +203,7 @@ Public Function KitifyDrifter( _
     For Each n In mSource
         n("validated") = False
     Next n
+    ShowConfiguration mWorking, PRODUCTION_CONFIGURATION
     ValidateMetadata "", True
     If Not mApp.GetOpenDocumentByName(snapshotPath) Is Nothing Then _
         Err.Raise vbObjectError + 2453, , "Construction snapshot is unexpectedly still loaded: " & snapshotPath
@@ -882,6 +884,48 @@ Private Function MetadataValue(ByVal metadata As Collection, ByVal propertyName 
     Next entry
 End Function
 
+Private Function FileIdentityValue(ByVal metadata As Collection, ByVal propertyName As String) As String
+    Dim entry As Object
+    For Each entry In metadata
+        If entry("scope") = "" And StrComp(CStr(entry("name")), propertyName, vbTextCompare) = 0 Then
+            If CLng(entry("type")) <> 30 Then Err.Raise vbObjectError + 2453, , _
+                "Production file-level " & propertyName & " must be a text property."
+            FileIdentityValue = CStr(entry("value"))
+            Exit Function
+        End If
+    Next entry
+End Function
+
+Private Function IsIdentityHelper(ByVal name As String) As Boolean
+    IsIdentityHelper = (StrComp(name, "KitPartNo", vbTextCompare) = 0 Or _
+        StrComp(name, "KitDescription", vbTextCompare) = 0)
+End Function
+
+Private Sub ValidateIdentityPlan()
+    Dim entry As Object
+    Dim group As Object
+    Dim key As Variant
+    Dim name As Variant
+    For Each entry In mRootMetadata
+        If IsIdentityHelper(CStr(entry("name"))) Then Err.Raise vbObjectError + 2453, , _
+            "Production metadata uses reserved identity helper property: " & entry("name")
+    Next entry
+    For Each name In Array("PartNo", "Description")
+        If Len(Trim$(FileIdentityValue(mRootMetadata, CStr(name)))) = 0 Then _
+            Err.Raise vbObjectError + 2453, , "Missing production file-level identity: " & name
+    Next name
+    For Each key In mGroups.Keys
+        Set group = mGroups(key)
+        If group("kind") = "KIT" Then
+            For Each name In Array("PartNo", "Description")
+                If Len(Trim$(MetadataValue(group("metadata"), CStr(name)))) = 0 Then _
+                    Err.Raise vbObjectError + 2453, , "Missing kit identity: " & _
+                    group("pdmIdentity") & "; " & name
+            Next name
+        End If
+    Next key
+End Sub
+
 Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As String) As String
     Dim parent As String
     Dim candidate As String
@@ -1006,7 +1050,8 @@ Private Function IsSourceProperty(ByVal name As String) As Boolean
     End Select
 End Function
 
-Private Function ReadMetadata(ByVal model As SldWorks.ModelDoc2, ByVal config As String) As Collection
+Private Function ReadMetadata(ByVal model As SldWorks.ModelDoc2, ByVal config As String, _
+    Optional ByVal excludeIdentityHelpers As Boolean = False) As Collection
     Dim result As New Collection
     Dim manager As SldWorks.CustomPropertyManager
     Dim scope As Variant
@@ -1023,7 +1068,8 @@ Private Function ReadMetadata(ByVal model As SldWorks.ModelDoc2, ByVal config As
         names = manager.GetNames
         If IsArray(names) Then
             For Each name In names
-                If IsSourceProperty(CStr(name)) Then
+                If IsSourceProperty(CStr(name)) And _
+                    (excludeIdentityHelpers = False Or IsIdentityHelper(CStr(name)) = False) Then
                     status = manager.Get6(CStr(name), False, raw, resolved, wasResolved, linked)
                     If status = 1 Or (linked And wasResolved = False) Then _
                         Err.Raise vbObjectError + 2448, , "Cannot resolve source metadata: " & _
@@ -1095,7 +1141,8 @@ Private Sub ValidateMetadata(Optional ByVal reportPrefix As String = "", Optiona
             Set model = mApp.GetOpenDocumentByName(group("file"))
             If model Is Nothing Then Err.Raise vbObjectError + 2450, , "Generated metadata document is not loaded: " & key
             Set expected = group("metadata")
-            Set actual = ReadMetadata(model, CStr(group("configuration")))
+            Set actual = ReadMetadata(model, CStr(group("configuration")), _
+                CBool(rootOnly And key = "ROOT"))
             If actual.Count <> expected.Count Then Err.Raise vbObjectError + 2450, , _
                 "Missing or leaked identity properties in generated group: " & key
             Set values = Dictionary()
@@ -1163,6 +1210,20 @@ Private Sub SetTextMetadata(ByVal metadata As Collection, ByVal name As String, 
     If found = False Then AddTextMetadata metadata, name, value
 End Sub
 
+Private Sub NormalizeKitIdentityProperty(ByVal metadata As Collection, ByVal name As String, ByVal value As String)
+    Dim i As Long
+    Dim entry As Object
+    Dim present As Boolean
+    For i = metadata.Count To 1 Step -1
+        Set entry = metadata(i)
+        If StrComp(CStr(entry("name")), name, vbTextCompare) = 0 Then
+            present = True
+            metadata.Remove i
+        End If
+    Next i
+    If present Then AddTextMetadata metadata, name, value
+End Sub
+
 Private Function KitMetadata(ByVal provenance As String) As Collection
     Dim metadata As New Collection
     Dim pattern As Object
@@ -1227,6 +1288,8 @@ Private Sub PrepareKitMetadata()
                     "; PDM=" & description & "; NOTE=" & envelopeDescription
             End If
         End If
+        NormalizeKitIdentityProperty group("metadata"), "PartNo", partNo
+        NormalizeKitIdentityProperty group("metadata"), "Description", description
         If Len(partNo) = 0 Then
             partNo = mFS.GetBaseName(CStr(kit("name")))
             LogLine "PDM KIT METADATA MISSING: " & kit("name") & "; PartNo; configuration uses the PDM filename."
@@ -1276,6 +1339,27 @@ Public Sub TestKitifyMetadata()
     If entry("value") <> "BG 007 731 31" Then Err.Raise vbObjectError + 2454, , "BG PartNo split regression."
     Set entry = metadata(2)
     If entry("value") <> "DRIFTER KIT" Then Err.Raise vbObjectError + 2454, , "BG Description split regression."
+    Set metadata = New Collection
+    AddTextMetadata metadata, "PartNo", "file identity"
+    Set entry = Dictionary()
+    entry.Add "scope", "CONFIG"
+    entry.Add "name", "PARTNO"
+    entry.Add "type", 30&
+    entry.Add "value", "configuration identity"
+    metadata.Add entry
+    NormalizeKitIdentityProperty metadata, "PartNo", MetadataValue(metadata, "PartNo")
+    If metadata.Count <> 1 Then Err.Raise vbObjectError + 2454, , "Kit identity scope normalization count regression."
+    Set entry = metadata(1)
+    If entry("scope") <> "" Or entry("value") <> "configuration identity" Then _
+        Err.Raise vbObjectError + 2454, , "Kit identity scope normalization value regression."
+    NormalizeKitIdentityProperty metadata, "Description", ""
+    If metadata.Count <> 1 Then Err.Raise vbObjectError + 2454, , "Missing kit identity was invented."
+    If FileIdentityValue(metadata, "partno") <> "configuration identity" Then _
+        Err.Raise vbObjectError + 2454, , "Production file identity lookup regression."
+    If Len(FileIdentityValue(metadata, "Description")) <> 0 Then _
+        Err.Raise vbObjectError + 2454, , "Missing production identity was invented."
+    If IsIdentityHelper("kitpartno") = False Or IsIdentityHelper("KITDESCRIPTION") = False Or _
+        IsIdentityHelper("PartNo") Then Err.Raise vbObjectError + 2454, , "Reserved helper detection regression."
     TestInvalidKitMetadata
     Debug.Print "Kit metadata tests PASS"
 End Sub
@@ -1917,6 +2001,9 @@ Private Function CombineConfigurations(ByVal source As SldWorks.ModelDoc2) As St
         Set component = components(name)
         SetSuppressed component, True
     Next name
+    Set manager = mWorking.Extension.CustomPropertyManager(PRODUCTION_CONFIGURATION)
+    PutProperty manager, "KitPartNo", FileIdentityValue(mRootMetadata, "PartNo")
+    PutProperty manager, "KitDescription", FileIdentityValue(mRootMetadata, "Description")
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If group("kind") = "KIT" Then
@@ -1942,13 +2029,18 @@ Private Function CombineConfigurations(ByVal source As SldWorks.ModelDoc2) As St
             If mWorking.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2453, , _
                 "PDM kit configuration rebuild failed: " & kitConfig
             Set manager = mWorking.Extension.CustomPropertyManager(kitConfig)
-            PutProperty manager, "PartNo", CStr(group("configPartNo"))
-            If Len(CStr(group("configDescription"))) > 0 Then _
-                PutProperty manager, "Description", CStr(group("configDescription"))
+            RemoveConfigIdentityProperties manager, kitConfig
+            PutProperty manager, "KitPartNo", MetadataValue(group("metadata"), "PartNo")
+            PutProperty manager, "KitDescription", MetadataValue(group("metadata"), "Description")
             LogLine "Created root kit configuration: " & kitConfig & " -> " & group("pdmIdentity")
         End If
     Next key
+    Set manager = mWorking.Extension.CustomPropertyManager("")
+    PutProperty manager, "PartNo", "$PRP:""KitPartNo"""
+    PutProperty manager, "Description", "$PRP:""KitDescription"""
     ShowConfiguration mWorking, FirstKitConfiguration()
+    If mWorking.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2453, , _
+        "Could not rebuild combined identity expressions."
     errors = 0
     warnings = 0
     If mWorking.Save3(1, errors, warnings) = False Or errors <> 0 Then Err.Raise vbObjectError + 2453, , _
@@ -2048,10 +2140,11 @@ Private Sub ValidateKitConfigurationIdentity()
     Dim config As String
     Dim kitPartNo As String
     Dim kitDescription As String
-    Dim actualPartNo As String
-    Dim actualDescription As String
+    Dim manager As SldWorks.CustomPropertyManager
     Set report = NewCsvReport()
-    WriteCsvLine report, "Configuration,PDMKitAssembly,PDMPartNo,PDMDescription,ConfigPartNo,ConfigDescription,Status"
+    WriteCsvLine report, "Configuration,PDMKitAssembly,PDMPartNo,PDMDescription,ConfigIdentityProperties,ResolvedPartNo,ResolvedDescription,Status"
+    ValidateConfigurationIdentity PRODUCTION_CONFIGURATION, _
+        FileIdentityValue(mRootMetadata, "PartNo"), FileIdentityValue(mRootMetadata, "Description")
     For Each key In mGroups.Keys
         Set group = mGroups(key)
         If group("kind") = "KIT" Then
@@ -2060,30 +2153,87 @@ Private Sub ValidateKitConfigurationIdentity()
             kitDescription = CStr(group("configDescription"))
             If StrComp(config, ConfigurationName(Trim$(kitPartNo & " " & kitDescription)), vbBinaryCompare) <> 0 Then _
                 Err.Raise vbObjectError + 2453, , "Kit configuration name does not match PDM PartNo/Description: " & config
-            actualPartNo = ConfigProperty(config, "PartNo")
-            actualDescription = ConfigProperty(config, "Description")
-            If actualPartNo <> kitPartNo Or actualDescription <> kitDescription Then _
-                Err.Raise vbObjectError + 2453, , "Kit configuration properties do not match PDM kit: " & config & _
-                "; PartNo=" & actualPartNo & "; Description=" & actualDescription
+            Set manager = mWorking.Extension.CustomPropertyManager(config)
+            If HasConfigIdentityProperties(manager) Then Err.Raise vbObjectError + 2453, , _
+                "Kit configuration contains configuration-specific PartNo or Description: " & config
+            ValidateConfigurationIdentity config, MetadataValue(group("metadata"), "PartNo"), _
+                MetadataValue(group("metadata"), "Description")
             WriteCsvLine report, Csv(config) & "," & Csv(group("pdmIdentity")) & "," & Csv(kitPartNo) & "," & _
-                Csv(kitDescription) & "," & Csv(actualPartNo) & "," & Csv(actualDescription) & ",PASS"
+                Csv(kitDescription) & ",absent," & Csv(MetadataValue(group("metadata"), "PartNo")) & "," & _
+                Csv(MetadataValue(group("metadata"), "Description")) & ",PASS"
         End If
     Next key
     SaveCsvReport report, "kit-configurations.csv"
-    LogLine "Kit configuration identity PASS: names and configuration-specific PartNo/Description match the PDM kits."
+    LogLine "Configuration identity PASS: Default and all kit expressions resolve to their expected values; " & _
+        "kit configuration-specific PartNo/Description are absent."
 End Sub
 
-Private Function ConfigProperty(ByVal config As String, ByVal name As String) As String
-    Dim manager As SldWorks.CustomPropertyManager
+Private Sub ValidateConfigurationIdentity(ByVal config As String, ByVal partNo As String, ByVal description As String)
+    Dim fileManager As SldWorks.CustomPropertyManager
+    Dim configManager As SldWorks.CustomPropertyManager
+    Dim propertyName As Variant
+    Dim helper As String
+    Dim expected As String
     Dim raw As String
     Dim resolved As String
     Dim wasResolved As Boolean
     Dim linked As Boolean
-    Set manager = mWorking.Extension.CustomPropertyManager(config)
-    manager.Get6 name, False, raw, resolved, wasResolved, linked
-    ConfigProperty = resolved
-    If Len(ConfigProperty) = 0 Then ConfigProperty = raw
+    Dim status As Long
+    ShowConfiguration mWorking, config
+    If mWorking.ForceRebuild3(False) = False Then Err.Raise vbObjectError + 2453, , _
+        "Could not rebuild identity expressions: " & config
+    Set fileManager = mWorking.Extension.CustomPropertyManager("")
+    Set configManager = mWorking.Extension.CustomPropertyManager(config)
+    For Each propertyName In Array("PartNo", "Description")
+        helper = "Kit" & CStr(propertyName)
+        expected = partNo
+        If propertyName = "Description" Then expected = description
+        status = configManager.Get6(helper, False, raw, resolved, wasResolved, linked)
+        If status <> 2 Or resolved <> expected Then Err.Raise vbObjectError + 2453, , _
+            "Configuration identity helper mismatch: " & config & "; " & helper & "; expected=" & expected & _
+            "; actual=" & resolved & "; status=" & status
+        status = fileManager.Get6(CStr(propertyName), False, raw, resolved, wasResolved, linked)
+        If status <> 2 Or raw <> "$PRP:""" & helper & """" Or resolved <> expected Then _
+            Err.Raise vbObjectError + 2453, , "File identity expression mismatch: " & config & "; " & _
+            propertyName & "; expected=" & expected & "; actual=" & resolved & "; expression=" & raw & _
+            "; status=" & status
+    Next propertyName
+End Sub
+
+Private Function IsConfigIdentityProperty(ByVal name As String) As Boolean
+    IsConfigIdentityProperty = (StrComp(name, "PartNo", vbTextCompare) = 0 Or _
+        StrComp(name, "Description", vbTextCompare) = 0)
 End Function
+
+Private Function HasConfigIdentityProperties(ByVal manager As SldWorks.CustomPropertyManager) As Boolean
+    Dim names As Variant
+    Dim name As Variant
+    names = manager.GetNames
+    If IsArray(names) Then
+        For Each name In names
+            If IsConfigIdentityProperty(CStr(name)) Then
+                HasConfigIdentityProperties = True
+                Exit Function
+            End If
+        Next name
+    End If
+End Function
+
+Private Sub RemoveConfigIdentityProperties(ByVal manager As SldWorks.CustomPropertyManager, ByVal config As String)
+    Dim names As Variant
+    Dim name As Variant
+    names = manager.GetNames
+    If IsArray(names) Then
+        For Each name In names
+            If IsConfigIdentityProperty(CStr(name)) Then
+                If manager.Delete2(CStr(name)) <> 0 Then Err.Raise vbObjectError + 2453, , _
+                    "Could not remove configuration-specific property " & name & " from " & config
+            End If
+        Next name
+    End If
+    If HasConfigIdentityProperties(manager) Then Err.Raise vbObjectError + 2453, , _
+        "Configuration-specific PartNo or Description remains in " & config
+End Sub
 
 Private Sub ValidateRootConfiguration(ByVal config As String, ByVal selectedGroup As String, _
     ByVal report As Object)
