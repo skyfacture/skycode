@@ -16,5 +16,6 @@
         "titleBar.activeBackground": "#1E1E1E",
         "titleBar.inactiveBackground": "#1E1E1E",
         "terminal.background": "#1E1E1E"
-    }
+    },
+    "snyk.advanced.organization": "95c2b729-c583-489f-b688-acf3eda17350"
 }
