@@ -105,28 +105,29 @@ Match the 18-column reference `partlink cad sandbox\kitified-generated_*\7397 03
 
 ## Merge kit BOMs into the drifter BOM
 
-Run this after the kit CSVs have been exported from the active drifter assembly. The kit CSVs are the per-kit BOMs generated from that assembly, and they are appended to its BOM as additional rows.
+Run this after the kit CSVs have been exported from the active drifter assembly. The kit CSVs are the per-kit BOMs generated from that assembly, and they are appended to its BOM as additional rows. They come from the same export run, in the `bom-export-12-KITS_*` folder next to the base. Do not use `kitify\`: it holds kit CSVs from earlier assemblies, such as RDX5 from 7393 0800 45, and merging those into another assembly's BOM adds unrelated rows.
 
 Inputs:
 
 - **Base (drifter BOM):** the 18-column computed BOM of the active assembly, for example `partlink cad sandbox\kitified-generated_*\7397 0320 22.csv`. Do not substitute a different assembly's BOM. Using `7393 0800 45.csv` as the base for `7397 0320 22` was a mistake, so confirm the base root `File Name` matches the active assembly before merging.
-- **Kit BOMs:** every other CSV in the kit folder (`kitify\*.csv`), for example `7372 1044 03 — RDX5 GH SEAL KIT.csv`. Exclude the base file and any previous merged output.
+- **Kit BOMs:** every other CSV in the `bom-export-12-KITS_*` folder, for example `7372 2927 02.csv`. Each file name is its kit root's Part Number. Exclude the base file and any previous merged output.
 
 Procedure:
 
-1. Check each kit CSV. The header must equal the 17-column kit header (the base header without `Weight`). Files have no BOM and use CRLF endings.
+1. Check each kit CSV. The header must equal the 18-column base header, including `Weight`. Kit files start with a UTF-8 BOM (`EF BB BF`) and use CRLF endings, so strip the BOM before reading.
 2. Read every file as Latin-1 (`[Text.Encoding]::GetEncoding(28591)`) so the bytes round-trip exactly. Do not decode as UTF-8, which would corrupt characters such as the `�` in `ROTARY SEAL (30x37.5x3.2 Ø30, FKM)`.
 3. Start with the base file's text unchanged. Add a CRLF if it does not end with one.
-4. For each kit file, skip the header line and every empty line. Append each remaining row followed by a comma and CRLF. This pads the 17 fields to 18 with an empty `Weight`.
-5. Write the result as bytes in Latin-1. The output is `kitify\<active assembly PartNo>.csv`, for example `kitify\7397 0320 22.csv`.
+4. For each kit file, skip the header line and every empty line. Append each remaining row followed by CRLF. Only a row with 17 fields needs a comma first, which pads it with an empty `Weight`. Rows with 18 fields are copied unchanged.
+5. Write the result as bytes in Latin-1. The output is `bom-export-12-KITS_*\<active assembly PartNo>.csv`, for example `bom-export-12-KITS_20261117_152548\7397 0320 22.csv`.
 6. Keep the native `Level` values of the kit rows (`1`, `1.1`, and so on) and do not renumber them. Row order does not matter. Kit roots stay at `Level` `1`, so there is one `Level` `1` row per kit plus the assembly root.
 
 Validation:
 
 - Row count equals base data rows plus the sum of kit data rows, counted by `Import-Csv`.
-- Every row has 18 fields.
+- Count fields with `Import-Csv`, not by splitting on commas. The base has quoted fields that contain commas, such as `"O-RING (85x2, 70SHORE)"`, so a naive split gives false results. Every row must parse to the 18 header columns.
 - The number of `Level` `1` rows equals 1 (the assembly root) plus the number of kit CSVs.
-- The base file is unchanged.
+- Each kit's root row (`Level` `1`, with the Part Number equal to the kit's file name) is present, and every kit data row appears verbatim in the output.
+- The base file's bytes are a prefix of the output.
 
 Remove any earlier merged output that was built on a different base, for example `drifter root partno.csv`, after the new file is verified.
 
