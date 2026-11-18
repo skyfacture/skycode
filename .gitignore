@@ -1,3 +1,7 @@
-# goodsync backup
-_gsdata_/_insync_v4.gsl
-_gsdata_
+# GoodSync metadata and logs
+_gsdata_/
+
+# SOLIDWORKS lockfiles
+~$*.[sS][lL][dD][pP][rR][tT]
+~$*.[sS][lL][dD][aA][sS][mM]
+~$*.[sS][lL][dD][dD][rR][wW]
