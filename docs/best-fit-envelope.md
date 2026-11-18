@@ -30,23 +30,29 @@ renamed from the initial extensionless working file.
 3. Keep the intended part or assembly active in the running SOLIDWORKS session.
 4. Run `SldworksBoundingBox`, or call `GetCurrentModelBoundingBox`.
    `GetCurrentModelBoundingBox(False)` returns the report without a message
-   box, for programmatic use. Both forms first show a **Save As** dialog for
-   the TXT report. Cancelling returns an empty string without changing the
-   model or creating output files.
+   box, for programmatic use. The TXT report is written beside the source model
+   as `<source>.txt` and overwritten without a Save As dialog.
 
-The script attaches using `GetObject(, "SldWorks.Application")`, rather than
-launching another SOLIDWORKS instance. It gets `ActiveDoc` and rejects missing
-models and drawings.
+The script attaches to the running SOLIDWORKS session with
+`GetObject(, "SldWorks.Application.34")`, then `...33`, rather than launching another
+SOLIDWORKS instance. The unversioned ProgID `SldWorks.Application` is registered to
+the newest installed version (2026 on this machine), not necessarily the running one,
+so the version-specific ProgIDs are used.
+It gets `ActiveDoc` and rejects missing models and drawings. If no instance is
+found (VBA error 429, "ActiveX component can't create object"), start SOLIDWORKS in
+the same Windows user session and elevation as the host and run again. Nothing is
+changed by a failed attach.
 
-A new feature is named `Skycode_BoundingBox`. An existing root bounding-box
-feature is reused only when its settings match the requested geometry scope.
-Conflicting settings and multiple root boxes produce explicit errors rather
-than silently modifying an existing feature.
+A new feature is named `Skycode_BoundingBox`. Any existing root bounding-box
+feature is deleted and recreated, so reruns replace the previous box. More than
+one root bounding-box feature raises an explicit error rather than guessing which to replace.
 
 Creating the feature changes the open model and clears the current selection.
 The script rebuilds the model but does **not** save the source model or write
 custom properties to it. It saves a separate solid proxy part beside the saved source
-model and a text report at the location chosen in the Save As dialog.
+model and a text report beside the source model. Both files are overwritten silently.
+The alignment plane (Front Plane) is selected with `SelectByID2`, falling back to
+`Feature.Select2`; each attempt is logged.
 For assemblies, the proxy is inserted as a fixed
 envelope component and excluded from the BOM; tree ordering is not changed.
 Save the source assembly manually to persist that component reference.
@@ -58,8 +64,13 @@ files or components may remain and are explicitly reported.
 - `IFeatureManager.CreateDefinition(swFmBoundingBox)` returns
   `IBoundingBoxFeatureData`. The installed constants library gives
   `swFmBoundingBox = 114`.
-- `ReferenceFaceOrPlane = swBoundingBoxType_BestFit`, whose installed value is
-  `1`, requests the native Best Fit mode.
+- `ReferenceFaceOrPlane = swBoundingBoxType_CustomPlane`, whose installed value is
+  `2`, keeps the Best Fit envelope but constrains its orientation to a selected
+  planar entity. The macro selects the Front Plane, so the box faces are normal to
+  the Front, Top and Right planes. The unconstrained `swBoundingBoxType_BestFit`
+  (`1`) can sit at an arbitrary angle, which is why it is not used.
+- Set `PlanarEntity` from the selection after `AccessSelections`, then call
+  `ReleaseSelectionAccess`.
 - Set `IncludeHiddenBodies = True` and `IncludeSurfaces = False`.
 - For assemblies also set `IncludeHiddenComponents = True` and
   `IncludeEnvelopeComponents = False`.
@@ -146,12 +157,9 @@ constructs a right-handed placement transform and applies it to a modeler box.
 
 The source model must already have a saved path, and SOLIDWORKS must have a
 valid default part template. Outputs are named
-`<source-name>_BoundingBox.SLDPRT` in the source model's folder, not the
-VBA script's folder. The TXT report's Save As dialog suggests a matching
-filename and initially opens in the source folder; choose its name and location
-before processing begins. The dialog supplies `.txt` when no extension is
-entered and confirms replacement of an existing report. It uses the Windows
-common dialog API, compatible with 32-bit and 64-bit VBA hosts.
+`<source-name>_BoundingBox.SLDPRT` and `<source-name>_BoundingBox.txt` in the
+source model's folder, not the VBA script's folder. The TXT report is overwritten
+silently on each run; no dialog is shown. The Windows common dialog API is no longer used.
 The proxy is overwritten on subsequent runs. The existing generated body feature
 is replaced in the same part document and saved, including when that document
 is loaded through the source assembly. An existing output lacking the named

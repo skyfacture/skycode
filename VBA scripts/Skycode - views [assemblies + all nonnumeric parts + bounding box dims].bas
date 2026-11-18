@@ -8,7 +8,8 @@ Option Explicit
 ' its visible proxy, opacity 100 and dimensions, without updating earlier views.
 ' Multi-configuration imports: the ADefault (production) tree is the root/BOX scope; other
 ' configuration trees get assembly/part views only, and duplicate view names are skipped.
-' BOX dimensions use explicit properties captured from the canonical 7382 5000 80 BOX view.
+' BOX dimensions use the Meta.BestFitOrigin and Meta.BestFitEdge1..3 properties written by
+' Skycode - sldworks bounding box.bas: a box constrained normal to the Front, Top and Right planes.
 ' ============================================================
 Private Const LOG_FILE_PATH As String = "C:\skycode\logs\views [assys + all nonnumeric parts + bounding box dims].txt"
 Private Const DIM_TAG As String = "SkycodeBBoxDim"
@@ -290,8 +291,7 @@ Private Function InTree(ByVal id As String, ByVal rootID As String) As Boolean
 End Function
 
 Private Function IsBoxProxy(ByVal actorName As String) As Boolean
-    IsBoxProxy = (InStr(1, actorName, "BoundingBox", vbTextCompare) > 0 Or _
-        InStr(1, actorName, "BestFitEnvelope", vbTextCompare) > 0) And _
+    IsBoxProxy = (InStr(1, actorName, "BoundingBox", vbTextCompare) > 0) And _
         InStr(1, actorName, DIM_TAG, vbBinaryCompare) = 0
 End Function
 
@@ -342,7 +342,7 @@ Private Sub CreateBoxView(ByVal app As DSComposer.Application, ByVal doc As DSCo
         End If
     Next id
     If candidates.count = 0 Then
-        LogPrint logFile, Now & " - ERROR: No visible BoundingBox or BestFitEnvelope proxy under root " & rootID & ". Run Skycode - sldworks bounding box.bas and import or re-import the proxy into Composer."
+        LogPrint logFile, Now & " - ERROR: No visible BoundingBox proxy under root " & rootID & ". Run Skycode - sldworks bounding box.bas and import or re-import the proxy into Composer."
         Exit Sub
     End If
     ' Preflight every candidate before deleting or creating any dimensions.

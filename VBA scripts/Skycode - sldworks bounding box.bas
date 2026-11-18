@@ -1,75 +1,17 @@
 Option Explicit
 
 ' Requires a reference to the installed SOLIDWORKS type library.
-' Native Best Fit is not a certified global-minimum-volume calculation.
+' Best Fit envelope constrained normal to the Front, Top and Right planes (custom-plane mode).
+' Not a certified global-minimum-volume calculation.
+' Custom-plane mode aligns the box to the Front Plane, so its faces are normal to the Front, Top and Right planes.
 Private Const DOCUMENT_PART As Long = 1
 Private Const DOCUMENT_ASSEMBLY As Long = 2
 Private Const FEATURE_BOUNDING_BOX As Long = 114
-Private Const BOUNDING_BOX_BEST_FIT As Long = 1
+Private Const BOUNDING_BOX_CUSTOM_PLANE As Long = 2
+Private Const ALIGNMENT_PLANE_NAME As String = "Front Plane"
 Private Const SKETCH_SEGMENT_LINE As Long = 0
 Private Const BOX_FEATURE_NAME As String = "Skycode_BoundingBox"
 
-#If VBA7 Then
-Private Declare PtrSafe Function GetSaveFileNameW Lib "comdlg32.dll" (ByRef dialog As SaveFileDialog) As Long
-Private Declare PtrSafe Function CommDlgExtendedError Lib "comdlg32.dll" () As Long
-#Else
-Private Declare Function GetSaveFileNameW Lib "comdlg32.dll" (ByRef dialog As SaveFileDialog) As Long
-Private Declare Function CommDlgExtendedError Lib "comdlg32.dll" () As Long
-#End If
-
-Private Type SaveFileDialog
-    structureSize As Long
-#If VBA7 Then
-    ownerWindow As LongPtr
-    instance As LongPtr
-    filter As LongPtr
-    customFilter As LongPtr
-#Else
-    ownerWindow As Long
-    instance As Long
-    filter As Long
-    customFilter As Long
-#End If
-    maxCustomFilter As Long
-    filterIndex As Long
-#If VBA7 Then
-    file As LongPtr
-#Else
-    file As Long
-#End If
-    maxFile As Long
-#If VBA7 Then
-    fileTitle As LongPtr
-#Else
-    fileTitle As Long
-#End If
-    maxFileTitle As Long
-#If VBA7 Then
-    initialDirectory As LongPtr
-    title As LongPtr
-#Else
-    initialDirectory As Long
-    title As Long
-#End If
-    flags As Long
-    fileOffset As Integer
-    fileExtension As Integer
-#If VBA7 Then
-    defaultExtension As LongPtr
-    customData As LongPtr
-    hook As LongPtr
-    templateName As LongPtr
-    reserved As LongPtr
-#Else
-    defaultExtension As Long
-    customData As Long
-    hook As Long
-    templateName As Long
-    reserved As Long
-#End If
-    reservedValue As Long
-    extendedFlags As Long
-End Type
 
 Public Sub SldworksBoundingBox()
     Call GetCurrentModelBoundingBox
@@ -83,6 +25,7 @@ Public Function GetCurrentModelBoundingBox( _
     Dim boxFeature As SldWorks.Feature
     Dim boxDefinition As SldWorks.BoundingBoxFeatureData
     Dim boxSketch As SldWorks.Sketch
+    Dim selectedPlane As Object
     Dim configuration As SldWorks.Configuration
     Dim modelType As Long
     Dim lengthMetres As Double
@@ -100,11 +43,17 @@ Public Function GetCurrentModelBoundingBox( _
     Dim proxyComponent As SldWorks.Component2
     Dim fs As Object
     Dim textOutput As Object
+    Dim selectAttempts As String
 
     On Error GoTo Failed
 
     stage = "Connecting to the running SOLIDWORKS session"
-    Set swApp = GetObject(, "SldWorks.Application")
+    Set swApp = AttachRunningSolidWorks()
+    If swApp Is Nothing Then
+        Err.Raise vbObjectError + 2150, , "SOLIDWORKS is not reachable from this macro host. " & _
+            "Start SOLIDWORKS in the same Windows user session and elevation as this host, " & _
+            "open the source model, and run the macro again. Nothing was changed."
+    End If
 
     stage = "Getting the current open model"
     Set swModel = swApp.ActiveDoc
@@ -138,14 +87,44 @@ Public Function GetCurrentModelBoundingBox( _
     stage = "Checking for an existing root-model bounding box"
     Set boxFeature = FindBoundingBox(swModel)
 
+    If Not boxFeature Is Nothing Then
+        stage = "Removing the existing root-model bounding box"
+        swModel.ClearSelection2 True
+        If boxFeature.Select2(False, 0) = False Then
+            Err.Raise vbObjectError + 2110, , "Could not select the existing bounding-box feature for overwrite."
+        End If
+        If swModel.Extension.DeleteSelection2(0) = False Then
+            Err.Raise vbObjectError + 2111, , "Could not delete the existing bounding-box feature."
+        End If
+        swModel.ClearSelection2 True
+        Set boxFeature = Nothing
+    End If
+
     If boxFeature Is Nothing Then
-        stage = "Defining the native Best Fit envelope"
+        stage = "Defining the bounding box aligned to the Front, Top and Right planes"
+        If Not SelectAlignmentPlane(swApp, swModel, ALIGNMENT_PLANE_NAME, selectAttempts) Then
+            Err.Raise vbObjectError + 2106, , "Could not select '" & ALIGNMENT_PLANE_NAME & "'. Attempts: " & selectAttempts
+        End If
+        stage = "Creating the bounding-box definition"
         Set boxDefinition = swModel.FeatureManager.CreateDefinition(FEATURE_BOUNDING_BOX)
         If boxDefinition Is Nothing Then
             Err.Raise vbObjectError + 2102, , "SOLIDWORKS did not create a bounding-box definition."
         End If
 
-        boxDefinition.ReferenceFaceOrPlane = BOUNDING_BOX_BEST_FIT
+        stage = "Setting the custom-plane reference type"
+        boxDefinition.ReferenceFaceOrPlane = BOUNDING_BOX_CUSTOM_PLANE
+        stage = "Accessing selections for the bounding-box definition"
+        boxDefinition.AccessSelections swModel, Nothing
+        stage = "Reading the selected alignment plane"
+        Set selectedPlane = swModel.SelectionManager.GetSelectedObject6(1, -1)
+        If selectedPlane Is Nothing Then
+            Err.Raise vbObjectError + 2107, , "No plane is selected after AccessSelections (selection count " & _
+                SelectedCount(swModel) & ")."
+        End If
+        stage = "Assigning the alignment plane as the planar entity"
+        boxDefinition.PlanarEntity = selectedPlane
+        stage = "Releasing selection access"
+        boxDefinition.ReleaseSelectionAccess
         boxDefinition.IncludeHiddenBodies = True
         boxDefinition.IncludeSurfaces = False
         If modelType = DOCUMENT_ASSEMBLY Then
@@ -153,7 +132,7 @@ Public Function GetCurrentModelBoundingBox( _
             boxDefinition.IncludeEnvelopeComponents = False
         End If
 
-        stage = "Calculating the native Best Fit envelope"
+        stage = "Calculating the aligned bounding box"
         swModel.ClearSelection2 True
         Set boxFeature = swModel.FeatureManager.CreateFeature(boxDefinition)
         If boxFeature Is Nothing Then
@@ -163,26 +142,6 @@ Public Function GetCurrentModelBoundingBox( _
         createdFeature = True
         boxFeature.Name = BOX_FEATURE_NAME
         swModel.ClearSelection2 True
-    Else
-        stage = "Validating the existing bounding-box settings"
-        Set boxDefinition = boxFeature.GetDefinition
-        If boxDefinition Is Nothing Then
-            Err.Raise vbObjectError + 2104, , "The existing bounding-box definition is unavailable."
-        End If
-
-        If boxDefinition.ReferenceFaceOrPlane <> BOUNDING_BOX_BEST_FIT _
-            Or boxDefinition.IncludeHiddenBodies = False _
-            Or boxDefinition.IncludeSurfaces <> False Then
-            Err.Raise vbObjectError + 2105, , _
-                "The existing bounding box uses different fit/body settings. It has not been overwritten."
-        End If
-        If modelType = DOCUMENT_ASSEMBLY Then
-            If boxDefinition.IncludeHiddenComponents = False _
-                Or boxDefinition.IncludeEnvelopeComponents <> False Then
-                Err.Raise vbObjectError + 2106, , _
-                    "The existing bounding box uses different component settings. It has not been overwritten."
-            End If
-        End If
     End If
 
     stage = "Rebuilding the active model"
@@ -237,7 +196,7 @@ Public Function GetCurrentModelBoundingBox( _
     report = "Model: " & swModel.GetTitle & vbCrLf & _
         "Configuration: " & configuration.Name & vbCrLf & _
         "Feature: " & boxFeature.Name & vbCrLf & _
-        "Native Best Fit envelope (not a certified global minimum)" & vbCrLf & _
+        "Best Fit envelope constrained normal to the Front, Top and Right planes (not a certified global minimum)" & vbCrLf & _
         "Length: " & Format$(lengthMetres * 1000#, "0") & " mm" & vbCrLf & _
         "Width: " & Format$(widthMetres * 1000#, "0") & " mm" & vbCrLf & _
         "Height: " & Format$(heightMetres * 1000#, "0") & " mm" & vbCrLf & _
@@ -269,8 +228,10 @@ Public Function GetCurrentModelBoundingBox( _
 Failed:
     failureNumber = Err.Number
     failureDescription = stage & ": " & Err.Description
-    failureDescription = failureDescription & _
-        " Outputs or an inserted component may remain after a partial failure. Proxy: " & proxyPath
+    If stage <> "Connecting to the running SOLIDWORKS session" Then
+        failureDescription = failureDescription & _
+            " Outputs or an inserted component may remain after a partial failure. Proxy: " & proxyPath
+    End If
     If createdFeature Then
         failureDescription = failureDescription & _
             " A new bounding-box feature was added before the failure; inspect it in the unsaved model."
@@ -279,38 +240,71 @@ Failed:
     Err.Raise failureNumber, "GetCurrentModelBoundingBox", failureDescription
 End Function
 
-Private Function ChooseReportPath(ByVal suggestedName As String, ByVal initialFolder As String) As String
-    Dim dialog As SaveFileDialog
-    Dim fileBuffer As String
-    Dim filter As String
-    Dim title As String
-    Dim extension As String
-    Dim dialogError As Long
-
-    fileBuffer = suggestedName & String$(32768 - Len(suggestedName), vbNullChar)
-    filter = "Text files (*.txt)" & vbNullChar & "*.txt" & vbNullChar & vbNullChar
-    title = "Save Best Fit envelope text report"
-    extension = "txt"
-    dialog.structureSize = LenB(dialog)
-    dialog.filter = StrPtr(filter)
-    dialog.filterIndex = 1
-    dialog.file = StrPtr(fileBuffer)
-    dialog.maxFile = Len(fileBuffer)
-    dialog.initialDirectory = StrPtr(initialFolder)
-    dialog.title = StrPtr(title)
-    dialog.defaultExtension = StrPtr(extension)
-    ' Confirm overwrites, preserve the current directory, and require an existing folder.
-    dialog.flags = &H2 Or &H8 Or &H800
-
-    If GetSaveFileNameW(dialog) <> 0 Then
-        ChooseReportPath = Left$(fileBuffer, InStr(fileBuffer, vbNullChar) - 1)
-    Else
-        dialogError = CommDlgExtendedError()
-        If dialogError <> 0 Then
-            Err.Raise vbObjectError + 2139, "ChooseReportPath", _
-                "The report Save As dialog failed. Windows dialog error: " & dialogError
+Private Function AttachRunningSolidWorks() As Object
+    ' The unversioned ProgID is registered to the newest installed SOLIDWORKS, which may not be
+    ' the running one, so the version-specific ProgIDs are tried instead.
+    Dim progIds As Variant, progId As Variant, found As Object
+    progIds = Array("SldWorks.Application.34", "SldWorks.Application.33")
+    For Each progId In progIds
+        On Error Resume Next
+        Set found = Nothing
+        Set found = GetObject(, CStr(progId))
+        On Error GoTo 0
+        If Not found Is Nothing Then
+            Set AttachRunningSolidWorks = found
+            Exit Function
         End If
+    Next progId
+End Function
+
+Private Function SelectedCount(ByVal model As SldWorks.ModelDoc2) As Long
+    SelectedCount = model.SelectionManager.GetSelectedObjectCount2(-1)
+End Function
+
+' Tries every selection route for the plane and logs each result, so a failure shows exactly what was attempted.
+Private Function SelectAlignmentPlane(ByVal swApp As SldWorks.SldWorks, ByVal model As SldWorks.ModelDoc2, _
+    ByVal planeName As String, ByRef attempts As String) As Boolean
+    Dim errors As Long
+    Dim feature As SldWorks.Feature
+    Dim typeName As Variant
+    Dim appendFlag As Variant
+    Dim ok As Boolean
+
+    attempts = ""
+    If swApp.ActivateDoc3(model.GetTitle, False, 0, errors) Is Nothing Then
+        attempts = "ActivateDoc3 failed (" & errors & "); "
     End If
+    For Each appendFlag In Array(False, True)
+        For Each typeName In Array("PLANE", "DATUMPLANE")
+            model.ClearSelection2 True
+            ok = model.Extension.SelectByID2(planeName, CStr(typeName), 0#, 0#, 0#, CBool(appendFlag), 0, Nothing, 0)
+            attempts = attempts & "SelectByID2(" & typeName & ",append=" & appendFlag & ")=" & ok & "/" & SelectedCount(model) & "; "
+            If ok And SelectedCount(model) > 0 Then
+                SelectAlignmentPlane = True
+                Exit Function
+            End If
+        Next typeName
+    Next appendFlag
+
+    Set feature = model.FeatureByName(planeName)
+    If feature Is Nothing Then
+        attempts = attempts & "FeatureByName not found; "
+        Exit Function
+    End If
+    For Each appendFlag In Array(False, True)
+        model.ClearSelection2 True
+        ok = feature.Select2(CBool(appendFlag), 0)
+        attempts = attempts & "Feature.Select2(append=" & appendFlag & ")=" & ok & "/" & SelectedCount(model) & "; "
+        If ok And SelectedCount(model) > 0 Then
+            SelectAlignmentPlane = True
+            Exit Function
+        End If
+    Next appendFlag
+End Function
+
+' Report goes beside the source model and overwrites any previous report, without prompting.
+Private Function ChooseReportPath(ByVal suggestedName As String, ByVal initialFolder As String) As String
+    ChooseReportPath = initialFolder & "\" & suggestedName
 End Function
 
 Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
@@ -340,9 +334,8 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
     Dim template As String
     Dim errors As Long, warnings As Long
     Dim activated As SldWorks.ModelDoc2
-    Dim oldFeature As SldWorks.Feature
+    Dim openDoc As SldWorks.ModelDoc2
     Dim fs As Object
-    Dim existingPart As Boolean
 
     Set utility = app.GetMathUtility
     Set toModel = sketch.ModelToSketchTransform.Inverse
@@ -410,38 +403,18 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
     End If
 
     Set fs = CreateObject("Scripting.FileSystemObject")
-    existingPart = fs.FileExists(outputPath)
-    If existingPart Then
-        Set partModel = app.GetOpenDocumentByName(outputPath)
-        If partModel Is Nothing Then
-            Set partModel = app.OpenDoc6(outputPath, DOCUMENT_PART, 1, "", errors, warnings)
-        End If
-        If partModel Is Nothing Or errors <> 0 Then
-            Err.Raise vbObjectError + 2134, , "Could not open the existing proxy. Error flags: " & errors
-        End If
-        Set oldFeature = partModel.FeatureByName(BOX_FEATURE_NAME)
-        If oldFeature Is Nothing Then
-            Err.Raise vbObjectError + 2135, , _
-                "The existing output does not contain the generated proxy feature; it has not been overwritten."
-        End If
-    Else
-        template = app.GetUserPreferenceStringValue(8)
-        If Len(template) = 0 Then Err.Raise vbObjectError + 2129, , "Configure a default SOLIDWORKS part template."
-        Set partModel = app.NewDocument(template, 0, 0#, 0#)
+    If fs.FileExists(outputPath) Then
+        Set openDoc = app.GetOpenDocumentByName(outputPath)
+        If Not openDoc Is Nothing Then app.CloseDoc openDoc.GetTitle
+        fs.DeleteFile outputPath, True
     End If
+    template = app.GetUserPreferenceStringValue(8)
+    If Len(template) = 0 Then Err.Raise vbObjectError + 2129, , "Configure a default SOLIDWORKS part template."
+    Set partModel = app.NewDocument(template, 0, 0#, 0#)
     If partModel Is Nothing Then Err.Raise vbObjectError + 2130, , "Could not open the proxy part template."
     Set activated = app.ActivateDoc3(partModel.GetTitle, False, 0, errors)
     If activated Is Nothing Or errors <> 0 Then
         Err.Raise vbObjectError + 2136, , "Could not activate the proxy part."
-    End If
-    If existingPart Then
-        partModel.ClearSelection2 True
-        If oldFeature.Select2(False, 0) = False Then
-            Err.Raise vbObjectError + 2137, , "Could not select the previous proxy body."
-        End If
-        If partModel.Extension.DeleteSelection2(0) = False Then
-            Err.Raise vbObjectError + 2138, , "Could not remove the previous proxy body."
-        End If
     End If
     Set part = partModel
     Set feature = part.CreateFeatureFromBody3(body, False, 0)
@@ -449,11 +422,7 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
     feature.Name = BOX_FEATURE_NAME
     WriteBoxFrameProperties partModel, origin, directions, lengths
     Dim saved As Boolean
-    If existingPart Then
-        saved = partModel.Save3(1, errors, warnings)
-    Else
-        saved = partModel.Extension.SaveAs(outputPath, 0, 1, Nothing, errors, warnings)
-    End If
+    saved = partModel.Extension.SaveAs(outputPath, 0, 1, Nothing, errors, warnings)
     If saved = False Or errors <> 0 Then
         Err.Raise vbObjectError + 2132, , "Proxy save failed. Error flags: " & errors & "; warning flags: " & warnings
     End If

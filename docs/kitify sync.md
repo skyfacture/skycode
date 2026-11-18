@@ -102,7 +102,22 @@ No permission, overwrite or output-location dialogs are used by the macro.
 message. `SkycodeKitify` never shows a message box: it prints the result or
 failure to the Immediate window, and every run writes `run.txt`.
 
-### Unattended runs (no dialogs)
+### Unattended runs
+
+The options below reduce prompts but do not guarantee a dialog-free run.
+Save Modified Documents prompts have still been observed during generation;
+their trigger has not yet been confirmed. `run.txt` records entry and return
+around generated-child saves, closes, and working-assembly reference deletion
+to help identify a blocked call. Do not treat a partial run as verified.
+
+On 2026-11-18, an isolated Access retry of the local `7397 0500 28` source
+completed through bounding-box creation, but the user reported one PDM checkout
+dialog for `BG 006 019 67.SLDPRT`. The checkout-dialog helper was disabled for
+that test, so it was not a fully unattended run. The run log verified
+16 kit configurations, and local source file sizes and modification times
+were unchanged. This is evidence for that session, not a confirmed root cause
+or a guarantee that prompts cannot recur; the source reference list previously
+reported `3115 2016 00 - Assemb.SLDASM` as missing.
 
 For the duration of a run the macro temporarily changes these SOLIDWORKS system
 options and restores the user's values on success or failure:
@@ -125,13 +140,15 @@ Access does not show its modal "waiting for another application to complete an
 OLE action" dialog during long SOLIDWORKS calls; it is re-registered afterwards.
 Inside SOLIDWORKS' own VBA host the filter is left alone.
 
-The SOLIDWORKS PDM add-in asks "*file* is not checked out. Would you like to
-check it out?" when a rebuild touches a read-only vault file. No SOLIDWORKS
-preference or API call turns this prompt off, so for the duration of the run
-the macro starts a hidden PowerShell helper (script in `%TEMP%`). The helper
-answers **No** only to that PDM dialog in the SOLIDWORKS process. Nothing is
-checked out. Each answered prompt is listed in `declined-checkouts.txt` and
-copied into `run.txt` as `AUTO-DECLINED PDM CHECKOUT`.
+For the duration of the run the macro starts a hidden PowerShell helper (script
+in `%TEMP%`) that requests **No** on standard, visible dialogs titled
+`SOLIDWORKS PDM` in the SOLIDWORKS process when exactly one No button is
+present. This applies to every such PDM question, not just checkout requests;
+No may have other consequences depending on the question. Other window titles,
+dialog types, and prompts without a unique No button are not answered. The
+historically named `declined-checkouts.txt` records queued responses and
+message-post failures; these entries are also copied into `run.txt`. A queued
+response does not itself prove the dialog accepted it.
 
 The macro stops the helper and deletes its script when the run succeeds or
 fails. The helper also exits by itself if SOLIDWORKS or the host process exits,
@@ -140,7 +157,7 @@ or if `run.txt` has not been written for 120 minutes.
 Default output:
 
 ```text
-<source folder>\kitified-generated_<yyyymmdd_hhnnss>\
+<source folder>\kitified-generated_<partno>_<yyyymmdd>_<run>\
     <source base name> kitified generated <run-id>.SLDASM
     <PDM kit identity> kitified <run-id>.SLDASM
     <source non-kit assembly name>_<run-id>_<identifier>.SLDASM
@@ -356,7 +373,7 @@ Transform values use the VBA host's locale and semicolon separators.
 | `production-metadata.csv` | Reopened `Default` root custom properties compared with source-resolved values |
 | `configurations.csv` | Exact root configuration inventory, branch suppressions and per-configuration PDM quantities |
 | `kit-configurations.csv` | PDM PartNo/Description, configuration name, resolved ordinary identity and verification that configuration-specific identity properties are absent |
-| `declined-checkouts.txt` | PDM "check it out?" prompts answered No automatically (only present when one occurred) |
+| `declined-checkouts.txt` | PDM No responses queued by the helper or message-post failures (only present when recorded) |
 | `validation.csv` | Source-to-generated occurrence and transform checks, including reused memberships |
 | `metadata.csv` | Expected versus reopened properties by scope/type; source and PDM-kit metadata gaps |
 | `appearance.csv` | Reopened individual-kit RGB colours; blank RGB for root and structures |

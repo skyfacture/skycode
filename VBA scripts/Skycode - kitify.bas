@@ -12,10 +12,13 @@ Option Explicit
 '     configuration-specific PartNo/Description; file-level expressions resolve each kit identity.
 '   - Call KitifyDrifter(sourcePath, outputFolder, showMessage) to identify an open source,
 '     choose an output folder, or show a completion message (off by default).
-'   - Creates verified kitified output and reports in a new kitified-generated_<timestamp> folder beside
+'   - Creates verified kitified output and reports in a new kitified-generated_<partno>_<yyyymmdd>_<run> folder beside
 '     the source unless outputFolder is specified.
-'   - SOLIDWORKS prompts and the host's OLE "server busy" dialog are suppressed during the run and
-'     restored afterwards; failures are written to run.txt instead of a message box.
+'   - SOLIDWORKS prompt settings are temporarily changed and restored afterwards; failures are written
+'     to run.txt instead of a message box. Some save prompts have still been observed.
+'   - The combined output gets a Skycode_BoundingBox feature via the bounding-box routine
+'     (Skycode - sldworks bounding box.bas), which writes the <output>_BoundingBox.SLDPRT proxy
+'     and TXT report beside it. The combined output is saved with that feature.
 '   - The source assembly is not saved or restructured.
 ' ============================================================
 ' Requires the installed SOLIDWORKS type library; no constants-library reference.
@@ -110,6 +113,7 @@ Public Function KitifyDrifter( _
     Dim errors As Long
     Dim warnings As Long
     Dim reopened As SldWorks.ModelDoc2
+    Dim boxReport As String
     On Error GoTo Failed
 
     mStage = "Connecting to the running SOLIDWORKS session"
@@ -206,6 +210,16 @@ Public Function KitifyDrifter( _
     Next n
     ShowConfiguration mWorking, PRODUCTION_CONFIGURATION
     ValidateMetadata "", True
+    mStage = "Creating the bounding-box proxy for the combined output"
+    Activate mWorking
+    boxReport = GetCurrentModelBoundingBox(False)
+    LogLine "Bounding box proxy and report written beside the combined output: " & boxReport
+    errors = 0
+    warnings = 0
+    If mWorking.Save3(1, errors, warnings) = False Or errors <> 0 Then Err.Raise vbObjectError + 2454, , _
+        "Could not save combined output with bounding box; errors=" & errors & "; warnings=" & warnings
+    LogLine "Bounding box feature saved into combined output."
+    CloseGenerated
     If Not mApp.GetOpenDocumentByName(snapshotPath) Is Nothing Then _
         Err.Raise vbObjectError + 2453, , "Construction snapshot is unexpectedly still loaded: " & snapshotPath
     mFS.DeleteFile snapshotPath, True
@@ -324,8 +338,7 @@ Private Sub RestorePrompts()
     Err.Clear
 End Sub
 
-' SOLIDWORKS PDM asks "...is not checked out. Would you like to check it out?" when a read-only vault
-' file is touched; no API or preference suppresses it. A hidden helper process answers No for the run.
+' Answer No to SOLIDWORKS PDM dialogs with an explicit No button during the run.
 Private Sub StartCheckoutDecliner()
     Dim script As Object
     Dim command As String
@@ -342,12 +355,12 @@ Private Sub StartCheckoutDecliner()
         GetCurrentProcessId() & " " & PsQuote(mDeclinerLog) & " " & _
         PsQuote(mFS.BuildPath(mFolder, "run.txt")) & """"
     mDeclinerPid = Shell(command, vbHide)
-    LogLine "PDM checkout prompts are answered No automatically by helper process " & CStr(mDeclinerPid) & _
+    LogLine "PDM prompt helper started as process " & CStr(mDeclinerPid) & "; it requests No where supported" & _
         "; see declined-checkouts.txt."
     Exit Sub
 Failed:
-    LogLine "WARNING: could not start the PDM checkout-prompt decliner: " & Err.Description
-    Err.Clear
+    Err.Raise Err.Number, "Skycode.StartCheckoutDecliner", _
+        "Could not start the PDM prompt decliner: " & Err.Description
 End Sub
 
 Private Sub StopCheckoutDecliner()
@@ -365,7 +378,7 @@ Private Sub StopCheckoutDecliner()
         If mFS.FileExists(mDeclinerLog) Then
             Set stream = mFS.OpenTextFile(mDeclinerLog, 1, False, -2)
             Do While Not stream.AtEndOfStream
-                mLog.WriteLine "AUTO-DECLINED PDM CHECKOUT: " & stream.ReadLine
+                mLog.WriteLine "PDM PROMPT HELPER: " & stream.ReadLine
             Loop
             stream.Close
         End If
@@ -396,24 +409,32 @@ Private Function CheckoutDeclinerScript() As String
     s = s & "  [DllImport(""user32.dll"")] static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);" & vbCrLf
     s = s & "  [DllImport(""user32.dll"", CharSet = CharSet.Unicode)] static extern int GetClassName(IntPtr h, StringBuilder s, int n);" & vbCrLf
     s = s & "  [DllImport(""user32.dll"", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr h, StringBuilder s, int n);" & vbCrLf
+    s = s & "  public static bool IsTargetDialog(uint ownerPid, uint swPid, bool visible, string kind, string title) {" & vbCrLf
+    s = s & "    return ownerPid == swPid && visible && kind == ""#32770"" &&" & vbCrLf
+    s = s & "      title.Equals(""SOLIDWORKS PDM"", StringComparison.OrdinalIgnoreCase);" & vbCrLf
+    s = s & "  }" & vbCrLf
+    s = s & "  public static bool IsNoButton(string kind, string text) {" & vbCrLf
+    s = s & "    return kind.Equals(""Button"", StringComparison.OrdinalIgnoreCase) &&" & vbCrLf
+    s = s & "      text.Replace(""&"", """").Trim().Equals(""No"", StringComparison.OrdinalIgnoreCase);" & vbCrLf
+    s = s & "  }" & vbCrLf
     s = s & "  public static List<string> Decline(uint pid) {" & vbCrLf
     s = s & "    var declined = new List<string>();" & vbCrLf
     s = s & "    EnumWindows((h, l) => {" & vbCrLf
     s = s & "      uint p; GetWindowThreadProcessId(h, out p);" & vbCrLf
-    s = s & "      if (p != pid || !IsWindowVisible(h)) return true;" & vbCrLf
     s = s & "      var c = new StringBuilder(64); GetClassName(h, c, 64);" & vbCrLf
-    s = s & "      if (c.ToString() != ""#32770"") return true;" & vbCrLf
-    s = s & "      var text = new StringBuilder(); IntPtr no = IntPtr.Zero;" & vbCrLf
+    s = s & "      var title = new StringBuilder(256); GetWindowText(h, title, 256);" & vbCrLf
+    s = s & "      if (!IsTargetDialog(p, pid, IsWindowVisible(h), c.ToString(), title.ToString())) return true;" & vbCrLf
+    s = s & "      var text = new StringBuilder(); IntPtr no = IntPtr.Zero; int noCount = 0;" & vbCrLf
     s = s & "      EnumChildWindows(h, (ch, l2) => {" & vbCrLf
     s = s & "        var t = new StringBuilder(2048); GetWindowText(ch, t, 2048);" & vbCrLf
-    s = s & "        if (t.ToString().Replace(""&"", """").Trim() == ""No"") no = ch;" & vbCrLf
+    s = s & "        var kind = new StringBuilder(64); GetClassName(ch, kind, 64);" & vbCrLf
+    s = s & "        if (IsNoButton(kind.ToString(), t.ToString())) { no = ch; noCount++; }" & vbCrLf
     s = s & "        text.Append(t.ToString()).Append(' ');" & vbCrLf
     s = s & "        return true; }, IntPtr.Zero);" & vbCrLf
     s = s & "      var all = text.ToString();" & vbCrLf
-    s = s & "      if (no != IntPtr.Zero && all.IndexOf(""not checked out"", StringComparison.OrdinalIgnoreCase) >= 0 &&" & vbCrLf
-    s = s & "          all.IndexOf(""check it out"", StringComparison.OrdinalIgnoreCase) >= 0) {" & vbCrLf
-    s = s & "        PostMessage(h, 0x0111, (IntPtr)(GetDlgCtrlID(no) & 0xFFFF), no);" & vbCrLf
-    s = s & "        declined.Add(all.Replace(""\r"", "" "").Replace(""\n"", "" "").Trim());" & vbCrLf
+    s = s & "      if (noCount == 1) {" & vbCrLf
+    s = s & "        string prefix = PostMessage(h, 0x0111, (IntPtr)(GetDlgCtrlID(no) & 0xFFFF), no) ? ""QUEUED NO: "" : ""ERROR: Could not queue No: "";" & vbCrLf
+    s = s & "        declined.Add(prefix + title + "": "" + all.Replace(""\r"", "" "").Replace(""\n"", "" "").Trim());" & vbCrLf
     s = s & "      }" & vbCrLf
     s = s & "      return true; }, IntPtr.Zero);" & vbCrLf
     s = s & "    return declined;" & vbCrLf
@@ -426,6 +447,7 @@ Private Function CheckoutDeclinerScript() As String
     s = s & "  if ((Test-Path -LiteralPath $RunLog) -and ((Get-Date) - (Get-Item -LiteralPath $RunLog).LastWriteTime).TotalMinutes -gt 120) { break }" & vbCrLf
     s = s & "  $declined = [SkycodeCheckoutDecliner]::Decline([uint32]$SwPid)" & vbCrLf
     s = s & "  foreach ($d in $declined) { Add-Content -LiteralPath $LogPath -Value ((Get-Date -Format s) + ' ' + $d) }" & vbCrLf
+    s = s & "  if ($declined -match '^ERROR:') { break }" & vbCrLf
     s = s & "  if ($declined.Count -gt 0) { Start-Sleep -Milliseconds 1000 } else { Start-Sleep -Milliseconds 250 }" & vbCrLf
     s = s & "}" & vbCrLf
     CheckoutDeclinerScript = s
@@ -985,8 +1007,8 @@ End Sub
 Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As String) As String
     Dim parent As String
     Dim candidate As String
-    Dim suffix As Long
-    Dim folderName As String
+    Dim run As Long
+    Dim folderPrefix As String
     If Len(requested) > 0 Then
         candidate = mFS.GetAbsolutePathName(requested)
         If mFS.FolderExists(candidate) Or mFS.FileExists(candidate) Then
@@ -994,11 +1016,12 @@ Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As 
         End If
     Else
         parent = mFS.GetParentFolderName(sourcePath)
-        folderName = "kitified-generated_" & Format$(Now, "yyyymmdd_hhnnss")
-        candidate = mFS.BuildPath(parent, folderName)
+        folderPrefix = "kitified-generated_" & mFS.GetBaseName(sourcePath) & "_" & Format$(Now, "yyyymmdd") & "_"
+        run = 1
+        candidate = mFS.BuildPath(parent, folderPrefix & CStr(run))
         Do While mFS.FolderExists(candidate) Or mFS.FileExists(candidate)
-            suffix = suffix + 1
-            candidate = mFS.BuildPath(parent, folderName & "_" & CStr(suffix))
+            run = run + 1
+            candidate = mFS.BuildPath(parent, folderPrefix & CStr(run))
         Loop
     End If
     mFS.CreateFolder candidate
@@ -1883,6 +1906,7 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
             Set childModel = Nothing
             LogLine "Closing inserted child document: " & mChildPath
             mApp.CloseDoc mChildPath
+            LogLine "Closed inserted child document: " & mChildPath
             mChildPath = ""
         End If
     Next childKey
@@ -1903,6 +1927,8 @@ Private Function BuildGroup(ByVal key As String, ByVal template As String, ByVal
     saveOptions = 3
     If key = "ROOT" Then saveOptions = 1
     saved = model.Extension.SaveAs3(group("file"), 0, saveOptions, Nothing, Nothing, errors, warnings)
+    LogLine "Group save returned: " & key & "; saved=" & CStr(saved) & _
+        "; errors=" & CStr(errors) & "; warnings=" & CStr(warnings)
     If saved = False Or errors <> 0 Then Err.Raise vbObjectError + 2420, , _
         "Save failed: " & group("file") & "; errors=" & errors & "; warnings=" & warnings
     If warnings <> 0 Then LogLine "SAVE WARNING " & group("file") & ": " & warnings
@@ -2015,7 +2041,9 @@ Private Function CombineConfigurations(ByVal source As SldWorks.ModelDoc2) As St
             InsertFixed mWorking, assembly, group("file"), CStr(group("configuration")), IdentityMatrix()
             SaveLoadedGeneratedDocuments
             Set childModel = Nothing
+            LogLine "Closing inserted child document: " & mChildPath
             mApp.CloseDoc mChildPath
+            LogLine "Closed inserted child document: " & mChildPath
             mChildPath = ""
         End If
     Next key
@@ -2439,8 +2467,10 @@ Private Sub ClearWorkingAssembly()
             If component.Select4(True, Nothing, False) = False Then Err.Raise vbObjectError + 2446, , _
                 "Could not select the working assembly contents for release."
         Next item
+        LogLine "Deleting selected working assembly references"
         If mWorking.Extension.DeleteSelection2(0) = False Then Err.Raise vbObjectError + 2446, , _
             "Could not clear the working assembly after saving its child copy."
+        LogLine "Deleted selected working assembly references"
     End If
     If assembly.GetComponentCount(True) <> 0 Then Err.Raise vbObjectError + 2446, , _
         "Working assembly still contains components from the previous child."
@@ -2464,9 +2494,11 @@ Private Sub SaveLoadedGeneratedDocuments()
             If Not model Is Nothing Then
                 If Not model Is mWorking Then
                     If model.GetSaveFlag Then
+                        LogLine "Saving rebuilt generated child: " & path
                         If model.Save3(1, errors, warnings) = False Or errors <> 0 Then _
                             Err.Raise vbObjectError + 2447, , "Could not save rebuilt generated child: " & path & _
                             "; errors=" & errors & "; warnings=" & warnings
+                        LogLine "Saved rebuilt generated child: " & path
                         If warnings <> 0 Then LogLine "GENERATED CHILD SAVE WARNING " & path & ": " & warnings
                     End If
                 End If
