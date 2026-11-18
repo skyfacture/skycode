@@ -182,6 +182,52 @@ import individual generated kit SLDASMs as separate masters. Other source
 configurations remain untouched in the original file but are not retained in
 the output.
 
+### Composer SOLIDWORKS import settings
+
+The user identifies these settings from the SOLIDWORKS tab of Composer's Open
+dialog as the canonical baseline and warns that other settings cause graphics
+distortion:
+
+- Select **Open**, not either merge option; **Preview** is enabled.
+- Select **all configurations**.
+- Disable **Import SOLIDWORKS appearance**, **Import SOLIDWORKS decals**,
+  **Import SOLIDWORKS BOM**, and **Import SOLIDWORKS Explode Views and Saved
+  Views**.
+- Enable **Import SOLIDWORKS assembly envelope**.
+
+The screenshot does not show the settings on the Import or Refinement tabs, so
+their canonical values are not established here.
+
+### Composer SOLIDWORKS plug-in registration
+
+On 2026-11-18, Composer 2025 could not translate even previously working
+assemblies and reported `LitInteropSWCOM : Failed to load plug-in` followed by
+`OpenDoc failed`. The SOLIDWORKS COM default had pointed to 2026; changing it
+back to 2025 was not sufficient. The separate Composer SOLIDWORKS add-in class
+was still registered to the Composer 2026 plug-in DLL.
+
+Check the effective add-in registration in PowerShell:
+
+```powershell
+(Get-ItemProperty 'Registry::HKEY_CLASSES_ROOT\CLSID\{1A49690A-CC1F-4C81-9B96-303C52F14AC3}\InprocServer32').'(default)'
+```
+
+For Composer 2025 on this machine, it should point to
+`C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS Composer\Plugins\solidworks\composersolidworksplug-in.dll`,
+not the `SOLIDWORKS Composer (2)` installation. If it points to the wrong
+version, close Composer and SOLIDWORKS and register the 2025 DLL from an
+Administrator PowerShell:
+
+```powershell
+& "$env:SystemRoot\System32\regsvr32.exe" 'C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS Composer\Plugins\solidworks\composersolidworksplug-in.dll'
+```
+
+Check the registration again and retry the import. In this incident the
+requested generated assembly opened after the plug-in was registered, and the
+user confirmed a subsequent import with the intended settings worked. This
+error can have other causes; do not assume an assembly is corrupt solely from
+the message. Do not delete versioned COM registrations as a routine fix.
+
 Runs use separate folders and do not overwrite existing output. Keep the whole
 run folder together: the root references its generated children. Run-specific
 root, structural and generated-kit names avoid SOLIDWORKS same-title conflicts

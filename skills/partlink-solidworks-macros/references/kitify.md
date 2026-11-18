@@ -30,7 +30,7 @@ Default output is a new folder beside the source, named `kitified-generated_<par
 - Reports, including `run.txt`, `membership.csv`, `pdm-kit-comparison.csv`, `validation.csv`, `metadata.csv`, `configurations.csv`, and `kit-configurations.csv`.
 - `declined-checkouts.txt`, listing PDM No responses queued by the helper or message-post failures.
 
-Import the single combined root into Composer, with all configurations selected. Do not import the generated kit children as separate masters.
+Import the single combined root into Composer using the [canonical SOLIDWORKS import settings](<../../../docs/kitify sync.md#composer-solidworks-import-settings>), including all configurations. Do not import the generated kit children as separate masters.
 
 ## Side effects and restoration
 
@@ -41,6 +41,7 @@ Import the single combined root into Composer, with all configurations selected.
 
 ## Gotchas
 
+- If Composer reports `LitInteropSWCOM : Failed to load plug-in` and `OpenDoc failed`, check the [Composer SOLIDWORKS plug-in registration](<../../../docs/kitify sync.md#composer-solidworks-plug-in-registration>): after installing Composer 2026, the add-in still pointed to its 2026 DLL even after the SOLIDWORKS COM default was restored to 2025. Registering the 2025 plug-in resolved the observed import failure.
 - Each kit configuration is named `<PartNo> <Description>` from the PDM kit assembly. Duplicate or reserved names fail the run.
 - Create the root Save As Copy before resolving or inspecting source components; moving it later can trigger save prompts for modified references. This does not copy the referenced parts.
 - Save Modified Documents prompts have also been observed during generation despite the existing prompt settings. Their cause remains unconfirmed; check `run.txt` around save, close, and reference-deletion calls rather than assuming the early-copy fix covers them.
