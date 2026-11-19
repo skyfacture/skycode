@@ -1,6 +1,6 @@
 ---
 name: partlink-solidworks-macros
-description: 'Run, choose, or troubleshoot the Skycode SOLIDWORKS and SOLIDWORKS Composer VBA macros used in Partlink maintenance and operation (kitify, bounding boxes, views, metadata, pivots, explode, root identification). Use when asked which macro to run, how a Partlink macro behaves, or what its inputs, outputs, and side effects are.'
+description: 'Develop, edit, run, choose, or troubleshoot the Skycode SOLIDWORKS and SOLIDWORKS Composer VBA macros used in Partlink maintenance and operation (kitify, bounding boxes, views, metadata, pivots, explode, root identification).'
 ---
 
 # Partlink SOLIDWORKS and Composer macros
@@ -46,6 +46,10 @@ Choose the views macro by what the view set needs:
 
 ## Shared conventions
 
+- Never add an `Attribute VB_Name = ...` line to macro source.
+- For Composer view-creation macros using `ZoomFitAll`, save `CameraSmoothTime`,
+  set it to `0` before the first zoom, and restore it on completion,
+  cancellation, and errors. Report restore failures.
 - Logs are written to fixed paths, normally `...\Skyfacture\3 - Economics\skycode\logs\` on OneDrive, or `C:\skycode\logs\`. Each reference lists its log. Check the log after every run; it records what was created, changed, skipped, or failed.
 - `_cfg` properties (`Meta.PARTNO_cfg`, `Meta.PartNo_cfg`, `Meta.Description_cfg`) are the configured values. Macros prefer them over the plain `Meta.*` values.
 - Numeric part numbers are skipped by the views macros. Nonnumeric and blank values are included.

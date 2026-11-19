@@ -1,4 +1,3 @@
-Attribute VB_Name = "create views balance parts not in db"
 Option Compare Database
 Option Explicit
 
@@ -15,6 +14,10 @@ Sub CreateViewsForPartsNotInDb()
     Dim swDoc As DSComposer.Document
     Dim logFile As Object
     Dim fs As Object
+    Dim previousCameraSmoothTime As Integer
+    Dim cameraSmoothTimeSaved As Boolean
+    Dim errorNumber As Long
+    Dim errorDescription As String
 
     Dim partNumberFilePath As String
     Dim targetPartMap As Object
@@ -49,9 +52,10 @@ Sub CreateViewsForPartsNotInDb()
     Dim response As VbMsgBoxResult
     Dim step1Status As String
 
+    On Error GoTo Failed
     ' Set up logging
     Set fs = CreateObject("Scripting.FileSystemObject")
-    Set logFile = fs.CreateTextFile("C:\OneDrive - Skyfacture Pty Ltd\Skyfacture\3 - Economics\skycode\logs\views [create balance parts not in db].txt", True)
+    Set logFile = fs.CreateTextFile("C:\skycode\logs\views [create balance parts not in db].txt", True)
     LogPrint logFile, Now & " - Starting create-views-for-pasted-parts process..."
 
     ' Connect to Composer and get document
@@ -62,7 +66,7 @@ Sub CreateViewsForPartsNotInDb()
         MsgBox "Failed to connect to SolidWorks Composer: " & Err.description, vbCritical
         GoTo Cleanup
     End If
-    On Error GoTo 0
+    On Error GoTo Failed
     LogPrint logFile, Now & " - Connected to Composer"
 
     Set swDoc = swApp.GetActiveDocument
@@ -92,6 +96,10 @@ Sub CreateViewsForPartsNotInDb()
     End If
     LogPrint logFile, Now & " - Parsed " & requestedCount & " unique target part numbers from file"
 
+    previousCameraSmoothTime = swDoc.CameraSmoothTime
+    cameraSmoothTimeSaved = True
+    swDoc.CameraSmoothTime = 0
+
     ' Step 1: identify root, match it against requested part numbers, and create+rename root view.
     processedRootPartNo = ProcessRootViewIfRequested(swDoc, targetPartMap, targetNormalizedMap, logFile)
     If Len(processedRootPartNo) > 0 Then
@@ -116,7 +124,7 @@ Sub CreateViewsForPartsNotInDb()
         MsgBox "Failed to retrieve assembly actors: " & Err.description, vbCritical
         GoTo Cleanup
     End If
-    On Error GoTo 0
+    On Error GoTo Failed
 
     If Not TryParseSelection(actorSelection, actorsAssy, logFile, "assembly") Then
         LogPrint logFile, Now & " - No assembly actors found in document"
@@ -137,7 +145,7 @@ Sub CreateViewsForPartsNotInDb()
         MsgBox "Failed to retrieve part actors: " & Err.description, vbCritical
         GoTo Cleanup
     End If
-    On Error GoTo 0
+    On Error GoTo Failed
 
     If Not TryParseSelection(actorSelection, actorsPart, logFile, "part") Then
         LogPrint logFile, Now & " - No part actors found in document"
@@ -194,24 +202,31 @@ Sub CreateViewsForPartsNotInDb()
                 partKey = outputViewName
                 On Error Resume Next
                 processedParts.Add partKey, partKey
-                If Err.Number = 0 Then
-                    ' Create the view
-                    swDoc.SetVisibility "", 0, 2
-                    swDoc.SetVisibility selectionString, 1, 2
-                    swDoc.ZoomFitAll
-
-                    If swDoc.CreateView(outputViewName, -1) Then
-                        createdCount = createdCount + 1
-                        LogVerbose logFile, Now & " - Created view: '" & outputViewName & "' for actor: '" & actorPath & "'"
-                    Else
-                        failedCount = failedCount + 1
-                        LogPrint logFile, Now & " - Failed to create view '" & outputViewName & "' for actor: '" & actorPath & "': " & Err.description
-                    End If
-                Else
-                    LogPrint logFile, Now & " - Skipped duplicate part: '" & actorPath & "' (View name: '" & outputViewName & "')"
+                If Err.Number <> 0 Then
+                    errorNumber = Err.Number
+                    errorDescription = Err.description
                     Err.Clear
+                    On Error GoTo Failed
+                    If errorNumber <> 457 Then Err.Raise errorNumber, , errorDescription
+                    errorNumber = 0
+                    errorDescription = ""
+                    LogPrint logFile, Now & " - Skipped duplicate part: '" & actorPath & "' (View name: '" & outputViewName & "')"
+                    GoTo NextRequestedPart
                 End If
-                On Error GoTo 0
+                On Error GoTo Failed
+
+                ' Create the view
+                swDoc.SetVisibility "", 0, 2
+                swDoc.SetVisibility selectionString, 1, 2
+                swDoc.ZoomFitAll
+
+                If swDoc.CreateView(outputViewName, -1) Then
+                    createdCount = createdCount + 1
+                    LogVerbose logFile, Now & " - Created view: '" & outputViewName & "' for actor: '" & actorPath & "'"
+                Else
+                    failedCount = failedCount + 1
+                    LogPrint logFile, Now & " - Failed to create view '" & outputViewName & "' for actor: '" & actorPath & "': " & Err.description
+                End If
             Else
                 failedCount = failedCount + 1
                 LogPrint logFile, Now & " - Failed to select actor for view creation: '" & actorPath & "'"
@@ -237,8 +252,20 @@ NextRequestedPart:
            "Failed creates: " & failedCount & vbCrLf & _
            "Not found in model: " & missingCount, vbInformation
 
+    GoTo Cleanup
+Failed:
+    errorNumber = Err.Number
+    errorDescription = Err.description
+    Resume Cleanup
+
 Cleanup:
-    LogPrint logFile, Now & " - Cleaning up resources..."
+    On Error GoTo 0
+    If cameraSmoothTimeSaved Then RestoreCameraSmoothTime swDoc, previousCameraSmoothTime, logFile
+    If Not logFile Is Nothing Then
+        If errorNumber <> 0 Then LogPrint logFile, Now & " - ERROR " & errorNumber & ": " & errorDescription
+        LogPrint logFile, Now & " - Cleaning up resources..."
+    End If
+    If errorNumber <> 0 Then MsgBox "View creation failed:" & vbCrLf & errorDescription, vbExclamation
 
     If Not logFile Is Nothing Then
         On Error Resume Next
@@ -256,6 +283,16 @@ Cleanup:
     Set fs = Nothing
     Set swDoc = Nothing
     Set swApp = Nothing
+End Sub
+
+Private Sub RestoreCameraSmoothTime(ByVal doc As DSComposer.Document, ByVal previousValue As Integer, _
+    ByVal logFile As Object)
+    On Error GoTo Failed
+    doc.CameraSmoothTime = previousValue
+    Exit Sub
+Failed:
+    If Not logFile Is Nothing Then LogPrint logFile, Now & " - ERROR: Could not restore CameraSmoothTime: " & Err.Number & ": " & Err.description
+    MsgBox "Could not restore CameraSmoothTime to " & previousValue & ":" & vbCrLf & Err.description, vbExclamation
 End Sub
 
 Private Function ProcessRootViewIfRequested( _

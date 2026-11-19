@@ -9,6 +9,7 @@ This codebase is behavior-critical and environment-sensitive. The baseline assum
 - Existing scripts encode months of trial-and-error and must be treated as production knowledge.
 
 ## Non-Negotiable Constraints
+- Never add an `Attribute VB_Name = ...` line to macro source.
 - Do not migrate runtime automation from Access VBA to Python as part of refactoring work.
 - Preserve COM call order unless a controlled experiment proves equivalence.
 - Preserve string path handling conventions used for actor addressing and selection.
@@ -82,6 +83,9 @@ This codebase is behavior-critical and environment-sensitive. The baseline assum
 - Convert recoverable errors into warnings with context.
 - Bubble unrecoverable errors after logging operation and inputs.
 - Ensure cleanup executes even when errors occur.
+- Composer view-creation macros that use `ZoomFitAll` should save
+  `CameraSmoothTime`, set it to `0` before the first zoom, and restore the
+  saved value on completion, cancellation, and errors. Report restore failures.
 
 ## Test Strategy
 - Use an Access harness that can run a chosen module repeatably.

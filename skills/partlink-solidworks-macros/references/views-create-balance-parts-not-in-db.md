@@ -21,11 +21,12 @@ Creates views only for the part numbers listed in a text file. Each requested pa
 - Views named with the sanitised requested part numbers.
 - The root view is renamed to a matched requested part number, if one matches.
 - Match, create, and missing counts are shown at the end.
-- Log: `C:\OneDrive - Skyfacture Pty Ltd\Skyfacture\3 - Economics\skycode\logs\views [create balance parts not in db].txt`.
+- Log: `C:\skycode\logs\views [create balance parts not in db].txt`.
 
 ## Side effects
 
 - Hides all actors except the selected root or part, and zooms to fit. Prior visibility is not restored.
+- Sets `CameraSmoothTime` to `0` before creating the root view and restores the previous value during cleanup, including cancellation and errors.
 - Shows prompts for file selection, confirmation, and completion or error.
 
 ## Gotchas
