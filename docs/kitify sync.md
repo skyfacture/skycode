@@ -110,14 +110,14 @@ their trigger has not yet been confirmed. `run.txt` records entry and return
 around generated-child saves, closes, and working-assembly reference deletion
 to help identify a blocked call. Do not treat a partial run as verified.
 
-On 2026-11-18, an isolated Access retry of the local `7397 0500 28` source
-completed through bounding-box creation, but the user reported one PDM checkout
-dialog for `BG 006 019 67.SLDPRT`. The checkout-dialog helper was disabled for
-that test, so it was not a fully unattended run. The run log verified
-16 kit configurations, and local source file sizes and modification times
-were unchanged. This is evidence for that session, not a confirmed root cause
-or a guarantee that prompts cannot recur; the source reference list previously
-reported `3115 2016 00 - Assemb.SLDASM` as missing.
+On 2026-11-19, `KitifyAndBoundingBox` completed unattended against local
+`7397 0500 28`. During kitify and again while reopening the generated
+assembly, the helper queued No on a visible `SOLIDWORKS PDM` dialog whose
+buttons were Yes, No and Cancel and whose text asked to check out
+`BG 006 019 67.SLDPRT`. The run did not stop for a manual answer. A queued No
+still does not by itself prove the dialog accepted the message. The 2026-11-18
+retry of the same source is historical: its helper was disabled, and the user
+answered that same checkout dialog manually.
 
 For the duration of a run the macro temporarily changes these SOLIDWORKS system
 options and restores the user's values on success or failure:
@@ -181,6 +181,44 @@ configurations to import `Default` and every PDM kit configuration. Do not
 import individual generated kit SLDASMs as separate masters. Other source
 configurations remain untouched in the original file but are not retained in
 the output.
+
+### Bounding box after kitify
+
+Kitify does not add a bounding box. The canonical combined entry is
+`KitifyAndBoundingBox` in
+[Skycode - kitifyandboundingbox.bas](<../vba scripts/Skycode - kitifyandboundingbox.bas>).
+Its skill reference is
+[kitifyandboundingbox.md](<../skills/partlink-solidworks-macros/references/kitifyandboundingbox.md>).
+Its Access module must be named `modKitifyAndBoundingBox`. `Application.Run`
+cannot find a public procedure whose name is the same as its module.
+
+The combined macro calls `KitifyDrifter` to completion, then adds the box.
+Do not insert the box before the kit configurations exist: `AddConfiguration3`
+copies the active configuration, so a resolved box in `Default` is copied,
+resolved, into every kit configuration.
+
+`InsertEnvelope` is the working insert path. `AddComponent4` and
+`AddComponent5` returned `Nothing` on the 2026-11-19 probe even after the
+assembly was saved and configuration `Default` was passed. `IsEnvelope` is
+read-only. Inserting the envelope after the kit configurations exist still
+resolves it in every existing configuration. `DeleteSelection2` from a kit
+configuration also removes it from `Default`, so do not delete it.
+
+The combined macro therefore activates `Default`, calls
+`GetCurrentModelBoundingBox(False)`, then suppresses the envelope component
+and the `Skycode_BoundingBox` feature in every non-Default configuration with
+`SetSuppression2(0)`. A successful suppression returns status `2`
+(`swSuppressionChangeOk`), not `0`. `ShowConfiguration2` returns False when
+that configuration is already active; treat the already-active case as
+success. Kitify closes the generated assembly and reactivates the source
+before it returns, so the wrapper must `OpenDoc6` the returned path. It saves
+only that generated assembly with `Save3(1)`.
+
+On the 2026-11-19 Composer import of
+`kitified-generated_7397 0500 28_20261119_1`, Composer did not see the
+bounding box in the kit configurations. Suppression is the canonical
+confinement method. The box remains resolved in `Default`. Enable
+**Import SOLIDWORKS assembly envelope** so that Default box is imported.
 
 ### Composer SOLIDWORKS import settings
 
@@ -458,6 +496,11 @@ Success requires:
 - Generated assembly parents match the plan and all generated assembly
   transforms are identity. Each PDM kit branch is a root child; membership and
   kit configuration names come from the source-relative PDM folder.
+- Bounding-box scope is verified for the combined macro. The envelope and
+  `Skycode_BoundingBox` are resolved only in `Default`. They remain present but
+  suppressed in every kit configuration. Deletion is not used, because deleting
+  the envelope from a kit configuration also removes it from `Default`. The
+  2026-11-19 Composer import did not see the box in the kit configurations.
 - Save, reopen and rebuild succeed. Warnings are logged; failures raise an error
   identifying the stage and partial-output folder.
 
@@ -517,6 +560,48 @@ Installed SOLIDWORKS 2025 interop signatures were inspected directly:
 - `CloseDoc`, `OpenDoc6` (assembly = 2; silent = 1).
 
 ## Validation status
+
+### Combined kitify and bounding box, live run (2026-11-19)
+
+This is the canonical evidence for kitify, the bounding box, and the PDM
+decliner. `KitifyAndBoundingBox` was imported into the open Access host
+`SkycodeHost SW v2025` and run against
+`C:\skycode\partlink cad sandbox\7397 0500 28.SLDASM`.
+
+- Output folder:
+  `kitified-generated_7397 0500 28_20261119_1`. The next run number is the
+  next free integer for that source base name and date. After
+  `kitified-generated_7397 0500 28_20261118_7`, the 2026-11-19 run was `_1`,
+  not `_8`.
+- Kitify created the root by silent Save As Copy (`SaveAs3` option 3) before
+  resolving source components. The source file stayed 13,789,862 bytes, last
+  written 18/11/2026 8:40:47 PM. Its in-memory dirty flag was already True and
+  was left True. Do not clear that flag or save the source.
+- `run.txt` reports configuration PASS for `Default` and 16 PDM kit
+  configurations, metadata preservation PASS, and the visible-document budget
+  PASS. The verified root is
+  `7397 0500 28 kitified generated 20261119_103112_241E54D.SLDASM`.
+- The PDM helper queued No at 11:00:54, during kitify, and at 11:10:24, during
+  the bounding-box reopen. Both entries are in
+  `C:\skycode\logs\kitifyandboundingbox-declined.txt`. The dialog title was
+  `SOLIDWORKS PDM`, the buttons were Yes, No and Cancel, and the file was
+  `C:\RDSA-PDM-Vault\2-SEALS AND FASTENERS\21-SEALS & O-RINGS\BG 006 019 67.SLDPRT`.
+  This run's folder has no separate `declined-checkouts.txt`; the wrapper log
+  is the record. Kitify still writes `declined-checkouts.txt` in the run folder
+  when its own helper records a response.
+- The box was added only after kitify returned. `Default` has a resolved
+  envelope and `Skycode_BoundingBox` feature: 517 x 271 x 190 mm,
+  0.026683423 m³. Every non-Default configuration has that envelope and feature
+  suppressed. The generated assembly was saved; the source was not.
+- The user imported this combined root into Composer and confirmed that
+  Composer does not see the bounding box in the kit configurations.
+
+A first wrapper attempt rejected this same output because it required the
+generated assembly and the source file to have the same parent folder. The
+generated assembly lives in the dated run folder beside the source. That check
+now accepts any path inside the source folder other than the source file
+itself. The box step was completed on this already verified output; kitify was
+not run a second time.
 
 The user confirmed that an expression fixture with actual kit values imported
 into Composer with correct ordinary `PartNo` and `Description`. A newly

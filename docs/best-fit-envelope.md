@@ -177,8 +177,12 @@ preserves the already-transformed solid coordinates, and the component is
 fixed and excluded from the BOM. No insertion occurs for a source part model.
 The new proxy part remains open. The source model is reactivated and remains
 unsaved. Enable envelope-component import in Composer and save the assembly
-before importing its on-disk contents. Transfer into Composer has not yet
-been verified; confirm actor inclusion and alignment there.
+before importing its on-disk contents. That early proxy transfer was not the
+kitified-root test. On 2026-11-19, `KitifyAndBoundingBox` added the envelope
+after kit configurations existed, suppressed it outside `Default`, and the
+Composer import of that root did not see the box in the kit configurations.
+See [kitify sync.md](kitify%20sync.md#bounding-box-after-kitify) and
+[kitifyandboundingbox.md](<../skills/partlink-solidworks-macros/references/kitifyandboundingbox.md>).
 
 The implementation was compiled and executed from an isolated Access database
 against the active assembly. Validation confirmed one solid body, eight

@@ -14,7 +14,7 @@ Creates views for the root assembly, its subassemblies, and eligible nonnumeric 
 
 - The active Composer document and its actors and properties. No prompts or database.
 - If the document has several configurations, `ADefault` is used for shared view names.
-- Visible proxy actors with `Meta.BestFitOrigin` and `Meta.BestFitEdge1` to `3`. Kitify creates the combined-root proxy; otherwise create one first with [sldworks-bounding-box](./sldworks-bounding-box.md), then import it into Composer.
+- Visible proxy actors with `Meta.BestFitOrigin` and `Meta.BestFitEdge1` to `3`. [KitifyAndBoundingBox](./kitifyandboundingbox.md) creates the combined-root proxy, leaves it resolved in `Default`, and suppresses it in kit configurations. The 2026-11-19 Composer import did not see that box in the kit configurations. Otherwise create one first with [sldworks-bounding-box](./sldworks-bounding-box.md), then import it into Composer.
 
 ## Outputs
 

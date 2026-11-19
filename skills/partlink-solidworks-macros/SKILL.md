@@ -9,7 +9,7 @@ The macros in [vba scripts/](<../../vba scripts>) support Partlink maintenance. 
 
 ## Hosts
 
-- **SOLIDWORKS VBA** (attaches to the running SOLIDWORKS session): [kitify](./references/kitify.md), [sldworks bounding box](./references/sldworks-bounding-box.md).
+- **SOLIDWORKS VBA** (attaches to the running SOLIDWORKS session): [kitify](./references/kitify.md), [kitify and bounding box](./references/kitifyandboundingbox.md), [sldworks bounding box](./references/sldworks-bounding-box.md).
 - **Composer VBA** (uses `DSComposer`, run from an Access host that references `C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS Composer\bin\composer.exe`): every other macro. Do not late-bind the Composer COM object from PowerShell; test Composer VBA through the Access host.
 
 ## Macro index
@@ -17,6 +17,7 @@ The macros in [vba scripts/](<../../vba scripts>) support Partlink maintenance. 
 | Macro | Host | Entry point | Reference |
 |---|---|---|---|
 | kitify | SOLIDWORKS | `SkycodeKitify`, `KitifyDrifter` | [kitify](./references/kitify.md) |
+| kitify and bounding box | SOLIDWORKS | `KitifyAndBoundingBox` | [kitifyandboundingbox](./references/kitifyandboundingbox.md) |
 | sldworks bounding box | SOLIDWORKS | `SldworksBoundingBox` | [sldworks-bounding-box](./references/sldworks-bounding-box.md) |
 | bounding box dims | Composer | `BoundingBoxDimensions` | [bounding-box-dims](./references/bounding-box-dims.md) |
 | views [assemblies + all nonnumeric parts + bounding box dims] | Composer | `CreateViewsAllWithBoundingBoxDims` | [views-assemblies-all-nonnumeric-parts-bbox-dims](./references/views-assemblies-all-nonnumeric-parts-bbox-dims.md) |
@@ -57,7 +58,7 @@ Choose the views macro by what the view set needs:
 
 This order follows the data dependencies between macros. Confirm it against the current run before relying on it.
 
-1. Run **kitify** in SOLIDWORKS to produce the kit and combined root output, including its bounding-box feature and proxy. Import the canonical bounding-box module into the same VBA project. Use the merged BOM workflow in [solidworks-pdm-bom-export](../solidworks-pdm-bom-export/SKILL.md) for the BOM.
+1. Run **kitify and bounding box** (`KitifyAndBoundingBox`) so kitify finishes before the box is added to `Default`. The box is then suppressed in every kit configuration. The 2026-11-19 Composer import did not see that box in the kit configurations; it remains resolved in `Default`. Use the merged BOM workflow in [solidworks-pdm-bom-export](../solidworks-pdm-bom-export/SKILL.md) for the BOM.
 2. Import the combined root into Composer, with custom properties and the naming settings described in [kitify](./references/kitify.md).
 3. Run **meta partnos** and **meta descriptions** to reconcile `Meta.*` values with their `_cfg` values.
 4. Run **align pivot** or **set local pivot** if pivots need correcting, and **auto explode** if an exploded view is needed.

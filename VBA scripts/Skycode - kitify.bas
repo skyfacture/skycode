@@ -16,9 +16,8 @@ Option Explicit
 '     the source unless outputFolder is specified.
 '   - SOLIDWORKS prompt settings are temporarily changed and restored afterwards; failures are written
 '     to run.txt instead of a message box. Some save prompts have still been observed.
-'   - The combined output gets a Skycode_BoundingBox feature via the bounding-box routine
-'     (Skycode - sldworks bounding box.bas), which writes the <output>_BoundingBox.SLDPRT proxy
-'     and TXT report beside it. The combined output is saved with that feature.
+'   - The bounding-box proxy is not generated in the combined output. Canonical reference runs
+'     (kitified-generated_20261111_110210) have no box in any configuration.
 '   - The source assembly is not saved or restructured.
 ' ============================================================
 ' Requires the installed SOLIDWORKS type library; no constants-library reference.
@@ -113,7 +112,6 @@ Public Function KitifyDrifter( _
     Dim errors As Long
     Dim warnings As Long
     Dim reopened As SldWorks.ModelDoc2
-    Dim boxReport As String
     On Error GoTo Failed
 
     mStage = "Connecting to the running SOLIDWORKS session"
@@ -210,15 +208,10 @@ Public Function KitifyDrifter( _
     Next n
     ShowConfiguration mWorking, PRODUCTION_CONFIGURATION
     ValidateMetadata "", True
-    mStage = "Creating the bounding-box proxy for the combined output"
-    Activate mWorking
-    boxReport = GetCurrentModelBoundingBox(False)
-    LogLine "Bounding box proxy and report written beside the combined output: " & boxReport
     errors = 0
     warnings = 0
     If mWorking.Save3(1, errors, warnings) = False Or errors <> 0 Then Err.Raise vbObjectError + 2454, , _
-        "Could not save combined output with bounding box; errors=" & errors & "; warnings=" & warnings
-    LogLine "Bounding box feature saved into combined output."
+        "Could not save combined output; errors=" & errors & "; warnings=" & warnings
     CloseGenerated
     If Not mApp.GetOpenDocumentByName(snapshotPath) Is Nothing Then _
         Err.Raise vbObjectError + 2453, , "Construction snapshot is unexpectedly still loaded: " & snapshotPath
@@ -1017,7 +1010,7 @@ Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As 
     Else
         parent = mFS.GetParentFolderName(sourcePath)
         folderPrefix = "kitified-generated_" & mFS.GetBaseName(sourcePath) & "_" & Format$(Now, "yyyymmdd") & "_"
-        run = 1
+        run = HighestRunNumber(parent, folderPrefix) + 1
         candidate = mFS.BuildPath(parent, folderPrefix & CStr(run))
         Do While mFS.FolderExists(candidate) Or mFS.FileExists(candidate)
             run = run + 1
@@ -1026,6 +1019,19 @@ Private Function NewOutputFolder(ByVal sourcePath As String, ByVal requested As 
     End If
     mFS.CreateFolder candidate
     NewOutputFolder = candidate
+End Function
+
+Private Function HighestRunNumber(ByVal parent As String, ByVal folderPrefix As String) As Long
+    Dim item As Object
+    Dim suffix As String
+    For Each item In mFS.GetFolder(parent).SubFolders
+        If Left$(item.Name, Len(folderPrefix)) = folderPrefix Then
+            suffix = Mid$(item.Name, Len(folderPrefix) + 1)
+            If Len(suffix) > 0 And Not suffix Like "*[!0-9]*" Then
+                If CLng(suffix) > HighestRunNumber Then HighestRunNumber = CLng(suffix)
+            End If
+        End If
+    Next item
 End Function
 
 Private Function Snapshot(ByVal model As SldWorks.ModelDoc2) As Collection
@@ -1956,6 +1962,7 @@ Private Function TopLevelComponents(ByVal model As SldWorks.ModelDoc2) As Object
     End If
     Set TopLevelComponents = result
 End Function
+
 
 Private Sub ShowConfiguration(ByVal model As SldWorks.ModelDoc2, ByVal name As String)
     Activate model

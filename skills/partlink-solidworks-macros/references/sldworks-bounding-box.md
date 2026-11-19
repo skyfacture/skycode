@@ -8,7 +8,7 @@ Creates or validates a native SOLIDWORKS bounding-box feature in best-fit envelo
 
 ## Host and entry point
 
-- SOLIDWORKS VBA, or an Access host with the SOLIDWORKS type library. Run `SldworksBoundingBox`, which calls `GetCurrentModelBoundingBox`. Kitify calls that function with messages disabled; both modules must be in the same VBA project.
+- SOLIDWORKS VBA, or an Access host with the SOLIDWORKS type library. Run `SldworksBoundingBox` on one saved model, with the intended configuration active. Kitify does not call this routine. The canonical kitified-root path is [kitify and bounding box](./kitifyandboundingbox.md), which calls `GetCurrentModelBoundingBox(False)` only after every kit configuration exists and `Default` is active.
 
 ## Inputs
 
@@ -27,7 +27,8 @@ Creates or validates a native SOLIDWORKS bounding-box feature in best-fit envelo
 
 - Adds a bounding-box feature to the source model in memory. Any existing `BoundingBoxProfileFeat` is deleted and recreated. The source is not saved by the macro. An assembly may be modified by the inserted envelope.
 - No rollback. A failure partway through can leave a new feature or component behind.
-- When called by Kitify, the model being modified and subsequently saved is the combined output, not the original source assembly.
+- `GetCurrentModelBoundingBox` does not save the host assembly. `KitifyAndBoundingBox` saves only the generated combined assembly after confinement. It does not save the original source.
+- `InsertEnvelope` resolves the new envelope in every existing configuration. Deleting it from one configuration deletes it from the others, including `Default`. The combined macro suppresses the envelope and `Skycode_BoundingBox` in every non-Default configuration instead. `SetSuppression2(0)` returns `2` on success. On the 2026-11-19 Composer import of `7397 0500 28`, Composer did not see the box in the kit configurations.
 
 ## Gotchas
 

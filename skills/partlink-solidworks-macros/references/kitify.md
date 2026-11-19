@@ -10,7 +10,7 @@ Builds one verified kitified assembly from the active production SOLIDWORKS asse
 ## Host and entry points
 
 - Runs in SOLIDWORKS VBA, or in Access with the SOLIDWORKS type library (`sldworks.tlb`) referenced. Access hosting is supported; the macro removes the OLE message filter during the run.
-- Import [Skycode - sldworks bounding box.bas](<../../../vba scripts/Skycode - sldworks bounding box.bas>) into the same VBA project: Kitify calls `GetCurrentModelBoundingBox(False)`. Reimport changed modules before testing; a compiled isolated test host does not update the user's Access project.
+- Kitify itself does not add a bounding box. The combined entry and its reference are [kitify and bounding box](./kitifyandboundingbox.md).
 - `SkycodeKitify`: runs with defaults. Writes the result to the Immediate window and to `run.txt`. It never shows a message box.
 - `KitifyDrifter(sourcePath, outputFolder, showMessage)`: all arguments are optional. An explicit `sourcePath` must already be open. An explicit `outputFolder` must not exist.
 - `TestKitifyMetadata`: regression checks for metadata and provenance. Prints PASS.
@@ -26,7 +26,6 @@ Builds one verified kitified assembly from the active production SOLIDWORKS asse
 Default output is a new folder beside the source, named `kitified-generated_<partno>_<yyyymmdd>_<run>`, where `<partno>` is the source file base name and `<run>` is the next free integer for that part number and date (starting at 1). It contains:
 
 - The combined root `<source> kitified generated <run-id>.SLDASM`, with the generated children.
-- A `Skycode_BoundingBox` feature saved in the combined root, plus `<combined root>_BoundingBox.SLDPRT` and `<combined root>_BoundingBox.txt`. Kitify creates the box in `Default` after configuration verification, using the canonical [bounding-box macro](./sldworks-bounding-box.md).
 - Reports, including `run.txt`, `membership.csv`, `pdm-kit-comparison.csv`, `validation.csv`, `metadata.csv`, `configurations.csv`, and `kit-configurations.csv`.
 - `declined-checkouts.txt`, listing PDM No responses queued by the helper or message-post failures.
 
@@ -35,7 +34,7 @@ Import the single combined root into Composer using the [canonical SOLIDWORKS im
 ## Side effects and restoration
 
 - Temporarily changes SOLIDWORKS system options (save prompts, rebuild prompts, lightweight-component resolution) and restores the user's values on success or failure.
-- Starts a hidden PowerShell helper for the run. It requests **No** on standard visible `SOLIDWORKS PDM` dialogs in the SOLIDWORKS process with exactly one No button, regardless of the question. Other dialogs are not answered; No may have consequences other than declining checkout. Logged responses are queued, not proof that the dialog accepted them. The updated matcher compiled and passed offline tests but has not been tested against a live dialog.
+- Starts a hidden PowerShell helper for the run. It requests **No** on standard visible `SOLIDWORKS PDM` dialogs (`#32770`) owned by the SOLIDWORKS process when exactly one button is No, regardless of the question. Other dialogs are not answered. No may have consequences other than declining checkout. A log line beginning `QUEUED NO` means the No command was posted, not that the dialog accepted it. This matcher is canonical: on 2026-11-19 it queued No on the live checkout dialog for `BG 006 019 67.SLDPRT` and the run continued without a manual answer.
 - Does not explicitly save or restructure the source assembly. Inspection can leave source documents dirty in memory; do not clear their dirty flags or discard pre-existing edits. The root Save As Copy does not copy referenced parts, which may remain shared. On failure partial output folders can remain.
 - The older `kitify-generated_*`, `kitify-vault_*`, and `kitified-generated_*` folders are not deleted automatically.
 
@@ -48,12 +47,19 @@ Import the single combined root into Composer using the [canonical SOLIDWORKS im
 - A source reference list previously showed `3115 2016 00 - Assemb.SLDASM` as missing. A Kitify `VERIFIED` result is not proof that every original reference exists; inspect references separately.
 - Missing `PartNo` or `Description` on the source root, or on a kit after the NOTE fallback, stops the run. Identity is never invented from a filename.
 - Suppressed components are excluded from kit membership but kept in `Default`.
+- Kitify never adds a bounding box. Run `KitifyAndBoundingBox`, or add the box only after kitify returns and only while `Default` is active. `InsertEnvelope` resolves the new envelope in existing configurations, and deleting it from a kit configuration also deletes it from `Default`. Suppress the envelope and `Skycode_BoundingBox` in every non-Default configuration. `SetSuppression2(0)` success status is `2`. On the 2026-11-19 Composer import, Composer did not see the box in the kit configurations. The box stayed resolved in `Default`.
 - Boolean snapshots use `CBool(value <> False)`.
 - CSV reports are comma-delimited, CRLF, UTF-8 with BOM.
 - Partlink's BOM merge of kit CSVs is a separate step documented in [solidworks-pdm-bom-export](../../solidworks-pdm-bom-export/SKILL.md). It is not part of this macro.
 
-## Latest live evidence
+## Canonical live result (2026-11-19)
 
-- On 2026-11-18, an isolated Access retry of local `7397 0500 28` completed in [run 4](<../../../partlink cad sandbox/kitified-generated_7397 0500 28_20261118_4/run.txt>). Its log reports 16 verified kit configurations and a saved bounding box; local source file sizes and modification times were unchanged. Both the initial and final source dirty flags were `True`.
-- The PDM helper was deliberately disabled for that test, and the user reported one checkout dialog for `BG 006 019 67.SLDPRT`; the run was therefore not fully unattended. An earlier [run 1 checkout log](<../../../partlink cad sandbox/kitified-generated_7397 0500 28_20261118_1/declined-checkouts.txt>) records the previous helper responding to that same file. This does not verify the subsequently broadened matcher.
-- The run logged PDM and child load warning code `2`; its meaning was not established. Do not equate this successful retry with a confirmed fix for the earlier save prompts or a guarantee of prompt-free future runs.
+`KitifyAndBoundingBox` is the canonical way to produce a kitified root with a bounding box. The full record is in [kitify sync.md](<../../../docs/kitify sync.md#combined-kitify-and-bounding-box-live-run-2026-11-19>).
+
+- Source `7397 0500 28.SLDASM` was copied, not saved. Size and last-write time stayed 13,789,862 bytes and 18/11/2026 8:40:47 PM. The in-memory dirty flag was already True and was left True.
+- Output is [kitified-generated_7397 0500 28_20261119_1](<../../../partlink cad sandbox/kitified-generated_7397 0500 28_20261119_1/run.txt>). The date rolled, so this was run `_1`, not `_8`. Kitify verified `Default` plus 16 kit configurations.
+- The PDM helper queued No on the live checkout dialog for `BG 006 019 67.SLDPRT` during kitify and again during the box reopen. See [kitifyandboundingbox-declined.txt](../../../logs/kitifyandboundingbox-declined.txt).
+- The box was added after kitify, resolved only in `Default` (517 x 271 x 190 mm), and suppressed in every kit configuration. The user confirmed that Composer does not see the box in the kit configurations.
+- PDM and child load warning code `2` was logged again. Its meaning is still not established. Do not treat this run as proof that every future prompt is impossible.
+
+The 2026-11-18 [run 4](<../../../partlink cad sandbox/kitified-generated_7397 0500 28_20261118_4/run.txt>) is historical. Its PDM helper was disabled, so it does not supersede the 2026-11-19 decliner result.
