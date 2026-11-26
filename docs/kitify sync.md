@@ -105,10 +105,23 @@ failure to the Immediate window, and every run writes `run.txt`.
 ### Unattended runs
 
 The options below reduce prompts but do not guarantee a dialog-free run.
-Save Modified Documents prompts have still been observed during generation;
-their trigger has not yet been confirmed. `run.txt` records entry and return
-around generated-child saves, closes, and working-assembly reference deletion
-to help identify a blocked call. Do not treat a partial run as verified.
+Save Modified Documents prompts recurred on 2026-11-26 against source
+`7377 2502 98+` although the same code ran prompt-free on 2026-11-19. They
+concern documents that were already dirty when SOLIDWORKS closed them: read-only
+vault kits and parts, and local Pack and Go subassemblies that vault kits share
+by file name. No generated document is involved. **Save all is the wrong
+answer**: it saves the source files and makes SOLIDWORKS offer to save vault
+parts (Save As into the vault). The macro's helper therefore presses **Don't
+Save** (`BM_CLICK` on the button window; command-link buttons have control ID 0,
+so `WM_COMMAND` by ID triggers Save all) on any visible `Save Modified Documents`
+or `SOLIDWORKS` save dialog for the whole run, and the macro saves generated
+documents explicitly. `run.txt` records `DIRTY DOCUMENT` lines around each kit
+close and `QUEUED DONT SAVE` answers. The complete cause analysis, and the
+abandoned reference-copying approach, are in the Kitify skill reference
+(`skills/partlink-solidworks-macros/references/kitify.md`).
+Do not treat a partial run as verified. Run 10 on 2026-11-26 (fresh SOLIDWORKS
+session, repaired source) passed with no save prompts; see the Gotchas in the
+Kitify skill reference for the session-state finding and the pre-run checklist.
 
 On 2026-11-19, `KitifyAndBoundingBox` completed unattended against local
 `7397 0500 28`. During kitify and again while reopening the generated
