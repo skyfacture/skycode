@@ -1,3 +1,4 @@
+Attribute VB_Name = "Skycode - Set Meta PartNo from PartNo_cfg"
 Option Compare Database
 Option Explicit
 
@@ -33,7 +34,7 @@ Sub setMetaPartNoFromPartno_cfg()
     
     ' Set up logging
     Set fs = CreateObject("Scripting.FileSystemObject")
-    Set logFile = fs.CreateTextFile("C:\OneDrive - Skyfacture Pty Ltd\Skyfacture\3 - Economics\skycode\logs\meta partnos.txt", True)
+    Set logFile = fs.CreateTextFile("C:\skycode\logs\meta partnos.txt", True)
     LogPrint logFile, Now & " - Starting part property fix test..."
 
     ' Connect to Composer

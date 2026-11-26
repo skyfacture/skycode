@@ -56,6 +56,7 @@ Choose the views macro by what the view set needs:
 - Part actors are identified by an actor-path segment that begins with `P`. Assemblies begin with `A`.
 - Boolean flags from SOLIDWORKS are normalised with `CBool(value <> False)`, because a native true can be `1` rather than VBA `True` (`-1`).
 - The kitify macro never saves the source assembly, and it restores the SOLIDWORKS prompt preferences it changes.
+- Kitify save prompts: never click Save all, and never copy every reference into the output folder. Prompts come from already-dirty vault and Pack and Go documents; the helper presses Don't Save. See the Gotchas in `references/kitify.md` before changing save or prompt behaviour.
 - Composer macros do not save the document. They change names, properties, visibility, or views in memory, so save the document yourself if the change must persist.
 
 ## Suggested order for a maintenance cycle

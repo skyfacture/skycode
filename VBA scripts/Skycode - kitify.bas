@@ -63,6 +63,7 @@ Private mSavedIntegers As Object
 Private mDeclinerPid As Double
 Private mDeclinerScript As String
 Private mDeclinerLog As String
+Private mDiscardFlag As String
 
 Private mApp As SldWorks.SldWorks
 Private mFS As Object
@@ -127,6 +128,7 @@ Public Function KitifyDrifter( _
     mRunId = Format$(Now, "yyyymmdd_hhnnss") & "_" & Hex$(CLng(Timer * 1000#))
     Set mLog = mFS.CreateTextFile(mFS.BuildPath(mFolder, "run.txt"), False, True)
     StartCheckoutDecliner
+    SetDiscardSourceSavePrompts True
     LogLine "Source: " & source.GetPathName
     LogLine "Source configuration: " & source.ConfigurationManager.ActiveConfiguration.Name
     LogLine "Source initially dirty: " & CStr(source.GetSaveFlag)
@@ -339,6 +341,8 @@ Private Sub StartCheckoutDecliner()
     If mDeclinerPid <> 0 Then Exit Sub
     mDeclinerScript = mFS.BuildPath(mFS.GetSpecialFolder(2), "skycode-kitify-decline-" & mRunId & ".ps1")
     mDeclinerLog = mFS.BuildPath(mFolder, "declined-checkouts.txt")
+    mDiscardFlag = mFS.BuildPath(mFS.GetSpecialFolder(2), "skycode-kitify-discard-" & mRunId & ".flag")
+    If mFS.FileExists(mDiscardFlag) Then mFS.DeleteFile mDiscardFlag, True
     Set script = mFS.CreateTextFile(mDeclinerScript, True, True)
     script.Write CheckoutDeclinerScript()
     script.Close
@@ -346,7 +350,7 @@ Private Sub StartCheckoutDecliner()
     command = "powershell.exe -NoProfile -NonInteractive -WindowStyle Hidden -Command ""& ([scriptblock]::Create(" & _
         "[IO.File]::ReadAllText(" & PsQuote(mDeclinerScript) & "))) " & mApp.GetProcessID & " " & _
         GetCurrentProcessId() & " " & PsQuote(mDeclinerLog) & " " & _
-        PsQuote(mFS.BuildPath(mFolder, "run.txt")) & """"
+        PsQuote(mFS.BuildPath(mFolder, "run.txt")) & " " & PsQuote(mDiscardFlag) & """"
     mDeclinerPid = Shell(command, vbHide)
     LogLine "PDM prompt helper started as process " & CStr(mDeclinerPid) & "; it requests No where supported" & _
         "; see declined-checkouts.txt."
@@ -354,6 +358,21 @@ Private Sub StartCheckoutDecliner()
 Failed:
     Err.Raise Err.Number, "Skycode.StartCheckoutDecliner", _
         "Could not start the PDM prompt decliner: " & Err.Description
+End Sub
+
+' The helper answers Save Modified Documents prompts Don't Save for the whole run while this flag file exists.
+' Opened kits and source subassemblies go dirty, and Save all on the "documents being closed" dialog makes
+' SOLIDWORKS offer to save vault documents. Generated documents are saved explicitly by the macro.
+Private Sub SetDiscardSourceSavePrompts(ByVal enabled As Boolean)
+    Dim flag As Object
+    If Len(mDiscardFlag) = 0 Then Exit Sub
+    If enabled Then
+        Set flag = mFS.CreateTextFile(mDiscardFlag, True)
+        flag.Close
+        LogLine "Save Modified Documents prompts are answered Don't Save for the whole run; generated documents are saved explicitly."
+    ElseIf mFS.FileExists(mDiscardFlag) Then
+        mFS.DeleteFile mDiscardFlag, True
+    End If
 End Sub
 
 Private Sub StopCheckoutDecliner()
@@ -367,6 +386,8 @@ Private Sub StopCheckoutDecliner()
         If mFS.FileExists(mDeclinerScript) Then mFS.DeleteFile mDeclinerScript, True
         mDeclinerScript = ""
     End If
+    SetDiscardSourceSavePrompts False
+    mDiscardFlag = ""
     If Len(mDeclinerLog) > 0 And Not mLog Is Nothing Then
         If mFS.FileExists(mDeclinerLog) Then
             Set stream = mFS.OpenTextFile(mDeclinerLog, 1, False, -2)
@@ -386,7 +407,7 @@ End Function
 
 Private Function CheckoutDeclinerScript() As String
     Dim s As String
-    s = s & "param([int]$SwPid, [int]$HostPid, [string]$LogPath, [string]$RunLog)" & vbCrLf
+    s = s & "param([int]$SwPid, [int]$HostPid, [string]$LogPath, [string]$RunLog, [string]$DiscardFlag)" & vbCrLf
     s = s & "Add-Type -TypeDefinition @'" & vbCrLf
     s = s & "using System;" & vbCrLf
     s = s & "using System.Collections.Generic;" & vbCrLf
@@ -410,23 +431,39 @@ Private Function CheckoutDeclinerScript() As String
     s = s & "    return kind.Equals(""Button"", StringComparison.OrdinalIgnoreCase) &&" & vbCrLf
     s = s & "      text.Replace(""&"", """").Trim().Equals(""No"", StringComparison.OrdinalIgnoreCase);" & vbCrLf
     s = s & "  }" & vbCrLf
-    s = s & "  public static List<string> Decline(uint pid) {" & vbCrLf
+    s = s & "  public static bool IsSaveDialog(uint ownerPid, uint swPid, bool visible, string title) {" & vbCrLf
+    s = s & "    return ownerPid == swPid && visible &&" & vbCrLf
+    s = s & "      (title.Equals(""Save Modified Documents"", StringComparison.OrdinalIgnoreCase) ||" & vbCrLf
+    s = s & "       title.Equals(""SOLIDWORKS"", StringComparison.OrdinalIgnoreCase));" & vbCrLf
+    s = s & "  }" & vbCrLf
+    s = s & "  public static bool IsDontSaveButton(string kind, string text) {" & vbCrLf
+    s = s & "    return kind.Equals(""Button"", StringComparison.OrdinalIgnoreCase) &&" & vbCrLf
+    s = s & "      text.Replace(""&"", """").Replace('\u2019', '\'').Trim().StartsWith(""Don't Save"", StringComparison.OrdinalIgnoreCase);" & vbCrLf
+    s = s & "  }" & vbCrLf
+    s = s & "  public static List<string> Decline(uint pid, bool discardSource) {" & vbCrLf
     s = s & "    var declined = new List<string>();" & vbCrLf
     s = s & "    EnumWindows((h, l) => {" & vbCrLf
     s = s & "      uint p; GetWindowThreadProcessId(h, out p);" & vbCrLf
     s = s & "      var c = new StringBuilder(64); GetClassName(h, c, 64);" & vbCrLf
     s = s & "      var title = new StringBuilder(256); GetWindowText(h, title, 256);" & vbCrLf
-    s = s & "      if (!IsTargetDialog(p, pid, IsWindowVisible(h), c.ToString(), title.ToString())) return true;" & vbCrLf
+    s = s & "      bool pdm = IsTargetDialog(p, pid, IsWindowVisible(h), c.ToString(), title.ToString());" & vbCrLf
+    s = s & "      bool save = discardSource && IsSaveDialog(p, pid, IsWindowVisible(h), title.ToString());" & vbCrLf
+    s = s & "      if (!pdm && !save) return true;" & vbCrLf
     s = s & "      var text = new StringBuilder(); IntPtr no = IntPtr.Zero; int noCount = 0;" & vbCrLf
+    s = s & "      IntPtr dontSave = IntPtr.Zero; int dontSaveCount = 0;" & vbCrLf
     s = s & "      EnumChildWindows(h, (ch, l2) => {" & vbCrLf
     s = s & "        var t = new StringBuilder(2048); GetWindowText(ch, t, 2048);" & vbCrLf
     s = s & "        var kind = new StringBuilder(64); GetClassName(ch, kind, 64);" & vbCrLf
     s = s & "        if (IsNoButton(kind.ToString(), t.ToString())) { no = ch; noCount++; }" & vbCrLf
+    s = s & "        if (IsDontSaveButton(kind.ToString(), t.ToString())) { dontSave = ch; dontSaveCount++; }" & vbCrLf
     s = s & "        text.Append(t.ToString()).Append(' ');" & vbCrLf
     s = s & "        return true; }, IntPtr.Zero);" & vbCrLf
     s = s & "      var all = text.ToString();" & vbCrLf
-    s = s & "      if (noCount == 1) {" & vbCrLf
+    s = s & "      if (pdm && noCount == 1) {" & vbCrLf
     s = s & "        string prefix = PostMessage(h, 0x0111, (IntPtr)(GetDlgCtrlID(no) & 0xFFFF), no) ? ""QUEUED NO: "" : ""ERROR: Could not queue No: "";" & vbCrLf
+    s = s & "        declined.Add(prefix + title + "": "" + all.Replace(""\r"", "" "").Replace(""\n"", "" "").Trim());" & vbCrLf
+    s = s & "      } else if (save && dontSaveCount == 1) {" & vbCrLf
+    s = s & "        string prefix = PostMessage(dontSave, 0x00F5, IntPtr.Zero, IntPtr.Zero) ? ""QUEUED DONT SAVE: "" : ""ERROR: Could not queue Don't Save: "";" & vbCrLf
     s = s & "        declined.Add(prefix + title + "": "" + all.Replace(""\r"", "" "").Replace(""\n"", "" "").Trim());" & vbCrLf
     s = s & "      }" & vbCrLf
     s = s & "      return true; }, IntPtr.Zero);" & vbCrLf
@@ -438,7 +475,7 @@ Private Function CheckoutDeclinerScript() As String
     ' keeps answering prompts in a later interactive session.
     s = s & "while ((Get-Process -Id $SwPid -ErrorAction SilentlyContinue) -and (Get-Process -Id $HostPid -ErrorAction SilentlyContinue)) {" & vbCrLf
     s = s & "  if ((Test-Path -LiteralPath $RunLog) -and ((Get-Date) - (Get-Item -LiteralPath $RunLog).LastWriteTime).TotalMinutes -gt 120) { break }" & vbCrLf
-    s = s & "  $declined = [SkycodeCheckoutDecliner]::Decline([uint32]$SwPid)" & vbCrLf
+    s = s & "  $declined = [SkycodeCheckoutDecliner]::Decline([uint32]$SwPid, [bool](Test-Path -LiteralPath $DiscardFlag))" & vbCrLf
     s = s & "  foreach ($d in $declined) { Add-Content -LiteralPath $LogPath -Value ((Get-Date -Format s) + ' ' + $d) }" & vbCrLf
     s = s & "  if ($declined -match '^ERROR:') { break }" & vbCrLf
     s = s & "  if ($declined.Count -gt 0) { Start-Sleep -Milliseconds 1000 } else { Start-Sleep -Milliseconds 250 }" & vbCrLf
@@ -903,8 +940,10 @@ Private Function LoadPdmKits(ByVal source As SldWorks.ModelDoc2) As Collection
             Set kit("occurrences") = occurrences
             kits.Add kit
             LogLine "Read-only PDM kit: " & fileName & "; part occurrences=" & total
+            LogDirtyDocuments "before closing PDM kit " & fileName
             mApp.CloseDoc model.GetTitle
             Set model = Nothing
+            LogDirtyDocuments "after closing PDM kit " & fileName
         End If
     Loop
     If kits.Count = 0 Then Err.Raise vbObjectError + 2462, , _
@@ -2931,4 +2970,22 @@ End Function
 Private Sub LogLine(ByVal text As String)
     Debug.Print text
     If Not mLog Is Nothing Then mLog.WriteLine text
+End Sub
+
+' Diagnostic only: records every loaded document with unsaved changes. It never saves, closes or modifies one.
+Private Sub LogDirtyDocuments(ByVal context As String)
+    Dim model As SldWorks.ModelDoc2
+    Dim count As Long
+    On Error Resume Next
+    Set model = mApp.GetFirstDocument
+    Do While Not model Is Nothing
+        If CBool(model.GetSaveFlag <> False) Then
+            count = count + 1
+            LogLine "DIRTY DOCUMENT " & context & ": " & model.GetPathName & "; readOnly=" & _
+                CStr(model.IsOpenedReadOnly)
+        End If
+        Set model = model.GetNext
+    Loop
+    If count = 0 Then LogLine "No dirty documents " & context
+    Err.Clear
 End Sub
