@@ -1,16 +1,16 @@
 Option Explicit
 
 ' Requires a reference to the installed SOLIDWORKS type library.
-' Best Fit envelope constrained normal to the Front, Top and Right planes (custom-plane mode).
-' Not a certified global-minimum-volume calculation.
-' Custom-plane mode aligns the box to the Front Plane, so its faces are normal to the Front, Top and Right planes.
+' Native custom-plane box is kept as the Skycode_BoundingBox feature. The proxy uses its
+' conservative axis-aligned extents, so its edges are parallel to the model X, Y and Z axes.
 Private Const DOCUMENT_PART As Long = 1
 Private Const DOCUMENT_ASSEMBLY As Long = 2
 Private Const FEATURE_BOUNDING_BOX As Long = 114
 Private Const BOUNDING_BOX_CUSTOM_PLANE As Long = 2
 Private Const ALIGNMENT_PLANE_NAME As String = "Front Plane"
-Private Const SKETCH_SEGMENT_LINE As Long = 0
 Private Const BOX_FEATURE_NAME As String = "Skycode_BoundingBox"
+Private Const LOG_FOLDER As String = "C:\skycode\logs"
+Private gDiagnostics As String
 
 
 Public Sub SldworksBoundingBox()
@@ -154,11 +154,17 @@ Public Function GetCurrentModelBoundingBox( _
     If boxSketch Is Nothing Then
         Err.Raise vbObjectError + 2108, , "The bounding-box sketch is unavailable in the active configuration."
     End If
-    ReadBoxDimensions boxSketch, lengthMetres, widthMetres, heightMetres
+    ' The native box can rotate within the Front Plane. Its axis-aligned sketch extents
+    ' conservatively contain the source geometry without traversing every solid body.
+    stage = "Computing the orthogonal (axis-aligned) envelope"
+    Dim boxOrigin(0 To 2) As Double
+    Dim boxLengths(0 To 2) As Double
+    ComputeOrthogonalBox swApp, boxSketch, boxOrigin, boxLengths
+    SortDimensions boxLengths, lengthMetres, widthMetres, heightMetres
     volumeMetres3 = lengthMetres * widthMetres * heightMetres
 
     stage = "Creating and saving the aligned solid proxy part"
-    CreateEnvelopeProxy swApp, swModel, boxSketch, proxyPath
+    CreateEnvelopeProxy swApp, swModel, boxOrigin, boxLengths, proxyPath
 
     If modelType = DOCUMENT_ASSEMBLY Then
         stage = "Inserting the proxy as an envelope component"
@@ -196,7 +202,7 @@ Public Function GetCurrentModelBoundingBox( _
     report = "Model: " & swModel.GetTitle & vbCrLf & _
         "Configuration: " & configuration.Name & vbCrLf & _
         "Feature: " & boxFeature.Name & vbCrLf & _
-        "Best Fit envelope constrained normal to the Front, Top and Right planes (not a certified global minimum)" & vbCrLf & _
+        "Conservative rectilinear envelope with sides orthogonal to the model X, Y and Z axes" & vbCrLf & _
         "Length: " & Format$(lengthMetres * 1000#, "0") & " mm" & vbCrLf & _
         "Width: " & Format$(widthMetres * 1000#, "0") & " mm" & vbCrLf & _
         "Height: " & Format$(heightMetres * 1000#, "0") & " mm" & vbCrLf & _
@@ -237,8 +243,22 @@ Failed:
             " A new bounding-box feature was added before the failure; inspect it in the unsaved model."
     End If
     Debug.Print "ERROR: " & failureDescription
+    AppendFailureLog swModel, failureNumber, failureDescription
     Err.Raise failureNumber, "GetCurrentModelBoundingBox", failureDescription
 End Function
+
+Private Sub AppendFailureLog(ByVal model As SldWorks.ModelDoc2, ByVal number As Long, ByVal description As String)
+    Dim fs As Object, stream As Object
+    Dim title As String
+    On Error Resume Next
+    If Not model Is Nothing Then title = model.GetPathName
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    If Not fs.FolderExists(LOG_FOLDER) Then fs.CreateFolder LOG_FOLDER
+    Set stream = fs.OpenTextFile(LOG_FOLDER & "\sldworks bounding box.txt", 8, True, -1)
+    stream.WriteLine Format$(Now, "yyyy-mm-dd hh:nn:ss") & " | " & title & " | error " & number & " | " & description
+    If Len(gDiagnostics) > 0 Then stream.WriteLine "    " & gDiagnostics
+    stream.Close
+End Sub
 
 Private Function AttachRunningSolidWorks() As Object
     ' The unversioned ProgID is registered to the newest installed SOLIDWORKS, which may not be
@@ -308,18 +328,11 @@ Private Function ChooseReportPath(ByVal suggestedName As String, ByVal initialFo
 End Function
 
 Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
-    ByVal source As SldWorks.ModelDoc2, ByVal sketch As SldWorks.Sketch, _
+    ByVal source As SldWorks.ModelDoc2, ByRef origin() As Double, ByRef lengths() As Double, _
     ByVal outputPath As String)
 
     Dim utility As SldWorks.MathUtility
-    Dim toModel As SldWorks.MathTransform
-    Dim segments As Variant
-    Dim line As SldWorks.SketchLine
-    Dim origin As Variant
-    Dim startPoint As Variant
-    Dim endPoint As Variant
     Dim directions(0 To 2, 0 To 2) As Double
-    Dim lengths(0 To 2) As Double
     Dim transformData(0 To 15) As Double
     Dim boxData(0 To 8) As Double
     Dim data As Variant
@@ -328,9 +341,7 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
     Dim partModel As SldWorks.ModelDoc2
     Dim part As SldWorks.PartDoc
     Dim feature As SldWorks.Feature
-    Dim i As Long, j As Long, count As Long
-    Dim determinant As Double
-    Dim temporary As Double
+    Dim i As Long, j As Long
     Dim template As String
     Dim errors As Long, warnings As Long
     Dim activated As SldWorks.ModelDoc2
@@ -338,50 +349,10 @@ Private Sub CreateEnvelopeProxy(ByVal app As SldWorks.SldWorks, _
     Dim fs As Object
 
     Set utility = app.GetMathUtility
-    Set toModel = sketch.ModelToSketchTransform.Inverse
-    segments = sketch.GetSketchSegments
-    Set line = segments(LBound(segments))
-    origin = SketchPointInModel(line.GetStartPoint2, utility, toModel)
-
-    For i = LBound(segments) To UBound(segments)
-        Set line = segments(i)
-        startPoint = SketchPointInModel(line.GetStartPoint2, utility, toModel)
-        endPoint = SketchPointInModel(line.GetEndPoint2, utility, toModel)
-        If PointsCoincide(origin, endPoint) Then
-            endPoint = startPoint
-            startPoint = origin
-        End If
-        If PointsCoincide(origin, startPoint) Then
-            If count >= 3 Then Err.Raise vbObjectError + 2123, , "Too many edges meet at the box corner."
-            For j = 0 To 2
-                directions(count, j) = endPoint(j) - origin(j)
-                lengths(count) = lengths(count) + directions(count, j) ^ 2
-            Next j
-            lengths(count) = Sqr(lengths(count))
-            If lengths(count) <= 0# Then Err.Raise vbObjectError + 2124, , "Degenerate box edge."
-            For j = 0 To 2
-                directions(count, j) = directions(count, j) / lengths(count)
-            Next j
-            count = count + 1
-        End If
-    Next i
-    If count <> 3 Then Err.Raise vbObjectError + 2125, , "Could not identify three edges at the box corner."
-
-    determinant = directions(0, 0) * (directions(1, 1) * directions(2, 2) - directions(1, 2) * directions(2, 1)) _
-        - directions(0, 1) * (directions(1, 0) * directions(2, 2) - directions(1, 2) * directions(2, 0)) _
-        + directions(0, 2) * (directions(1, 0) * directions(2, 1) - directions(1, 1) * directions(2, 0))
-    If Abs(Abs(determinant) - 1#) > 0.0000001 Then
-        Err.Raise vbObjectError + 2126, , "Box edge directions are not orthonormal."
-    End If
-    If determinant < 0# Then
-        For j = 0 To 2
-            temporary = directions(0, j)
-            directions(0, j) = directions(1, j)
-            directions(1, j) = temporary
-        Next j
-        temporary = lengths(0): lengths(0) = lengths(1): lengths(1) = temporary
-    End If
+    ' Edges run along the model X, Y and Z axes from the minimum corner.
+    directions(0, 0) = 1#: directions(1, 1) = 1#: directions(2, 2) = 1#
     For i = 0 To 2
+        If lengths(i) <= 0# Then Err.Raise vbObjectError + 2124, , "Degenerate box edge."
         For j = 0 To 2
             transformData(i * 3 + j) = directions(i, j)
         Next j
@@ -482,6 +453,73 @@ Private Function FindProxyComponent(ByVal assembly As SldWorks.AssemblyDoc, _
     Next i
 End Function
 
+Private Sub SortDimensions(ByRef lengths() As Double, ByRef longest As Double, _
+    ByRef middle As Double, ByRef shortest As Double)
+    Dim a As Double, b As Double, c As Double, t As Double
+    a = lengths(0): b = lengths(1): c = lengths(2)
+    If a < b Then t = a: a = b: b = t
+    If b < c Then t = b: b = c: c = t
+    If a < b Then t = a: a = b: b = t
+    longest = a: middle = b: shortest = c
+End Sub
+
+' Uses the native bounding-box sketch's axis-aligned extents. This is conservative:
+' the resulting box contains the native box and therefore all geometry it contains.
+Private Sub ComputeOrthogonalBox(ByVal app As SldWorks.SldWorks, ByVal sketch As SldWorks.Sketch, _
+    ByRef origin() As Double, ByRef lengths() As Double)
+
+    Dim utility As SldWorks.MathUtility
+    Dim limits(0 To 5) As Double
+    Dim i As Long
+
+    Set utility = app.GetMathUtility
+    SketchExtents sketch, utility, limits
+    gDiagnostics = "Envelope extents taken from the native bounding-box sketch; no body traversal performed."
+    For i = 0 To 2
+        origin(i) = limits(i)
+        lengths(i) = limits(i + 3) - limits(i)
+        If lengths(i) <= 0# Then
+            Err.Raise vbObjectError + 2147, , "The native bounding-box sketch has a zero or negative extent."
+        End If
+    Next i
+End Sub
+
+Private Sub SketchExtents(ByVal sketch As SldWorks.Sketch, ByVal utility As SldWorks.MathUtility, _
+    ByRef limits() As Double)
+
+    Dim toModel As SldWorks.MathTransform
+    Dim segments As Variant
+    Dim line As SldWorks.SketchLine
+    Dim point As Variant
+    Dim i As Long, j As Long, k As Long
+    Dim first As Boolean
+
+    Set toModel = sketch.ModelToSketchTransform.Inverse
+    segments = sketch.GetSketchSegments
+    If Not IsArray(segments) Then
+        Err.Raise vbObjectError + 2148, , "SOLIDWORKS did not return the bounding-box sketch edges."
+    End If
+    If UBound(segments) - LBound(segments) + 1 <> 12 Then
+        Err.Raise vbObjectError + 2149, , "Expected exactly 12 edges in the bounding-box sketch."
+    End If
+    first = True
+    For i = LBound(segments) To UBound(segments)
+        Set line = segments(i)
+        For k = 0 To 1
+            If k = 0 Then
+                point = SketchPointInModel(line.GetStartPoint2, utility, toModel)
+            Else
+                point = SketchPointInModel(line.GetEndPoint2, utility, toModel)
+            End If
+            For j = 0 To 2
+                If first Or point(j) < limits(j) Then limits(j) = point(j)
+                If first Or point(j) > limits(j + 3) Then limits(j + 3) = point(j)
+            Next j
+            first = False
+        Next k
+    Next i
+End Sub
+
 Private Function SketchPointInModel(ByVal point As SldWorks.SketchPoint, _
     ByVal utility As SldWorks.MathUtility, ByVal transform As SldWorks.MathTransform) As Variant
     Dim coordinates(0 To 2) As Double
@@ -492,12 +530,6 @@ Private Function SketchPointInModel(ByVal point As SldWorks.SketchPoint, _
     Set mathPoint = utility.CreatePoint(data)
     Set mathPoint = mathPoint.MultiplyTransform(transform)
     SketchPointInModel = mathPoint.ArrayData
-End Function
-
-Private Function PointsCoincide(ByVal first As Variant, ByVal second As Variant) As Boolean
-    PointsCoincide = Abs(first(0) - second(0)) < 0.000000001 _
-        And Abs(first(1) - second(1)) < 0.000000001 _
-        And Abs(first(2) - second(2)) < 0.000000001
 End Function
 
 Private Function FindBoundingBox(ByVal model As SldWorks.ModelDoc2) As SldWorks.Feature
@@ -517,62 +549,3 @@ Private Function FindBoundingBox(ByVal model As SldWorks.ModelDoc2) As SldWorks.
     Loop
     Set FindBoundingBox = found
 End Function
-
-Private Sub ReadBoxDimensions(ByVal sketch As SldWorks.Sketch, _
-    ByRef lengthMetres As Double, ByRef widthMetres As Double, _
-    ByRef heightMetres As Double)
-
-    Dim segments As Variant
-    Dim segment As SldWorks.SketchSegment
-    Dim edgeLengths(0 To 11) As Double
-    Dim i As Long
-    Dim j As Long
-    Dim offset As Long
-    Dim swapLength As Double
-    Dim tolerance As Double
-
-    segments = sketch.GetSketchSegments
-    If IsEmpty(segments) Then
-        Err.Raise vbObjectError + 2110, , "The bounding-box sketch has no edges."
-    End If
-    If Not IsArray(segments) Then
-        Err.Raise vbObjectError + 2111, , "SOLIDWORKS did not return an array of bounding-box edges."
-    End If
-    If UBound(segments) - LBound(segments) + 1 <> 12 Then
-        Err.Raise vbObjectError + 2112, , "Expected exactly 12 edges in the bounding-box sketch."
-    End If
-
-    For i = LBound(segments) To UBound(segments)
-        Set segment = segments(i)
-        If segment.GetType <> SKETCH_SEGMENT_LINE Then
-            Err.Raise vbObjectError + 2113, , "The bounding-box sketch contains a non-linear edge."
-        End If
-        offset = i - LBound(segments)
-        edgeLengths(offset) = segment.GetLength
-        If edgeLengths(offset) <= 0# Then
-            Err.Raise vbObjectError + 2114, , "The bounding box has a zero or negative edge length."
-        End If
-    Next i
-
-    For i = 0 To 10
-        For j = i + 1 To 11
-            If edgeLengths(j) < edgeLengths(i) Then
-                swapLength = edgeLengths(i)
-                edgeLengths(i) = edgeLengths(j)
-                edgeLengths(j) = swapLength
-            End If
-        Next j
-    Next i
-
-    ' Each box dimension occurs on four edges, including for cubes and square prisms.
-    For i = 0 To 8 Step 4
-        tolerance = 0.0000000001 + edgeLengths(i + 3) * 0.00000001
-        If edgeLengths(i + 3) - edgeLengths(i) > tolerance Then
-            Err.Raise vbObjectError + 2115, , "The sketch edge lengths do not form three groups of four."
-        End If
-    Next i
-
-    heightMetres = edgeLengths(3)
-    widthMetres = edgeLengths(7)
-    lengthMetres = edgeLengths(11)
-End Sub

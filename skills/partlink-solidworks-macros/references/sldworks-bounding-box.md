@@ -4,7 +4,7 @@ Macro: [Skycode - sldworks bounding box.bas](<../../../vba scripts/Skycode - sld
 
 ## Purpose
 
-Creates or validates a native SOLIDWORKS bounding-box feature in best-fit envelope mode, constrained normal to the Front, Top and Right planes (`swBoundingBoxType_CustomPlane`, Front Plane as the alignment entity). It is not a certified global minimum.
+Creates a native SOLIDWORKS bounding-box feature in best-fit envelope mode, constrained normal to the Front, Top and Right planes (`swBoundingBoxType_CustomPlane`, Front Plane as the alignment entity), then makes a fast conservative proxy whose edges align to the model X, Y and Z axes. The proxy uses the axis-aligned extents of the native box sketch; it contains the source geometry but may be larger than its tight axis-aligned bounds. It is not a certified global minimum.
 
 ## Host and entry point
 
@@ -22,6 +22,7 @@ Creates or validates a native SOLIDWORKS bounding-box feature in best-fit envelo
 - A sibling proxy part `<source>_BoundingBox.SLDPRT`. Its custom properties are `BestFitOrigin` and `BestFitEdge1` to `BestFitEdge3`, in millimetres in model coordinates.
 - A text report with the configuration, dimensions from longest to shortest, volume, and paths.
 - For an assembly, the proxy is inserted as a fixed envelope component and excluded from the BOM.
+- Proxy sizing uses the 12 native box sketch edges; it does not traverse components or solid bodies.
 
 ## Side effects
 
@@ -34,7 +35,7 @@ Creates or validates a native SOLIDWORKS bounding-box feature in best-fit envelo
 
 - The plane is selected with `SelectByID2` (PLANE, then DATUMPLANE), falling back to `Feature.Select2`. Each attempt is logged. The alignment entity is assigned as `PlanarEntity` without `Set`, because it is a Variant property.
 - An existing root bounding-box feature is deleted and recreated on each run. More than one root bounding-box feature raises an error.
-- The sketch must contain 12 linear edges in three groups of four.
+- The sketch must contain exactly 12 edges.
 - Dimensions are reported longest to shortest, not along world X, Y, or Z.
 - Replacing an existing proxy requires that the file already contains the named generated feature.
 - The Composer-side macros read these proxies through `Meta.BestFitOrigin` and `Meta.BestFitEdge1` to `3`. See [bounding-box-dims](./bounding-box-dims.md).

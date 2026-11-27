@@ -66,9 +66,14 @@ files or components may remain and are explicitly reported.
   `swFmBoundingBox = 114`.
 - `ReferenceFaceOrPlane = swBoundingBoxType_CustomPlane`, whose installed value is
   `2`, keeps the Best Fit envelope but constrains its orientation to a selected
-  planar entity. The macro selects the Front Plane, so the box faces are normal to
-  the Front, Top and Right planes. The unconstrained `swBoundingBoxType_BestFit`
-  (`1`) can sit at an arbitrary angle, which is why it is not used.
+  planar entity. The native box is still free to rotate within that plane. To avoid
+  slow body-by-body geometry calls, the proxy takes the axis-aligned extents of the
+  native box sketch's 12 edges. This is a conservative rectilinear envelope: it
+  contains the native box and all geometry included by that feature, but can be
+  larger than the tight axis-aligned bounds of the source geometry. It requires no
+  component resolution, body copies, or `IBody2.GetExtremePoint` calls.
+  The unconstrained `swBoundingBoxType_BestFit` (`1`) can sit at an arbitrary
+  angle, which is why it is not used.
 - Set `PlanarEntity` from the selection after `AccessSelections`, then call
   `ReleaseSelectionAccess`.
 - Set `IncludeHiddenBodies = True` and `IncludeSurfaces = False`.

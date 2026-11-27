@@ -1,1 +1,0 @@
-2026-11-26T17:14:58 QUEUED NO: SOLIDWORKS PDM: &Yes &No Cancel  C:\RDSA-PDM-Vault\1-ROCK DRILLS\7374 - 1838 RETRO\11-ROCK DRILL CADS\3115 0824 00.SLDPRT is not checked out. Would you like to check it out?
